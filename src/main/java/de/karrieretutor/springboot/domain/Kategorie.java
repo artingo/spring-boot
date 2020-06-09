@@ -1,4 +1,4 @@
-package de.karrieretutor.springboot.model;
+package de.karrieretutor.springboot.domain;
 
 public enum Kategorie {
     WEISSWEIN,
