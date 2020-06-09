@@ -11,14 +11,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-
-import static de.karrieretutor.springboot.domain.Kategorie.ROTWEIN;
-import static de.karrieretutor.springboot.domain.Kategorie.WEISSWEIN;
-import static de.karrieretutor.springboot.domain.Rebsorte.*;
+import java.util.Optional;
 
 @Controller
 public class SimpleController {
@@ -38,35 +34,37 @@ public class SimpleController {
     @GetMapping("/{name}.html")
     public String htmlMapping(@PathVariable(name = "name") String name, Model model) {
         model.addAttribute("titel", StringUtils.capitalize(name));
-//        List<Wein> weine = createWeine();
-//        model.addAttribute("weine", weine);
-//        model.addAttribute("weine", weinRepository.findAll());
+        model.addAttribute("weine", weinRepository.findAll());
         model.addAttribute("preis", 9.90);
         return name;
     }
 
-    @GetMapping("/wein-hinzufuegen.html")
-    public String weinHinzufuegen(Model model) {
-        Wein neuerWein = new Wein();
-        model.addAttribute("wein", neuerWein);
-        return "wein-hinzufuegen";
+    @GetMapping("/wein-bearbeiten.html")
+    public String weinBearbeiten(@RequestParam(required = false) Long id, Model model) {
+        Wein aktuellerWein = new Wein();
+        if (id != null) {
+            Optional<Wein> vorhandenerWein = weinRepository.findById(id);
+            if (vorhandenerWein.isPresent()) {
+                aktuellerWein = vorhandenerWein.get();
+            }
+        }
+        model.addAttribute("wein", aktuellerWein);
+        return "wein-bearbeiten";
     }
 
-    @PostMapping("/weinHinzufuegen")
-    public String weinHinzufuegen(@Valid Wein wein, BindingResult fields, Model model) {
+    @PostMapping("/weinSpeichern")
+    public String weinSpeichern(@Valid Wein wein, BindingResult fields, Model model) {
         if (fields.hasErrors()) {
-            return "wein-hinzufuegen";
+            return "wein-bearbeiten";
         }
-        weinRepository.save(wein);
+        Optional<Wein> vorhandenerWein = weinRepository.findById(wein.getId());
+        if (vorhandenerWein.isPresent()) {
+            // vorhandenen Wein aktualisieren
+        } else {
+            // neuen Wein speichern
+            weinRepository.save(wein);
+        }
         model.addAttribute("weine", weinRepository.findAll());
         return "redirect:/index.html";
-    }
-
-    private List<Wein> createWeine() {
-        List<Wein> weine = new ArrayList<>();
-        weine.add(new Wein("Kloster Eberbach", "Rheingau", WEISSWEIN, RIESLING));
-        weine.add(new Wein("Ernest & Julio Gallo", "Kalifornien", ROTWEIN, ZINFANDEL));
-        weine.add(new Wein("Mia", "Deutschland", WEISSWEIN, SILVANER));
-        return weine;
     }
 }

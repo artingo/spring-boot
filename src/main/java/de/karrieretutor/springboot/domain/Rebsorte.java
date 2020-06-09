@@ -4,5 +4,6 @@ public enum Rebsorte {
     RIESLING,
     BURGUNDER,
     ZINFANDEL,
-    SILVANER
+    SILVANER,
+    ICH_HAB_KEINE_AHNUNG
 }
