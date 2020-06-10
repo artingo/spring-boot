@@ -26,8 +26,8 @@
             <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
                 <a class="mdl-navigation__link " href="index.html">Portfolio</a>
                 <a class="mdl-navigation__link" href="blog.html">Blog</a>
-                <a class="mdl-navigation__link" href="about.html">About</a>
-                <a class="mdl-navigation__link is-active" href="wein-bearbeiten.html">Wein bearbeiten</a>
+                <a class="mdl-navigation__link" href="about.html">Über uns</a>
+                <a class="mdl-navigation__link is-active" href="wein-bearbeiten.html">Wein erfassen</a>
             </nav>
         </div>
     </header>
@@ -35,8 +35,8 @@
         <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
             <a class="mdl-navigation__link is-active" href="index.html">Portfolio</a>
             <a class="mdl-navigation__link" href="blog.html">Blog</a>
-            <a class="mdl-navigation__link" href="about.html">About</a>
-            <a class="mdl-navigation__link" href="contact.html">Contact</a>
+            <a class="mdl-navigation__link" href="about.html">Über uns</a>
+            <a class="mdl-navigation__link" href="wein-bearbeiten.html">Wein erfassen</a>
         </nav>
     </div>
     <main class="mdl-layout__content">
@@ -52,16 +52,11 @@
                     <p>
                         Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.
                     </p>
-                    <p>
-                        Bitte geben Sie hier die Daten des neuen Weines ein:
-                    </p>
-                    <form action="#" th:action="@{/weinSpeichern}" th:object="${wein}" method="post" class="">
+                    <p>Bitte geben Sie hier die Daten des neuen Weines ein:</p>
+                    <form action="#" th:action="@{/weinSpeichern}" th:object="${wein}" method="post" autocomplete="on">
+                        <input type="hidden" th:field="${wein.id}" id="id"/>
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-invalid">
-                            <input class="mdl-textfield__input" type="text" th:field="${wein.id}" id="id" readonly="readonly">
-                            <label class="mdl-textfield__label" for="id">ID des Weines</label>
-                        </div>
-                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-invalid">
-                            <input class="mdl-textfield__input"
+                            <input class="mdl-textfield__input" autocomplete="false"
                                    type="text" th:field="${wein.name}" id="name">
                             <label class="mdl-textfield__label" for="name">Name des Weines</label>
                             <span class="mdl-textfield__error" th:if="${#fields.hasErrors('name')}" th:errors="${wein.name}"></span>
@@ -74,16 +69,23 @@
                         </div>
 
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-invalid">
+                            <input class="mdl-textfield__input"
+                                   type="number" min="0" step="0.05" th:field="${wein.preis}" id="preis">
+                            <label class="mdl-textfield__label" for="preis">Preis des Weines</label>
+                            <span class="mdl-textfield__error" th:if="${#fields.hasErrors('preis')}" th:errors="${wein.preis}"></span>
+                        </div>
+
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-invalid">
                             <select class="mdl-textfield__input" name="kategorie" id="kategorie" th:field="${wein.kategorie}">
                                 <option th:each="kategorie : ${T(de.karrieretutor.springboot.domain.Kategorie).values()}"
-                                        th:value="${kategorie}" th:text="${kategorie}"></option>
+                                        th:value="${kategorie}" th:text="${kategorie.displayValue}"></option>
                             </select>
                             <label class="mdl-textfield__label" for="kategorie">Kategorie des Weines</label>
                         </div>
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-invalid">
                             <select class="mdl-textfield__input" name="rebsorte" id="rebsorte" th:field="${wein.rebsorte}">
                                 <option th:each="rebsorte : ${T(de.karrieretutor.springboot.domain.Rebsorte).values()}"
-                                        th:value="${rebsorte}" th:text="${rebsorte}"></option>
+                                        th:value="${rebsorte}" th:text="${rebsorte.displayValue}"></option>
                             </select>
                             <label class="mdl-textfield__label" for="kategorie">Rebsorte des Weines</label>
                         </div>

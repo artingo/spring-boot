@@ -1,12 +1,13 @@
 package de.karrieretutor.springboot.domain;
 
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Wein {
@@ -21,11 +22,14 @@ public class Wein {
     @NotBlank(message = "Bitte geben Sie ein/e Herkunftsland/-region ein")
     private String herkunft;
 
-//    @NotEmpty(message = "Bitte geben Sie eine Kategorie ein")
+    @NotNull(message = "Bitte geben Sie eine Kategorie ein")
     private Kategorie kategorie;
 
-//    @NotEmpty(message = "Bitte geben Sie eine Rebsorte ein")
+    @NotNull(message = "Bitte geben Sie eine Rebsorte ein")
     private Rebsorte rebsorte;
+
+    @Min(value = 5, message = "Der Preis muss größer als 5€ sein")
+    private double preis;
 
     String foto;
 
@@ -42,11 +46,13 @@ public class Wein {
     public long getId() {
         return id;
     }
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -54,7 +60,6 @@ public class Wein {
     public String getHerkunft() {
         return herkunft;
     }
-
     public void setHerkunft(String herkunft) {
         this.herkunft = herkunft;
     }
@@ -62,7 +67,6 @@ public class Wein {
     public Kategorie getKategorie() {
         return kategorie;
     }
-
     public void setKategorie(Kategorie kategorie) {
         this.kategorie = kategorie;
     }
@@ -70,10 +74,20 @@ public class Wein {
     public Rebsorte getRebsorte() {
         return rebsorte;
     }
-
     public void setRebsorte(Rebsorte rebsorte) {
         this.rebsorte = rebsorte;
     }
+
+    public double getPreis() {
+        return preis;
+    }
+    public void setPreis(double preis) {
+        this.preis = preis;
+    }
+    public String getPreisFormatiert() {
+        return String.format("%.2f", this.preis);
+    }
+
 
     public String getFoto() {
         if (this.rebsorte == null)

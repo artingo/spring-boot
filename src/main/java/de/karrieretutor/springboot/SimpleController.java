@@ -35,7 +35,6 @@ public class SimpleController {
     public String htmlMapping(@PathVariable(name = "name") String name, Model model) {
         model.addAttribute("titel", StringUtils.capitalize(name));
         model.addAttribute("weine", weinRepository.findAll());
-        model.addAttribute("preis", 9.90);
         return name;
     }
 
@@ -57,14 +56,19 @@ public class SimpleController {
         if (fields.hasErrors()) {
             return "wein-bearbeiten";
         }
-        Optional<Wein> vorhandenerWein = weinRepository.findById(wein.getId());
-        if (vorhandenerWein.isPresent()) {
-            // vorhandenen Wein aktualisieren
-        } else {
-            // neuen Wein speichern
-            weinRepository.save(wein);
-        }
+        weinRepository.save(wein);
         model.addAttribute("weine", weinRepository.findAll());
+        return "redirect:/index.html";
+    }
+
+    @GetMapping("/weinLoeschen")
+    public String weinLoeschen(@RequestParam Long id, Model model) {
+        if (id != null) {
+            Optional<Wein> vorhandenerWein = weinRepository.findById(id);
+            if (vorhandenerWein.isPresent()) {
+                weinRepository.delete(vorhandenerWein.get());
+            }
+        }
         return "redirect:/index.html";
     }
 }
