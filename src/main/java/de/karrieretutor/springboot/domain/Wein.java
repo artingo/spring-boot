@@ -2,14 +2,12 @@ package de.karrieretutor.springboot.domain;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@Table(name = "WEIN")
 public class Wein {
 
     @Id
@@ -46,6 +44,7 @@ public class Wein {
     public long getId() {
         return id;
     }
+
     public void setId(long id) {
         this.id = id;
     }
@@ -53,6 +52,7 @@ public class Wein {
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -60,6 +60,7 @@ public class Wein {
     public String getHerkunft() {
         return herkunft;
     }
+
     public void setHerkunft(String herkunft) {
         this.herkunft = herkunft;
     }
@@ -67,6 +68,7 @@ public class Wein {
     public Kategorie getKategorie() {
         return kategorie;
     }
+
     public void setKategorie(Kategorie kategorie) {
         this.kategorie = kategorie;
     }
@@ -74,6 +76,7 @@ public class Wein {
     public Rebsorte getRebsorte() {
         return rebsorte;
     }
+
     public void setRebsorte(Rebsorte rebsorte) {
         this.rebsorte = rebsorte;
     }
@@ -81,17 +84,18 @@ public class Wein {
     public double getPreis() {
         return preis;
     }
+
     public void setPreis(double preis) {
         this.preis = preis;
     }
+
     public String getPreisFormatiert() {
         return String.format("%.2f", this.preis);
     }
 
-
     public String getFoto() {
         if (this.rebsorte == null)
-            return "images/example-work03.jpg";
+            return "images/example-work05.jpg";
         switch (this.rebsorte) {
             case RIESLING:
                 return "images/example-work01.jpg";
@@ -99,8 +103,10 @@ public class Wein {
                 return "images/example-work07.jpg";
             case SILVANER:
                 return "images/example-work02.jpg";
+            case ICH_HAB_KEINE_AHNUNG:
+                return "images/example-work02.jpg";
         }
-        return "images/example-work03.jpg";
+        return "images/example-work04.jpg";
     }
 }
 

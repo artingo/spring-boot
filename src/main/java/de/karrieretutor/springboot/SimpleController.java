@@ -18,15 +18,11 @@ import java.util.Optional;
 
 @Controller
 public class SimpleController {
-    @Value("${spring.application.name}")
-    String appName;
-
     @Autowired
     WeinRepository weinRepository;
 
     @GetMapping("/")
     public String homePage(Model model) {
-        model.addAttribute("appName", appName);
         model.addAttribute("titel", "Freddie Walker");
         return "index";
     }
