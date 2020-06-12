@@ -1,0 +1,23 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<header class="mdl-layout__header mdl-layout__header--waterfall portfolio-header">
+    <div class="mdl-layout__header-row portfolio-logo-row">
+        <span class="mdl-layout__title"><div class="portfolio-logo"></div></span>
+    </div>
+    <div class="mdl-layout__header-row portfolio-navigation-row mdl-layout--large-screen-only">
+        <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
+            <a href="index.html" class="mdl-navigation__link" th:classappend="${titel=='Index'}?is-active">Portfolio</a>
+            <a href="blog.html"  class="mdl-navigation__link" th:classappend="${titel=='Blog'}?is-active">Blog</a>
+            <a href="about.html" class="mdl-navigation__link" th:classappend="${titel=='About'}?is-active">Über uns</a>
+            <a href="wein-bearbeiten.html" class="mdl-navigation__link" th:classappend="${titel=='wein-bearbeiten'}?is-active">Wein erfassen</a>
+        </nav>
+    </div>
+</header>
+<div class="mdl-layout__drawer mdl-layout--small-screen-only">
+    <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
+        <a class="mdl-navigation__link" href="index.html">Portfolio</a>
+        <a class="mdl-navigation__link" href="blog.html">Blog</a>
+        <a class="mdl-navigation__link" href="about.html">Über uns</a>
+        <a class="mdl-navigation__link" href="wein-bearbeiten.html">Wein erfassen</a>
+    </nav>
+</div>
+</html>
