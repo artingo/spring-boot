@@ -12,7 +12,7 @@ public class Wein {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @NotBlank(message = "Bitte geben Sie einen Namen ein")
     private String name;
@@ -27,7 +27,7 @@ public class Wein {
     private Rebsorte rebsorte;
 
     @Min(value = 5, message = "Der Preis muss größer als 5€ sein")
-    private double preis;
+    private double preis = 5;
 
     String foto;
 
@@ -41,18 +41,16 @@ public class Wein {
         this.rebsorte = rebsorte;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
-
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -60,7 +58,6 @@ public class Wein {
     public String getHerkunft() {
         return herkunft;
     }
-
     public void setHerkunft(String herkunft) {
         this.herkunft = herkunft;
     }
@@ -68,7 +65,6 @@ public class Wein {
     public Kategorie getKategorie() {
         return kategorie;
     }
-
     public void setKategorie(Kategorie kategorie) {
         this.kategorie = kategorie;
     }
@@ -76,7 +72,6 @@ public class Wein {
     public Rebsorte getRebsorte() {
         return rebsorte;
     }
-
     public void setRebsorte(Rebsorte rebsorte) {
         this.rebsorte = rebsorte;
     }
@@ -84,11 +79,9 @@ public class Wein {
     public double getPreis() {
         return preis;
     }
-
     public void setPreis(double preis) {
         this.preis = preis;
     }
-
     public String getPreisFormatiert() {
         return String.format("%.2f", this.preis);
     }

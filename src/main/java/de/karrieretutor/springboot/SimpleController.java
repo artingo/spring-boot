@@ -2,18 +2,19 @@ package de.karrieretutor.springboot;
 
 import de.karrieretutor.springboot.domain.Wein;
 import de.karrieretutor.springboot.domain.WeinRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Optional;
 
 @Controller
@@ -23,8 +24,7 @@ public class SimpleController {
 
     @GetMapping("/")
     public String homePage(Model model) {
-        model.addAttribute("titel", "Freddie Walker");
-        return "index";
+        return "redirect:/index.html";
     }
 
     @GetMapping("/{name}.html")
@@ -35,7 +35,7 @@ public class SimpleController {
     }
 
     @GetMapping("/wein-bearbeiten.html")
-    public String weinBearbeiten(@RequestParam(required = false) Long id, Model model) {
+    public String weinBearbeiten(@RequestParam(required = false, name = "id") Long id, Model model) {
         Wein aktuellerWein = new Wein();
         if (id != null) {
             Optional<Wein> vorhandenerWein = weinRepository.findById(id);
@@ -43,6 +43,7 @@ public class SimpleController {
                 aktuellerWein = vorhandenerWein.get();
             }
         }
+        model.addAttribute("titel", "wein-bearbeiten");
         model.addAttribute("wein", aktuellerWein);
         return "wein-bearbeiten";
     }
@@ -66,5 +67,16 @@ public class SimpleController {
             }
         }
         return "redirect:/index.html";
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ModelAndView handleError(HttpServletRequest req, Exception ex) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        ex.printStackTrace(pw);
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("exception", sw.toString());
+        mav.setViewName("error");
+        return mav;
     }
 }
