@@ -1,42 +1,13 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <title th:text="${titel}"></title>
-    <link rel="stylesheet" href="fonts.css">
-    <link rel="stylesheet" href="material.grey-pink.min.css"/>
-    <link rel="stylesheet" href="styles.css"/>
-    <link rel="stylesheet" href="icons.css">
+    <link th:replace="fragments/styles"/>
 </head>
 
 <body>
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-    <header class="mdl-layout__header mdl-layout__header--waterfall portfolio-header">
-        <div class="mdl-layout__header-row portfolio-logo-row">
-            <span class="mdl-layout__title">
-                <div class="portfolio-logo"></div>
-            </span>
-        </div>
-        <div class="mdl-layout__header-row portfolio-navigation-row mdl-layout--large-screen-only">
-            <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
-                <a class="mdl-navigation__link" href="index.html">Portfolio</a>
-                <a class="mdl-navigation__link" href="blog.html">Blog</a>
-                <a class="mdl-navigation__link is-active" href="about.html">Über uns</a>
-                <a class="mdl-navigation__link" href="wein-bearbeiten.html">Wein erfassen</a>
-            </nav>
-        </div>
-    </header>
-    <div class="mdl-layout__drawer mdl-layout--small-screen-only">
-        <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
-            <a class="mdl-navigation__link is-active" href="index.html">Portfolio</a>
-            <a class="mdl-navigation__link" href="blog.html">Blog</a>
-            <a class="mdl-navigation__link" href="about.html">Über uns</a>
-            <a class="mdl-navigation__link" href="wein-bearbeiten.html">Wein erfassen</a>
-        </nav>
-    </div>
+    <header th:replace="fragments/header"></header>
     <main class="mdl-layout__content">
         <div class="mdl-grid portfolio-max-width">
 
@@ -81,20 +52,8 @@
 
 
         </div>
-        <footer class="mdl-mini-footer">
-            <div class="mdl-mini-footer__left-section">
-                <div class="mdl-logo">Simple portfolio website</div>
-            </div>
-            <div class="mdl-mini-footer__right-section">
-                <ul class="mdl-mini-footer__link-list">
-                    <li><a href="#">Help</a></li>
-                    <li><a href="#">Privacy & Terms</a></li>
-                </ul>
-            </div>
-        </footer>
+        <footer th:replace="fragments/footer"/>
     </main>
 </div>
-<script src="material.min.js"></script>
 </body>
-
 </html>

@@ -1,44 +1,12 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="A portfolio template that uses Material Design Lite.">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <title th:text="${titel}"></title>
-    <link rel="stylesheet" href="fonts.css">
-    <link rel="stylesheet" href="material.grey-pink.min.css" />
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="icons.css">
+    <link th:replace="fragments/styles"/>
 </head>
-
 <body>
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-    <header class="mdl-layout__header mdl-layout__header--waterfall portfolio-header">
-        <div class="mdl-layout__header-row portfolio-logo-row">
-            <span class="mdl-layout__title">
-                <div class="portfolio-logo"></div>
-            <span class="mdl-layout__title" th:text="${titel}"></span>
-            </span>
-        </div>
-        <div class="mdl-layout__header-row portfolio-navigation-row mdl-layout--large-screen-only">
-            <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
-                <a class="mdl-navigation__link " href="index.html">Portfolio</a>
-                <a class="mdl-navigation__link" href="blog.html">Blog</a>
-                <a class="mdl-navigation__link" href="about.html">Über uns</a>
-                <a class="mdl-navigation__link is-active" href="wein-bearbeiten.html">Wein erfassen</a>
-            </nav>
-        </div>
-    </header>
-    <div class="mdl-layout__drawer mdl-layout--small-screen-only">
-        <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
-            <a class="mdl-navigation__link is-active" href="index.html">Portfolio</a>
-            <a class="mdl-navigation__link" href="blog.html">Blog</a>
-            <a class="mdl-navigation__link" href="about.html">Über uns</a>
-            <a class="mdl-navigation__link" href="wein-bearbeiten.html">Wein erfassen</a>
-        </nav>
-    </div>
+    <header th:replace="fragments/header"></header>
     <main class="mdl-layout__content">
         <div class="mdl-grid portfolio-max-width portfolio-contact">
             <div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp">
@@ -49,69 +17,56 @@
                     <img class="article-image" src=" images/contact-image.jpg" border="0" alt="">
                 </div>
                 <div class="mdl-card__supporting-text">
-                    <p>
-                        Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.
-                    </p>
                     <p>Bitte geben Sie hier die Daten des neuen Weines ein:</p>
                     <form action="#" th:action="@{/weinSpeichern}" th:object="${wein}" method="post" autocomplete="on">
                         <input type="hidden" th:field="${wein.id}" id="id"/>
-                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-invalid">
-                            <input class="mdl-textfield__input" autocomplete="false"
-                                   type="text" th:field="${wein.name}" id="name">
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                             th:classappend="${#fields.hasErrors('name')}?is-invalid">
+                            <input class="mdl-textfield__input" type="text" th:field="${wein.name}" id="name">
                             <label class="mdl-textfield__label" for="name">Name des Weines</label>
                             <span class="mdl-textfield__error" th:if="${#fields.hasErrors('name')}" th:errors="${wein.name}"></span>
                         </div>
-                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-invalid">
-                            <input class="mdl-textfield__input"
-                                   type="text" th:field="${wein.herkunft}" id="herkunft">
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                             th:classappend="${#fields.hasErrors('herkunft')}?is-invalid">
+                            <input class="mdl-textfield__input" type="text" th:field="${wein.herkunft}" id="herkunft">
                             <label class="mdl-textfield__label" for="herkunft">Herkunft des Weines</label>
                             <span class="mdl-textfield__error" th:if="${#fields.hasErrors('herkunft')}" th:errors="${wein.herkunft}"></span>
                         </div>
-
-                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-invalid">
-                            <input class="mdl-textfield__input"
-                                   type="number" min="0" step="0.05" th:field="${wein.preis}" id="preis">
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                             th:classappend="${#fields.hasErrors('preis')}?is-invalid">
+                            <input class="mdl-textfield__input" type="number" min="5" step="0.05" th:field="${wein.preis}" id="preis">
                             <label class="mdl-textfield__label" for="preis">Preis des Weines</label>
                             <span class="mdl-textfield__error" th:if="${#fields.hasErrors('preis')}" th:errors="${wein.preis}"></span>
                         </div>
-
-                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-invalid">
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                             th:classappend="${#fields.hasErrors('kategorie')}?is-invalid">
+                            <label class="mdl-textfield__label" for="kategorie">Kategorie des Weines</label>
                             <select class="mdl-textfield__input" name="kategorie" id="kategorie" th:field="${wein.kategorie}">
+                                <option value="">-- Bitte wählen Sie --</option>
                                 <option th:each="kategorie : ${T(de.karrieretutor.springboot.domain.Kategorie).values()}"
                                         th:value="${kategorie}" th:text="${kategorie.displayValue}"></option>
                             </select>
-                            <label class="mdl-textfield__label" for="kategorie">Kategorie des Weines</label>
+                            <span class="mdl-textfield__error" th:if="${#fields.hasErrors('kategorie')}" th:errors="${wein.kategorie}"></span>
                         </div>
-                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-invalid">
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                             th:classappend="${#fields.hasErrors('rebsorte')}?is-invalid">
                             <select class="mdl-textfield__input" name="rebsorte" id="rebsorte" th:field="${wein.rebsorte}">
+                                <option value="">-- Bitte wählen Sie --</option>
                                 <option th:each="rebsorte : ${T(de.karrieretutor.springboot.domain.Rebsorte).values()}"
                                         th:value="${rebsorte}" th:text="${rebsorte.displayValue}"></option>
                             </select>
-                            <label class="mdl-textfield__label" for="kategorie">Rebsorte des Weines</label>
+                            <label class="mdl-textfield__label" for="rebsorte">Rebsorte des Weines</label>
+                            <span class="mdl-textfield__error" th:if="${#fields.hasErrors('rebsorte')}" th:errors="${wein.rebsorte}"></span>
                         </div>
-                        <p>
-                            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
-                                Wein speichern
-                            </button>
-                        </p>
+                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
+                            Wein speichern
+                        </button>
                     </form>
                 </div>
             </div>
         </div>
-        <footer class="mdl-mini-footer">
-            <div class="mdl-mini-footer__left-section">
-                <div class="mdl-logo">Simple portfolio website</div>
-            </div>
-            <div class="mdl-mini-footer__right-section">
-                <ul class="mdl-mini-footer__link-list">
-                    <li><a href="#">Help</a></li>
-                    <li><a href="#">Privacy & Terms</a></li>
-                </ul>
-            </div>
-        </footer>
+        <footer th:replace="fragments/footer"/>
     </main>
 </div>
-<script src="material.min.js"></script>
 </body>
-
 </html>

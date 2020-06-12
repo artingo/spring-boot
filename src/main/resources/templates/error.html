@@ -1,9 +1,9 @@
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Du hast das Internet kaputt gemacht!</title>
     <link rel="stylesheet" href="material.grey-pink.min.css"/>
 </head>
-<body style="background: url('404-error-page.jpg') no-repeat 50% 0%">
+<body style="background: url('404-error-page.jpg') no-repeat 50% -40%">
 <h1 align="center">Du hast das Internet kaputt gemacht!</h1>
 <p align="center" style="width:100%">
     <a href="index.html" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
@@ -15,5 +15,6 @@
     </span>
     </a>
 </p>
+<pre th:text="${exception}" style="font-size:14pt"></pre>
 </body>
 </html>
