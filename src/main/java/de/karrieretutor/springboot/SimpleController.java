@@ -1,7 +1,7 @@
 package de.karrieretutor.springboot;
 
-import de.karrieretutor.springboot.domain.Wein;
-import de.karrieretutor.springboot.domain.WeinRepository;
+import de.karrieretutor.springboot.domain.Produkt;
+import de.karrieretutor.springboot.domain.ProduktRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,7 +20,7 @@ import java.util.Optional;
 @Controller
 public class SimpleController {
     @Autowired
-    WeinRepository weinRepository;
+    ProduktRepository produktRepository;
 
     @GetMapping("/")
     public String homePage(Model model) {
@@ -30,40 +30,40 @@ public class SimpleController {
     @GetMapping("/{name}.html")
     public String htmlMapping(@PathVariable(name = "name") String name, Model model) {
         model.addAttribute("titel", StringUtils.capitalize(name));
-        model.addAttribute("weine", weinRepository.findAll());
+        model.addAttribute("produkte", produktRepository.findAll());
         return name;
     }
 
-    @GetMapping("/wein-bearbeiten.html")
-    public String weinBearbeiten(@RequestParam(required = false, name = "id") Long id, Model model) {
-        Wein aktuellerWein = new Wein();
+    @GetMapping("/bearbeiten.html")
+    public String bearbeiten(@RequestParam(required = false, name = "id") Long id, Model model) {
+        Produkt aktuellesProdukt = new Produkt();
         if (id != null) {
-            Optional<Wein> vorhandenerWein = weinRepository.findById(id);
-            if (vorhandenerWein.isPresent()) {
-                aktuellerWein = vorhandenerWein.get();
+            Optional<Produkt> produktDB = produktRepository.findById(id);
+            if (produktDB.isPresent()) {
+                aktuellesProdukt = produktDB.get();
             }
         }
-        model.addAttribute("titel", "wein-bearbeiten");
-        model.addAttribute("wein", aktuellerWein);
-        return "wein-bearbeiten";
+        model.addAttribute("titel", "bearbeiten");
+        model.addAttribute("produkt", aktuellesProdukt);
+        return "bearbeiten";
     }
 
-    @PostMapping("/weinSpeichern")
-    public String weinSpeichern(@Valid Wein wein, BindingResult fields, Model model) {
+    @PostMapping("/speichern")
+    public String speichern(@Valid Produkt produkt, BindingResult fields, Model model) {
         if (fields.hasErrors()) {
-            return "wein-bearbeiten";
+            return "bearbeiten";
         }
-        weinRepository.save(wein);
-        model.addAttribute("weine", weinRepository.findAll());
+        produktRepository.save(produkt);
+        model.addAttribute("produkte", produktRepository.findAll());
         return "redirect:/index.html";
     }
 
-    @GetMapping("/weinLoeschen")
-    public String weinLoeschen(@RequestParam Long id, Model model) {
+    @GetMapping("/loeschen")
+    public String loeschen(@RequestParam Long id, Model model) {
         if (id != null) {
-            Optional<Wein> vorhandenerWein = weinRepository.findById(id);
-            if (vorhandenerWein.isPresent()) {
-                weinRepository.delete(vorhandenerWein.get());
+            Optional<Produkt> produktDB = produktRepository.findById(id);
+            if (produktDB.isPresent()) {
+                produktRepository.delete(produktDB.get());
             }
         }
         return "redirect:/index.html";

@@ -168,3 +168,6 @@ footer {
   background-size: cover;
 }
 
+.mdl-textfield__label.select {
+    top: 0px;
+}

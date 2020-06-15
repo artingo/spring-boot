@@ -7,8 +7,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "WEIN")
-public class Wein {
+public class Produkt {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,22 +22,22 @@ public class Wein {
     @NotNull(message = "Bitte geben Sie eine Kategorie ein")
     private Kategorie kategorie;
 
-    @NotNull(message = "Bitte geben Sie eine Rebsorte ein")
-    private Rebsorte rebsorte;
+    @NotNull(message = "Bitte geben Sie eine Unterkategorie ein")
+    private Unterkategorie unterkategorie;
 
     @Min(value = 5, message = "Der Preis muss größer als 5€ sein")
     private double preis = 5;
 
     String foto;
 
-    public Wein() {
+    public Produkt() {
     }
 
-    public Wein(String name, String herkunft, Kategorie kategorie, Rebsorte rebsorte) {
+    public Produkt(String name, String herkunft, Kategorie kategorie, Unterkategorie unterkategorie) {
         this.name = name;
         this.herkunft = herkunft;
         this.kategorie = kategorie;
-        this.rebsorte = rebsorte;
+        this.unterkategorie = unterkategorie;
     }
 
     public Long getId() {
@@ -69,11 +68,11 @@ public class Wein {
         this.kategorie = kategorie;
     }
 
-    public Rebsorte getRebsorte() {
-        return rebsorte;
+    public Unterkategorie getUnterkategorie() {
+        return unterkategorie;
     }
-    public void setRebsorte(Rebsorte rebsorte) {
-        this.rebsorte = rebsorte;
+    public void setUnterkategorie(Unterkategorie unterkategorie) {
+        this.unterkategorie = unterkategorie;
     }
 
     public double getPreis() {
@@ -87,19 +86,22 @@ public class Wein {
     }
 
     public String getFoto() {
-        if (this.rebsorte == null)
-            return "images/example-work05.jpg";
-        switch (this.rebsorte) {
-            case RIESLING:
+        if (this.unterkategorie == null)
+            return "images/example-work07.jpg";
+        switch (this.unterkategorie) {
+            case SUBKAT1:
                 return "images/example-work01.jpg";
-            case ZINFANDEL:
-                return "images/example-work07.jpg";
-            case SILVANER:
+            case SUBKAT2:
                 return "images/example-work02.jpg";
-            case ICH_HAB_KEINE_AHNUNG:
-                return "images/example-work02.jpg";
+            case SUBKAT3:
+                return "images/example-work03.jpg";
+            case SUBKAT4:
+                return "images/example-work04.jpg";
+            case KEINE_AHNUNG:
+                return "images/example-work05.jpg";
+            default:
+               return "images/example-work06.jpg";
         }
-        return "images/example-work04.jpg";
     }
 }
 

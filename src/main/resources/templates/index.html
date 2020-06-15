@@ -23,29 +23,32 @@
     <div th:replace="fragments/header"></div>
     <main class="mdl-layout__content">
         <div class="mdl-grid portfolio-max-width">
-            <div th:if="${weine==null || weine.isEmpty()}">
-                <h2>Noch keine Weine erfasst!</h2>
+            <div th:if="${produkte==null || produkte.isEmpty()}">
+                <h2>Noch keine Produkte erfasst!</h2>
             </div>
-            <div th:each="wein : ${weine}" class="mdl-cell mdl-card mdl-shadow--4dp portfolio-card">
+            <div th:each="produkt : ${produkte}" class="mdl-cell mdl-card mdl-shadow--4dp portfolio-card">
                 <div class="mdl-card__media">
-                    <img class="article-image" th:src="${wein.foto}" border="0" alt=""/>
+                    <img class="article-image" th:src="${produkt.foto}" border="0" alt=""/>
                 </div>
                 <div class="mdl-card__title">
-                    <h2 class="mdl-card__title-text" th:text="${wein.name}"></h2>
+                    <h2 class="mdl-card__title-text" th:text="${produkt.name}"></h2>
                 </div>
                 <div class="mdl-card__supporting-text">
-                    Herkunft: <b th:text="${wein.herkunft}"></b><br/>
-                    Kategorie: <b th:text="${wein.kategorie.displayValue}"></b><br/>
-                    Rebsorte: <b th:text="${wein.rebsorte.displayValue}"></b><br/>
-                    Preis: <b><span th:text="${wein.preisFormatiert}"></span> &euro;</b>
+                    Herkunft: <b th:text="${produkt.herkunft}"></b><br/>
+                    Kategorie: <b th:text="${produkt.kategorie.displayValue}"></b><br/>
+                    Unterkategorie: <b th:text="${produkt.unterkategorie.displayValue}"></b><br/>
+                    Preis: <b><span th:text="${produkt.preisFormatiert}"></span> &euro;</b>
                 </div>
                 <div class="mdl-card__actions mdl-card--border">
                     <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
-                       th:href="@{/wein-bearbeiten.html(id=${wein.id})}">Wein bearbeiten</a>
+                       th:href="@{/bearbeiten.html(id=${produkt.id})}">
+                        Bearbeiten
+                        <i class="material-icons">edit</i></a>
                     <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
-                       title="Wein löschen"
-                       th:href="@{/weinLoeschen(id=${wein.id})}"
+                       title="Produkt löschen"
+                       th:href="@{/loeschen(id=${produkt.id})}"
                        onclick="loeschenBestaetigen(this.href); return false">
+                        Löschen
                         <i class="material-icons">delete</i>
                     </a>
                 </div>
@@ -54,7 +57,7 @@
         <dialog class="mdl-dialog" style="width:400px; top: 100px">
             <h4 class="mdl-dialog__title">Sind Sie sicher?</h4>
             <div class="mdl-dialog__content">
-                <p>Wollen Sie diesen Wein wirklich löschen?</p>
+                <p>Wollen Sie dieses Produkt wirklich löschen?</p>
             </div>
             <div class="mdl-dialog__actions">
                 <a href="#" id="loeschenLink"><button type="button" class="mdl-button">Ja</button></a>
