@@ -13,7 +13,7 @@ public class Produkt {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank(message = "Bitte geben Sie einen Namen ein")
+    @NotBlank()
     private String name;
 
     @NotBlank(message = "Bitte geben Sie ein/e Herkunftsland/-region ein")

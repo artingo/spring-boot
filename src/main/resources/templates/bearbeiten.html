@@ -1,7 +1,7 @@
 <!doctype html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <title th:text="${titel}"></title>
+    <title th:text="#{nav.product}"></title>
     <link th:replace="fragments/styles"/>
 </head>
 <body>
@@ -11,56 +11,55 @@
         <div class="mdl-grid portfolio-max-width portfolio-contact">
             <div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp">
                 <div class="mdl-card__title">
-                    <h2 class="mdl-card__title-text">Produkt bearbeiten</h2>
+                    <h2 class="mdl-card__title-text" th:text="#{h2.edit.product}"></h2>
                 </div>
                 <div class="mdl-card__media">
                     <img class="article-image" src=" images/contact-image.jpg" border="0" alt="">
                 </div>
                 <div class="mdl-card__supporting-text">
-                    <p>Bitte geben Sie hier die Daten des neuen Produktes ein:</p>
+                    <p th:text="#{h3.edit.product}"></p>
                     <form action="#" th:action="@{/speichern}" th:object="${produkt}" method="post" autocomplete="on">
                         <input type="hidden" th:field="${produkt.id}" id="id"/>
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
                              th:classappend="${#fields.hasErrors('name')}?is-invalid">
                             <input class="mdl-textfield__input" type="text" th:field="${produkt.name}" id="name">
-                            <label class="mdl-textfield__label" for="name">Name des Produktes</label>
-                            <span class="mdl-textfield__error" th:if="${#fields.hasErrors('name')}" th:errors="${produkt.name}"></span>
+                            <label class="mdl-textfield__label" for="name" th:text="#{label.name}"></label>
+                            <span class="mdl-textfield__error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
                         </div>
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
                              th:classappend="${#fields.hasErrors('herkunft')}?is-invalid">
                             <input class="mdl-textfield__input" type="text" th:field="${produkt.herkunft}" id="herkunft">
-                            <label class="mdl-textfield__label" for="herkunft">Herkunft des Produktes</label>
+                            <label class="mdl-textfield__label" for="herkunft" th:text="#{label.origin}"></label>
                             <span class="mdl-textfield__error" th:if="${#fields.hasErrors('herkunft')}" th:errors="${produkt.herkunft}"></span>
                         </div>
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
                              th:classappend="${#fields.hasErrors('preis')}?is-invalid">
                             <input class="mdl-textfield__input" type="number" min="5" step="0.05" th:field="${produkt.preis}" id="preis">
-                            <label class="mdl-textfield__label" for="preis">Preis des Produktes</label>
+                            <label class="mdl-textfield__label" for="preis" th:text="#{label.price}"></label>
                             <span class="mdl-textfield__error" th:if="${#fields.hasErrors('preis')}" th:errors="${produkt.preis}"></span>
                         </div>
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
                              th:classappend="${#fields.hasErrors('kategorie')}?is-invalid">
                             <select class="mdl-textfield__input" name="kategorie" id="kategorie" th:field="${produkt.kategorie}">
-                                <option value="">-- Bitte wählen Sie --</option>
+                                <option value="" th:text="#{select}"></option>
                                 <option th:each="kategorie : ${T(de.karrieretutor.springboot.domain.Kategorie).values()}"
-                                        th:value="${kategorie}" th:text="${kategorie.displayValue}"></option>
+                                        th:value="${kategorie}" th:text="#{${kategorie.messageKey}}"></option>
                             </select>
-                            <label class="mdl-textfield__label select" for="kategorie">Kategorie des Produktes</label>
+                            <label class="mdl-textfield__label select" for="kategorie" th:text="#{label.category}"></label>
                             <span class="mdl-textfield__error" th:if="${#fields.hasErrors('kategorie')}" th:errors="${produkt.kategorie}"></span>
                         </div>
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
                              th:classappend="${#fields.hasErrors('unterkategorie')}?is-invalid">
                             <select class="mdl-textfield__input" name="unterkategorie" id="unterkategorie" th:field="${produkt.unterkategorie}">
-                                <option value="">-- Bitte wählen Sie --</option>
+                                <option value="" th:text="#{select}"></option>
                                 <option th:each="unterkategorie : ${T(de.karrieretutor.springboot.domain.Unterkategorie).values()}"
-                                        th:value="${unterkategorie}" th:text="${unterkategorie.displayValue}"></option>
+                                        th:value="${unterkategorie}" th:text="#{${unterkategorie.messageKey}}"></option>
                             </select>
-                            <label class="mdl-textfield__label select" for="unterkategorie">Unterkategorie des Produktes</label>
+                            <label class="mdl-textfield__label select" for="unterkategorie" th:text="#{label.subcategory}"></label>
                             <span class="mdl-textfield__error" th:if="${#fields.hasErrors('unterkategorie')}" th:errors="${produkt.unterkategorie}"></span>
                         </div>
-                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
-                            Produkt speichern
-                        </button>
+                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                            type="submit" th:text="#{button.save}"/>
                     </form>
                 </div>
             </div>

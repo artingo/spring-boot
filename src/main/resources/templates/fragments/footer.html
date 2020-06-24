@@ -1,11 +1,11 @@
 <footer class="mdl-mini-footer" xmlns:th="http://www.thymeleaf.org">
     <div class="mdl-mini-footer__left-section">
-        <div class="mdl-logo">Demo Web Shop</div>
+        <div class="mdl-logo" th:text="#{footer.title}"></div>
     </div>
     <div class="mdl-mini-footer__right-section">
         <ul class="mdl-mini-footer__link-list">
-            <li><a href="#">Hilfe</a></li>
-            <li><a href="#">Impressum</a></li>
+            <li><a href="#" th:text="#{footer.help}"></a></li>
+            <li><a href="#" th:text="#{footer.imprint}"></a></li>
         </ul>
     </div>
     <script src="material.min.js"></script>

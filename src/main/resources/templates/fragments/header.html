@@ -1,23 +1,42 @@
 <html xmlns:th="http://www.thymeleaf.org">
+<script type="text/javascript">
+function switchLanguage(select) {
+    window.location.search = '?lang=' + select.value;
+}
+</script>
 <header class="mdl-layout__header mdl-layout__header--waterfall portfolio-header">
     <div class="mdl-layout__header-row portfolio-logo-row">
         <span class="mdl-layout__title"><div class="portfolio-logo"></div></span>
     </div>
     <div class="mdl-layout__header-row portfolio-navigation-row mdl-layout--large-screen-only">
         <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
-            <a href="index.html" class="mdl-navigation__link" th:classappend="${titel=='Index'}?is-active">Portfolio</a>
-            <a href="blog.html"  class="mdl-navigation__link" th:classappend="${titel=='Blog'}?is-active">Blog</a>
-            <a href="about.html" class="mdl-navigation__link" th:classappend="${titel=='About'}?is-active">Über uns</a>
-            <a href="bearbeiten.html" class="mdl-navigation__link" th:classappend="${titel=='bearbeiten'}?is-active">Produkt erfassen</a>
+            <a href="index.html" class="mdl-navigation__link"
+               th:classappend="${titel=='Index'}?is-active" th:text="#{nav.portfolio}"></a>
+            <a href="blog.html"  class="mdl-navigation__link"
+               th:classappend="${titel=='Blog'}?is-active" th:text="#{nav.blog}"></a>
+            <a href="about.html" class="mdl-navigation__link"
+               th:classappend="${titel=='About'}?is-active" th:text="#{nav.about}"></a>
+            <a href="bearbeiten.html" class="mdl-navigation__link"
+               th:classappend="${titel=='bearbeiten'}?is-active" th:text="#{nav.product}"></a>
         </nav>
+        <div>
+            <span th:text="#{lang.change}"></span><br/>
+            <select id="locales" onchange="switchLanguage(this)">
+                <option value="" th:text="#{lang.select}"></option>
+                <option value="en" th:text="#{lang.en}"
+                    th:selected="${#strings.equals(#locale, 'en')}"></option>
+                <option value="de" th:text="#{lang.de}"
+                    th:selected="${#strings.equals(#locale, 'de')}"></option>
+            </select>
+        </div>
     </div>
 </header>
 <div class="mdl-layout__drawer mdl-layout--small-screen-only">
     <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
-        <a class="mdl-navigation__link" href="index.html">Portfolio</a>
-        <a class="mdl-navigation__link" href="blog.html">Blog</a>
-        <a class="mdl-navigation__link" href="about.html">Über uns</a>
-        <a class="mdl-navigation__link" href="bearbeiten.html">Produkt erfassen</a>
+        <a class="mdl-navigation__link" href="index.html" th:text="#{nav.portfolio}"></a>
+        <a class="mdl-navigation__link" href="blog.html" th:text="#{nav.blog}"></a>
+        <a class="mdl-navigation__link" href="about.html" th:text="#{nav.about}"></a>
+        <a class="mdl-navigation__link" href="bearbeiten.html" th:text="#{nav.product}"></a>
     </nav>
 </div>
 </html>

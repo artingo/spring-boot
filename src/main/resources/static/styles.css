@@ -171,3 +171,9 @@ footer {
 .mdl-textfield__label.select {
     top: 0px;
 }
+
+.mdl-card__supporting-text > label {
+    display: inline-block;
+    width: 8em;
+    font-weight: 700;
+}
