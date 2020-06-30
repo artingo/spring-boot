@@ -22,43 +22,45 @@
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <div th:replace="fragments/header"></div>
     <main class="mdl-layout__content">
-        <div class="mdl-grid portfolio-max-width">
-            <div th:if="${produkte==null || produkte.isEmpty()}">
-                <h2 th:text="#{no.products}"></h2>
-            </div>
-            <div th:each="produkt : ${produkte}" class="mdl-cell mdl-card mdl-shadow--4dp portfolio-card">
-                <div class="mdl-card__media">
-                    <img class="article-image" th:src="${produkt.foto}" border="0" alt=""/>
-                </div>
-                <div class="mdl-card__title">
-                    <h2 class="mdl-card__title-text" th:text="${produkt.name}"></h2>
-                </div>
-                <div class="mdl-card__supporting-text">
-                    <label th:text="#{label.origin.short}"></label>
-                    <span th:text="${produkt.herkunft}"></span><br/>
-                    <label th:text="#{label.category.short}"></label>
-                    <span th:text="#{${produkt.kategorie.messageKey}}"></span><br/>
-                    <label th:text="#{label.subcategory.short}"></label>
-                    <span th:text="#{${produkt.unterkategorie.messageKey}}"></span><br/>
-                    <label th:text="#{label.price.short}"></label>
-                    <span><span th:text="${produkt.preisFormatiert}"></span> &euro;</span>
-                </div>
-                <div class="mdl-card__actions mdl-card--border">
-                    <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
-                       th:href="@{/kaufen(id=${produkt.id})}">
-                        <span th:text="#{button.buy}"></span>
-                        <i class="material-icons">add_shopping_cart</i></a>
-                    <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
-                       th:href="@{/bearbeiten.html(id=${produkt.id})}">
-                        <span th:text="#{button.edit}"></span>
-                        <i class="material-icons">edit</i></a>
-                    <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
-                       title="Produkt löschen"
-                       th:href="@{/loeschen(id=${produkt.id})}"
-                       onclick="loeschenBestaetigen(this.href); return false">
-                        <span th:text="#{button.delete}"></span>
-                        <i class="material-icons">delete</i>
-                    </a>
+        <div class="portfolio-max-width">
+            <h2 th:if="${produkte==null||produkte.isEmpty()}" th:text="#{no.products}"></h2>
+            <h4 th:if="${message!=null}" th:text="${message}"></h4>
+
+            <div class="mdl-grid">
+                <div th:each="produkt : ${produkte}" class="mdl-cell mdl-card mdl-shadow--4dp portfolio-card">
+                    <div class="mdl-card__media">
+                        <img class="article-image" th:src="${produkt.foto}" border="0" alt=""/>
+                    </div>
+                    <div class="mdl-card__title">
+                        <h2 class="mdl-card__title-text" th:text="${produkt.name}"></h2>
+                    </div>
+                    <div class="mdl-card__supporting-text">
+                        <label th:text="#{label.origin.short}"></label>
+                        <span th:text="${produkt.herkunft}"></span><br/>
+                        <label th:text="#{label.category.short}"></label>
+                        <span th:text="#{${produkt.kategorie.messageKey}}"></span><br/>
+                        <label th:text="#{label.subcategory.short}"></label>
+                        <span th:text="#{${produkt.unterkategorie.messageKey}}"></span><br/>
+                        <label th:text="#{label.price.short}"></label>
+                        <span><span th:text="${produkt.preisFormatiert}"></span> &euro;</span>
+                    </div>
+                    <div class="mdl-card__actions mdl-card--border">
+                        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
+                           th:href="@{/kaufen(id=${produkt.id})}">
+                            <span th:text="#{button.buy}"></span>
+                            <i class="material-icons">add_shopping_cart</i></a>
+                        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
+                           th:href="@{/bearbeiten.html(id=${produkt.id})}">
+                            <span th:text="#{button.edit}"></span>
+                            <i class="material-icons">edit</i></a>
+                        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
+                           title="Produkt löschen"
+                           th:href="@{/loeschen(id=${produkt.id})}"
+                           onclick="loeschenBestaetigen(this.href); return false">
+                            <span th:text="#{button.delete}"></span>
+                            <i class="material-icons">delete</i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

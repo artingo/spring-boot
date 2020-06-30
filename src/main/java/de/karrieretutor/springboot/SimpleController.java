@@ -9,14 +9,15 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Controller
 public class SimpleController {
@@ -52,6 +53,7 @@ public class SimpleController {
 
     @PostMapping("/speichern")
     public String speichern(@Valid Produkt produkt, BindingResult fields, Model model) {
+        MultipartFile file;
         if (fields.hasErrors()) {
             return "bearbeiten";
         }
@@ -82,46 +84,38 @@ public class SimpleController {
     }
 
     @GetMapping("/kaufen")
-    public String kaufen(@RequestParam Long id, Model model) {
-        Produkt aktuellesProdukt = new Produkt();
+    public String kaufen(@RequestParam Long id, Model model, RedirectAttributes redirect) {
+        String message = "Produkt mit der ID \"" + id + "\" nicht gefunden.";
         if (id != null) {
             Optional<Produkt> produktDB = produktRepository.findById(id);
             if (produktDB.isPresent()) {
-                aktuellesProdukt = produktDB.get();
+                Produkt aktuellesProdukt = produktDB.get();
                 warenkorb.getProdukte().add(aktuellesProdukt);
-                model.addAttribute("message", "Produkt \'" + aktuellesProdukt.getName() + "\' zum Warenkorb hinzugefügt.");
+                message = "Produkt \"" + aktuellesProdukt.getName() + "\" zum Warenkorb hinzugefügt.";
             }
-        } else {
-            model.addAttribute("message", "Produkt mit der ID \'" + id + "\' nicht gefunden.");
         }
-        model.addAttribute("titel", "Warenkorb");
-        model.addAttribute("warenkorb", warenkorb);
-        return "warenkorb";
+        redirect.addFlashAttribute("message", message);
+        return "redirect:index.html";
     }
 
     @GetMapping("/entfernen")
-    public String entfernen(@RequestParam Long id, Model model) {
+    public String entfernen(@RequestParam Long id, Model model, RedirectAttributes redirect) {
+        String message = "Produkt nicht gefunden.";
         if (id != null) {
-            AtomicReference<Produkt> gefunden = new AtomicReference<>();
-            warenkorb.getProdukte().forEach(aktuellesProdukt -> {
-                if (id.equals(aktuellesProdukt.getId())) {
-                    gefunden.set(aktuellesProdukt);
-                    return;
-                }
-            });
-            Produkt gefundenesProdukt = gefunden.get();
+            Produkt gefundenesProdukt = warenkorb.getProdukte().stream()
+                    .filter(p -> id.equals(p.getId()))
+                    .findFirst().get();
             if (gefundenesProdukt != null) {
                 warenkorb.getProdukte().remove(gefundenesProdukt);
-                model.addAttribute("message", "Produkt \'" + gefundenesProdukt.getName() + "\' vom Warenkorb entfernt.");
+                message = "Produkt \"" + gefundenesProdukt.getName() + "\" vom Warenkorb entfernt.";
             } else {
-                model.addAttribute("message", "Produkt mit ID \'" + id + "\' nicht im Warenkorb gefunden.");
+                message = "Produkt mit ID \"" + id + "\" nicht im Warenkorb gefunden.";
             }
-        } else {
-            model.addAttribute("message", "Produkt nicht gefunden.");
         }
+        redirect.addFlashAttribute("message", message);
         model.addAttribute("titel", "Warenkorb");
         model.addAttribute("warenkorb", warenkorb);
-        return "warenkorb";
+        return "redirect:warenkorb.html";
     }
 
     @ExceptionHandler(Exception.class)
