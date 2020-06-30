@@ -23,10 +23,11 @@
     <div th:replace="fragments/header"></div>
     <main class="mdl-layout__content">
         <div class="mdl-grid portfolio-max-width">
-            <div th:if="${produkte==null || produkte.isEmpty()}">
-                <h2 th:text="#{no.products}"></h2>
+            <div th:if="${warenkorb.produkte==null || warenkorb.produkte.isEmpty()}">
+                <h2 th:text="#{cart.no.products}"></h2>
             </div>
-            <div th:each="produkt : ${produkte}" class="mdl-cell mdl-card mdl-shadow--4dp portfolio-card">
+            <h4 th:if="${message!=null}" th:text="${message}"></h4>
+            <div th:each="produkt : ${warenkorb.produkte}" class="mdl-cell mdl-card mdl-shadow--4dp portfolio-card">
                 <div class="mdl-card__media">
                     <img class="article-image" th:src="${produkt.foto}" border="0" alt=""/>
                 </div>
@@ -45,16 +46,8 @@
                 </div>
                 <div class="mdl-card__actions mdl-card--border">
                     <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
-                       th:href="@{/kaufen(id=${produkt.id})}">
-                        <span th:text="#{button.buy}"></span>
-                        <i class="material-icons">add_shopping_cart</i></a>
-                    <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
-                       th:href="@{/bearbeiten.html(id=${produkt.id})}">
-                        <span th:text="#{button.edit}"></span>
-                        <i class="material-icons">edit</i></a>
-                    <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
                        title="Produkt löschen"
-                       th:href="@{/loeschen(id=${produkt.id})}"
+                       th:href="@{/entfernen(id=${produkt.id})}"
                        onclick="loeschenBestaetigen(this.href); return false">
                         <span th:text="#{button.delete}"></span>
                         <i class="material-icons">delete</i>
@@ -65,7 +58,7 @@
         <dialog class="mdl-dialog" style="width:400px; top: 100px">
             <h4 class="mdl-dialog__title">Sind Sie sicher?</h4>
             <div class="mdl-dialog__content">
-                <p>Wollen Sie dieses Produkt wirklich löschen?</p>
+                <p>Wollen Sie dieses Produkt wirklich entfernen?</p>
             </div>
             <div class="mdl-dialog__actions">
                 <a href="#" id="loeschenLink"><button type="button" class="mdl-button">Ja</button></a>
