@@ -29,9 +29,9 @@
             <div class="mdl-grid">
                 <div th:each="produkt : ${produkte}" class="mdl-cell mdl-card mdl-shadow--4dp portfolio-card">
                     <div class="mdl-card__media">
-                        <img th:if="${produkt.datei.length>0}" th:src="@{/fotos/}+${produkt.id}"
+                        <img th:if="${produkt.datei}" th:src="@{/fotos/}+${produkt.id}"
                              th:alt="${produkt.dateiname}" class="article-image" border="0"/>
-                        <img th:unless="${produkt.datei.length>0}" src="/images/no-image.png"
+                        <img th:unless="${produkt.datei}" src="/images/no-image.png"
                              class="article-image" border="0"/>
                     </div>
                     <div class="mdl-card__title">
