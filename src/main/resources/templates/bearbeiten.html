@@ -25,11 +25,6 @@
                 <div class="mdl-card__supporting-text">
                     <p th:text="#{h3.edit.product}"></p>
 
-                    <div th:if="${file}">
-                        Dateiname: <span th:text="${file.originalFilename}"></span><br/>
-                        Datei: <span th:text="${file}"></span>
-                    </div>
-
                     <form action="#" th:action="@{/speichern}" th:object="${produkt}" method="post" autocomplete="on"
                       enctype="multipart/form-data">
                         <input type="hidden" th:field="${produkt.id}" id="id"/>
