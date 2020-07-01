@@ -24,10 +24,12 @@
     <main class="mdl-layout__content">
         <div class=" portfolio-max-width">
             <h2 th:if="${warenkorb.produkte.isEmpty()}" th:text="#{cart.no.products}"></h2>
+            <h4 th:if="${message}" th:text="${message}"></h4>
             <div class="mdl-grid">
                 <div th:each="produkt : ${warenkorb.produkte}" class="mdl-cell mdl-card mdl-shadow--4dp portfolio-card">
                     <div class="mdl-card__media">
-                        <img class="article-image" th:src="${produkt.foto}" border="0" alt=""/>
+                        <img th:if="${produkt.datei}" th:src="@{/fotos/}+${produkt.id}"
+                             th:alt="${produkt.dateiname}" class="article-image" border="0"/>
                     </div>
                     <div class="mdl-card__title">
                         <h2 class="mdl-card__title-text" th:text="${produkt.name}"></h2>

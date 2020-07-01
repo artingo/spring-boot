@@ -4,6 +4,10 @@ import de.karrieretutor.springboot.domain.Produkt;
 import de.karrieretutor.springboot.domain.ProduktRepository;
 import de.karrieretutor.springboot.domain.Warenkorb;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -15,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Optional;
@@ -52,12 +57,17 @@ public class SimpleController {
     }
 
     @PostMapping("/speichern")
-    public String speichern(@Valid Produkt produkt, BindingResult fields, Model model) {
-        MultipartFile file;
+    public String speichern(@RequestParam MultipartFile file,
+                            @Valid Produkt produkt, BindingResult fields,
+                            Model model, RedirectAttributes redirect) throws IOException {
         if (fields.hasErrors()) {
             return "bearbeiten";
         }
+        produkt.setDateiname(file.getOriginalFilename());
+        produkt.setDatei(file.getBytes());
         produktRepository.save(produkt);
+
+        redirect.addFlashAttribute("message", "Produkt \"" + produkt.getName() + "\" gespeichert.");
         model.addAttribute("produkte", produktRepository.findAll());
         return "redirect:/index.html";
     }
@@ -71,6 +81,20 @@ public class SimpleController {
             }
         }
         return "redirect:/index.html";
+    }
+
+    @GetMapping("/fotos/{id}")
+    public ResponseEntity<Resource> fotos(@PathVariable Long id) {
+        Produkt produkt = new Produkt();
+        if (id != null) {
+            Optional<Produkt> produktDB = produktRepository.findById(id);
+            if (produktDB.isPresent()) {
+                produkt = produktDB.get();
+            }
+        }
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(new ByteArrayResource(produkt.getDatei()));
     }
 
     @GetMapping("/warenkorb.html")
@@ -115,7 +139,7 @@ public class SimpleController {
         redirect.addFlashAttribute("message", message);
         model.addAttribute("titel", "Warenkorb");
         model.addAttribute("warenkorb", warenkorb);
-        return "redirect:warenkorb.html";
+        return "redirect:/warenkorb.html";
     }
 
     @ExceptionHandler(Exception.class)

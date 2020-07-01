@@ -28,7 +28,10 @@ public class Produkt {
     @Min(value = 5, message = "Der Preis muss größer als 5€ sein")
     private double preis = 5;
 
-    String foto;
+    private String dateiname;
+
+    @Lob
+    private byte[] datei;
 
     public Produkt() {
     }
@@ -100,8 +103,23 @@ public class Produkt {
             case KEINE_AHNUNG:
                 return "images/example-work05.jpg";
             default:
-               return "images/example-work06.jpg";
+                return "images/example-work06.jpg";
         }
     }
+
+    public String getDateiname() {
+        return this.dateiname;
+    }
+    public void setDateiname(String dateiname) {
+        this.dateiname = dateiname;
+    }
+
+    public byte[] getDatei() {
+        return datei;
+    }
+    public void setDatei(byte[] datei) {
+        this.datei = datei;
+    }
+
 }
 
