@@ -14,17 +14,14 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Optional;
 
 @Controller
+@RequestMapping(value = "/")
 public class SimpleController {
     @Autowired
     ProduktRepository produktRepository;
@@ -141,17 +138,4 @@ public class SimpleController {
         model.addAttribute("warenkorb", warenkorb);
         return "redirect:/warenkorb.html";
     }
-
-    @ExceptionHandler(Exception.class)
-    public ModelAndView handleError(HttpServletRequest req, Exception ex) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        ex.printStackTrace(pw);
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("exception", sw.toString());
-        mav.setViewName("error");
-        return mav;
-    }
-
-
 }
