@@ -11,9 +11,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Optional;
 
 @Controller
@@ -36,20 +41,24 @@ public class SimpleController {
     }
 
     @GetMapping("/fotos/{id}")
-    public ResponseEntity<Resource> fotos(@PathVariable Long id) {
+    public ResponseEntity<Resource> fotos(@PathVariable Long id) throws IOException {
         Produkt produkt = new Produkt();
+        byte[] bytes = new byte[0];
         if (id != null) {
             Optional<Produkt> produktDB = produktRepository.findById(id);
             if (produktDB.isPresent()) {
                 produkt = produktDB.get();
-            } else {
-                // TODO: "no-image" zurückgeben
+                bytes = produkt.getDatei();
+                // wenn kein Bild hochgeladen wurde, dann lade das Standard-Bild
+                if (bytes == null || bytes.length == 0) {
+                    InputStream in = getClass().getResourceAsStream("/static/images/no-image.png");
+                    bytes = in.readAllBytes();
+                }
             }
-
         }
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_JPEG)
-                .body(new ByteArrayResource(produkt.getDatei()));
+                .body(new ByteArrayResource(bytes));
     }
 
     @GetMapping("/warenkorb.html")
