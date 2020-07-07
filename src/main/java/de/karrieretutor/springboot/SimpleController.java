@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 @Controller
@@ -41,7 +44,7 @@ public class SimpleController {
     }
 
     @GetMapping("/fotos/{id}")
-    public ResponseEntity<Resource> fotos(@PathVariable Long id) throws IOException {
+    public ResponseEntity<Resource> fotos(@PathVariable Long id) throws IOException, URISyntaxException {
         Produkt produkt = new Produkt();
         byte[] bytes = new byte[0];
         if (id != null) {
@@ -51,8 +54,8 @@ public class SimpleController {
                 bytes = produkt.getDatei();
                 // wenn kein Bild hochgeladen wurde, dann lade das Standard-Bild
                 if (bytes == null || bytes.length == 0) {
-                    InputStream in = getClass().getResourceAsStream("/static/images/no-image.png");
-                    bytes = in.readAllBytes();
+                    URL imageURL = this.getClass().getClassLoader().getResource("./static/images/no-image.png");
+                    bytes = Files.readAllBytes(Paths.get(imageURL.toURI()));
                 }
             }
         }
