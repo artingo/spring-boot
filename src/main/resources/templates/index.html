@@ -1,5 +1,7 @@
 <!doctype html>
-<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<html lang="de"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title th:text="${titel}"></title>
     <link th:replace="fragments/styles"/>
@@ -52,17 +54,20 @@
                            th:href="@{/kaufen(id=${produkt.id})}">
                             <span th:text="#{button.buy}"></span>
                             <i class="material-icons">add_shopping_cart</i></a>
-                        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
-                           th:href="@{/bearbeiten.html(id=${produkt.id})}">
-                            <span th:text="#{button.edit}"></span>
-                            <i class="material-icons">edit</i></a>
-                        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
-                           title="Produkt löschen"
-                           th:href="@{/loeschen(id=${produkt.id})}"
-                           onclick="loeschenBestaetigen(this.href); return false">
-                            <span th:text="#{button.delete}"></span>
-                            <i class="material-icons">delete</i>
-                        </a>
+
+                        <span sec:authorize="isAuthenticated()">
+                            <br/>
+                            <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
+                               th:href="@{/admin/bearbeiten.html(id=${produkt.id})}"
+                               th:title="#{button.edit}">
+                                <i class="material-icons">edit</i></a>
+                            <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
+                               th:title="#{button.delete}"
+                               th:href="@{/admin/loeschen(id=${produkt.id})}"
+                               onclick="loeschenBestaetigen(this.href); return false">
+                                <i class="material-icons">delete</i>
+                            </a>
+                        </span>
                     </div>
                 </div>
             </div>

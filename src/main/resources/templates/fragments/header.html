@@ -1,4 +1,5 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <script type="text/javascript">
 function switchLanguage(select) {
     window.location.search = '?lang=' + select.value;
@@ -9,26 +10,35 @@ function switchLanguage(select) {
         <span class="mdl-layout__title"><div class="portfolio-logo"></div></span>
     </div>
     <div class="mdl-layout__header-row portfolio-navigation-row mdl-layout--large-screen-only">
+
         <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
-            <a href="index.html" class="mdl-navigation__link"
+            <a href="/index.html" class="mdl-navigation__link"
                th:classappend="${titel=='Index'}?is-active" th:text="#{nav.portfolio}"></a>
-            <a href="warenkorb.html"  class="mdl-navigation__link"
+            <a href="/warenkorb.html"  class="mdl-navigation__link"
                th:classappend="${titel=='Warenkorb'}?is-active" th:text="#{nav.cart}"></a>
-            <a href="about.html" class="mdl-navigation__link"
+            <a href="/about.html" class="mdl-navigation__link"
                th:classappend="${titel=='About'}?is-active" th:text="#{nav.about}"></a>
-            <a href="bearbeiten.html" class="mdl-navigation__link"
+            <a sec:authorize="isAuthenticated()"
+               href="/admin/bearbeiten.html" class="mdl-navigation__link"
                th:classappend="${titel=='bearbeiten'}?is-active" th:text="#{nav.product}"></a>
         </nav>
-        <div>
+        <span>
             <span th:text="#{lang.change}"></span><br/>
             <select id="locales" onchange="switchLanguage(this)">
                 <option value="" th:text="#{lang.select}"></option>
                 <option value="en" th:text="#{lang.en}"
-                    th:selected="${#strings.equals(#locale, 'en')}"></option>
+                        th:selected="${#strings.equals(#locale, 'en')}"></option>
                 <option value="de" th:text="#{lang.de}"
-                    th:selected="${#strings.equals(#locale, 'de')}"></option>
+                        th:selected="${#strings.equals(#locale, 'de')}"></option>
             </select>
-        </div>
+        </span>
+        <span>
+            <a sec:authorize="!isAuthenticated()" href="/login" class="mdl-navigation__link" th:text="#{nav.login}"></a>
+            <a sec:authorize="isAuthenticated()" href="/logout" class="mdl-navigation__link" th:text="#{nav.logout}"></a>
+        </span>
+        <span sec:authorize="isAuthenticated()">
+            User: <span sec:authentication="name"></span>
+        </span>
     </div>
 </header>
 <div class="mdl-layout__drawer mdl-layout--small-screen-only">
