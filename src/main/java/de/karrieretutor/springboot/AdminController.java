@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 @Controller
-@RequestMapping(value = "/admin")
+@RequestMapping(value = "/admin/")
 public class AdminController {
     @Autowired
     ProduktRepository produktRepository;
@@ -30,7 +30,7 @@ public class AdminController {
     }
 */
 
-    @GetMapping("/bearbeiten.html")
+    @GetMapping("bearbeiten.html")
     public String bearbeiten(@RequestParam(required = false, name = "id") Long id, Model model) {
         Produkt aktuellesProdukt = new Produkt();
         if (id != null) {
@@ -41,10 +41,10 @@ public class AdminController {
         }
         model.addAttribute("titel", "bearbeiten");
         model.addAttribute("produkt", aktuellesProdukt);
-        return "/admin/bearbeiten";
+        return "admin/bearbeiten";
     }
 
-    @PostMapping("/speichern")
+    @PostMapping("speichern")
     public String speichern(@RequestParam MultipartFile file,
                             @Valid Produkt produkt, BindingResult fields,
                             Model model, RedirectAttributes redirect) throws IOException {
@@ -60,7 +60,7 @@ public class AdminController {
         return "redirect:/index.html";
     }
 
-    @GetMapping("/loeschen")
+    @GetMapping("loeschen")
     public String loeschen(@RequestParam Long id, Model model, RedirectAttributes redirect) {
         if (id != null) {
             Optional<Produkt> produktDB = produktRepository.findById(id);
