@@ -12,6 +12,7 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import java.util.Locale;
+import java.util.TimeZone;
 
 @SpringBootApplication
 public class Application extends WebMvcConfigurerAdapter {
@@ -24,8 +25,9 @@ public class Application extends WebMvcConfigurerAdapter {
 
     @Bean
     public LocaleResolver localeResolver() {
+        TimeZone.setDefault(TimeZone.getTimeZone("CET"));
         SessionLocaleResolver slr = new SessionLocaleResolver();
-        slr.setDefaultLocale(Locale.GERMAN);
+        slr.setDefaultLocale(new Locale("de"));
         return slr;
     }
 
@@ -40,6 +42,4 @@ public class Application extends WebMvcConfigurerAdapter {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor());
     }
-
-
 }
