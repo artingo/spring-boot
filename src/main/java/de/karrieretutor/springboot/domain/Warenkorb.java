@@ -5,7 +5,6 @@ import java.util.List;
 
 public class Warenkorb {
     private List<Produkt> produkte = new ArrayList<>();
-    private double gesamtpreis = 0;
     private Long userId;
 
     public Warenkorb() {}
@@ -21,11 +20,12 @@ public class Warenkorb {
         this.produkte = produkte;
     }
 
-    public double getGesamtpreis() {
-        return gesamtpreis;
-    }
-    public void setGesamtpreis(double gesamtpreis) {
-        this.gesamtpreis = gesamtpreis;
+    public String getGesamtpreis() {
+        double gesamtpreis = 0;
+        for(Produkt p : produkte) {
+            gesamtpreis += p.getPreis();
+        }
+        return String.format("%.2f", gesamtpreis);
     }
 
     public Long getUserId() {
@@ -34,4 +34,5 @@ public class Warenkorb {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
+
 }

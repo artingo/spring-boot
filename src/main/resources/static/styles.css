@@ -181,3 +181,15 @@ footer {
     width: 8em;
     font-weight: 700;
 }
+
+.mdl-data-table {
+    margin: 2em 8px;
+}
+.mdl-data-table th {
+    background-color: #EEEEEE;
+    font-size: larger;
+}
+
+.mdl-data-table tfoot {
+    font-size: larger;
+}

@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title th:text="${titel}"></title>
+	<link th:replace="fragments/styles"/>
+
+	<script type="text/javascript" src="dialog-polyfill.js"></script>
+	<script type="text/javascript" language="JavaScript">
+    window.onload = function () {
+        var dialog = document.querySelector('dialog');
+        if (!dialog.showModal) {
+          dialogPolyfill.registerDialog(dialog);
+        }
+    }
+
+    function loeschenBestaetigen(url) {
+        document.querySelector('#loeschenLink').href = url;
+        document.querySelector('dialog').showModal();
+    }
+
+	</script>
+</head>
+<body>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+	<div th:replace="fragments/header"></div>
+	<main class="mdl-layout__content">
+		<div class="portfolio-max-width">
+			<button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+			        style="float:right; font-size:larger">
+				Jetzt kaufen</button>
+			<h2 th:if="${warenkorb.produkte.isEmpty()}" th:text="#{cart.no.products}"></h2>
+			<h4 th:if="${message}" th:text="${message}"></h4>
+
+			<table class="mdl-data-table mdl-cell--10-col mdl-js-data-table mdl-shadow--4dp">
+			<thead>
+				<tr>
+					<th class="mdl-data-table__cell--non-numeric" width="20%"th:text="#{table.image}"></th>
+					<th class="mdl-data-table__cell--non-numeric" th:text="#{table.description}"></th>
+					<th width="20%" th:text="#{table.price}"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="produkt:${warenkorb.produkte}">
+					<td class="mdl-data-table__cell--non-numeric">
+						<img th:if="${produkt.datei}" th:src="@{/fotos/}+${produkt.id}"
+				         th:alt="${produkt.dateiname}" height="30" border="0"/>
+					</td>
+					<td th:text="${produkt.name}" class="mdl-data-table__cell--non-numeric"></td>
+					<td><span th:text="${produkt.preisFormatiert}"/>  &euro;</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td></td>
+					<td class="mdl-data-table__cell--non-numeric">
+						Anzahl der Produkte: <span th:text="${warenkorb.produkte.size()}"/>
+					</td>
+					<td>Gesamtpreis: <span th:text="${warenkorb.gesamtpreis}"/> &euro;</td>
+				</tr>
+			</tfoot>
+			</table>
+
+			<form action="#" method="post" autocomplete="on">
+			<div class="mdl-cell mdl-cell--10-col mdl-card mdl-shadow--4dp">
+				<div class="mdl-card__supporting-text">
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+							<input class="mdl-textfield__input" type="text" id="vorname">
+							<label class="mdl-textfield__label" for="street">Vorname</label>
+							<span class="mdl-textfield__error"></span>
+						</div>
+
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+							<input class="mdl-textfield__input" type="text" id="name">
+							<label class="mdl-textfield__label" for="name">Name</label>
+							<span class="mdl-textfield__error"></span>
+						</div>
+
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+							style="width:604px">
+							<input class="mdl-textfield__input" type="text" id="street">
+							<label class="mdl-textfield__label" for="street">Straße und Hausnummer</label>
+							<span class="mdl-textfield__error"></span>
+						</div><br/>
+
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+							<input class="mdl-textfield__input" type="text" id="plz">
+							<label class="mdl-textfield__label" for="street">PLZ</label>
+							<span class="mdl-textfield__error"></span>
+						</div>
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+							<input class="mdl-textfield__input" type="text" id="ort">
+							<label class="mdl-textfield__label" for="ort">Ort</label>
+							<span class="mdl-textfield__error"></span>
+						</div>
+				</div>
+			</div>
+
+			<div class="mdl-cell mdl-cell--10-col mdl-card mdl-shadow--4dp">
+				<div class=" mdl-card__supporting-text">
+					<ul class="mdl-list">
+						<li class="mdl-list__item mdl-list__item--three-line">
+							<span class="mdl-list__item-primary-content">
+								<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="list-option-1">
+									<input type="radio" id="list-option-1" class="mdl-radio__button" name="options" value="1"/>
+									<span class="mdl-radio__label">Bankeinzug</span>
+								</label>
+								<span class="mdl-list__item-text-body">
+									<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+										<input class="mdl-textfield__input" type="text" id="iban">
+										<label class="mdl-textfield__label" for="iban">IBAN</label>
+										<span class="mdl-textfield__error"></span>
+									</div>
+								</span>
+							</span>
+						</li>
+
+						<li class="mdl-list__item mdl-list__item--three-line">
+				    <span class="mdl-list__item-primary-content">
+					    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="list-option-2">
+			          <input type="radio" id="list-option-2" class="mdl-radio__button" name="options" value="2"/>
+						    <span class="mdl-radio__label">Kreditkarte</span>
+					    </label>
+							<span class="mdl-list__item-text-body">
+								<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+									<input class="mdl-textfield__input" type="text" id="kreditkarte">
+									<label class="mdl-textfield__label" for="kreditkarte">Kreditkarten-Nummer</label>
+									<span class="mdl-textfield__error"></span>
+								</div>
+							</span>
+				    </span>
+						</li>
+
+						<li class="mdl-list__item mdl-list__item--three-line">
+				    <span class="mdl-list__item-primary-content">
+					    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="list-option-3">
+			          <input type="radio" id="list-option-3" class="mdl-radio__button" name="options" value="3"/>
+						    <span class="mdl-radio__label">Paypal</span>
+					    </label>
+							<span class="mdl-list__item-text-body">
+								<a href="https://developer.paypal.com/classic-home/" target="paypal"
+								   onclick="window.open('', 'paypal', 'width=500,height=600,top=200')">
+									<img src="/images/paypal-button.png"/>
+								</a>
+							</span>
+				    </span>
+						</li>
+					</ul>
+				</div>
+			</div>
+			</form>
+		</div>
+
+		<dialog class="mdl-dialog" style="width:400px; top: 100px">
+			<h4 class="mdl-dialog__title">Sind Sie sicher?</h4>
+			<div class="mdl-dialog__content">
+				<p>Wollen Sie dieses Produkt wirklich entfernen?</p>
+			</div>
+			<div class="mdl-dialog__actions">
+				<a href="#" id="loeschenLink">
+					<button type="button" class="mdl-button">Ja</button>
+				</a>
+				<button type="button" class="mdl-button close"
+				        onclick="document.querySelector('dialog').close()">Nein
+				</button>
+			</div>
+		</dialog>
+		<footer th:replace="fragments/footer"/>
+	</main>
+</div>
+</body>
+</html>

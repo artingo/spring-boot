@@ -13,14 +13,22 @@ function switchLanguage(select) {
 
         <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
             <a href="/index.html" class="mdl-navigation__link"
-               th:classappend="${titel=='Index'}?is-active" th:text="#{nav.portfolio}"></a>
-            <a href="/warenkorb.html"  class="mdl-navigation__link"
-               th:classappend="${titel=='Warenkorb'}?is-active" th:text="#{nav.cart}"></a>
-            <a href="/about.html" class="mdl-navigation__link"
-               th:classappend="${titel=='About'}?is-active" th:text="#{nav.about}"></a>
+                 th:classappend="${titel=='Index'}?is-active" th:text="#{nav.portfolio}"></a>
+            <a href="/warenkorb.html" sec:authorize="!isAuthenticated()" class="mdl-navigation__link"
+               th:classappend="${titel=='Warenkorb'}?is-active">
+                <span th:text="#{nav.cart}" class="mdl-badge"
+                  th:data-badge="${warenkorb.produkte.size()}"/>
+            </a>
+            <a href="/checkout.html" sec:authorize="!isAuthenticated()" th:if="${titel=='Checkout' || !warenkorb.produkte.isEmpty()}"
+               class="mdl-navigation__link" th:classappend="${titel=='Checkout'}?is-active">
+                <span th:text="#{button.checkout}"></span>
+                <i class="material-icons">exit_to_app</i>
+            </a>
             <a sec:authorize="isAuthenticated()"
                href="/admin/bearbeiten.html" class="mdl-navigation__link"
                th:classappend="${titel=='bearbeiten'}?is-active" th:text="#{nav.product}"></a>
+            <a href="/about.html" class="mdl-navigation__link"
+               th:classappend="${titel=='About'}?is-active" th:text="#{nav.about}"></a>
         </nav>
         <span>
             <span th:text="#{lang.change}"></span><br/>

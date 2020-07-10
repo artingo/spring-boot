@@ -23,13 +23,6 @@ public class AdminController {
     @Autowired
     ProduktRepository produktRepository;
 
-/*
-    @GetMapping("/*")
-    public String adminHomePage(Model model) {
-        return "redirect:bearbeiten.html";
-    }
-*/
-
     @GetMapping("bearbeiten.html")
     public String bearbeiten(@RequestParam(required = false, name = "id") Long id, Model model) {
         Produkt aktuellesProdukt = new Produkt();
