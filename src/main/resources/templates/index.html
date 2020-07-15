@@ -51,12 +51,12 @@
                     </div>
                     <div class="mdl-card__actions mdl-card--border">
                         <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
+                           sec:authorize="!isAuthenticated()"
                            th:href="@{/kaufen(id=${produkt.id})}">
                             <span th:text="#{button.buy}"></span>
                             <i class="material-icons">add_shopping_cart</i></a>
 
                         <span sec:authorize="isAuthenticated()">
-                            <br/>
                             <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
                                th:href="@{/admin/bearbeiten.html(id=${produkt.id})}"
                                th:title="#{button.edit}">

@@ -1,9 +1,8 @@
 package de.karrieretutor.springboot.domain;
 
-import org.hibernate.validator.constraints.NotBlank;
-
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -13,20 +12,20 @@ public class Produkt {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank()
+    @NotBlank(message = "{validation.produkt.name}")
     private String name;
 
-    @NotBlank(message = "Bitte geben Sie ein/e Herkunftsland/-region ein")
+    @NotBlank(message = "{validation.produkt.herkunft}")
     private String herkunft;
 
-    @NotNull(message = "Bitte geben Sie eine Kategorie ein")
+    @NotNull(message = "{validation.produkt.kategorie}")
     private Kategorie kategorie;
 
-    @NotNull(message = "Bitte geben Sie eine Unterkategorie ein")
+    @NotNull(message = "{validation.produkt.unterkategorie}")
     private Unterkategorie unterkategorie;
 
-    @Min(value = 5, message = "Der Preis muss größer als 5€ sein")
-    private double preis = 5;
+    @Min(value = 1, message = "{validation.produkt.preis}")
+    private double preis = 1;
 
     private String dateiname;
 
@@ -86,25 +85,6 @@ public class Produkt {
     }
     public String getPreisFormatiert() {
         return String.format("%.2f", this.preis);
-    }
-
-    public String getFoto() {
-        if (this.unterkategorie == null)
-            return "images/example-work07.jpg";
-        switch (this.unterkategorie) {
-            case SUBKAT1:
-                return "images/example-work01.jpg";
-            case SUBKAT2:
-                return "images/example-work02.jpg";
-            case SUBKAT3:
-                return "images/example-work03.jpg";
-            case SUBKAT4:
-                return "images/example-work04.jpg";
-            case KEINE_AHNUNG:
-                return "images/example-work05.jpg";
-            default:
-                return "images/example-work06.jpg";
-        }
     }
 
     public String getDateiname() {

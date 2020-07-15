@@ -42,7 +42,8 @@ public class AdminController {
                             @Valid Produkt produkt, BindingResult fields,
                             Model model, RedirectAttributes redirect) throws IOException {
         if (fields.hasErrors()) {
-            return "bearbeiten";
+            // TODO: File mitliefern
+            return "admin/bearbeiten";
         }
         produkt.setDateiname(file.getOriginalFilename());
         produkt.setDatei(file.getBytes());

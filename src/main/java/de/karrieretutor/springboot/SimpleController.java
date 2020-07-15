@@ -61,6 +61,7 @@ public class SimpleController {
             }
         }
         return ResponseEntity.ok()
+                // TODO: Dateiname zurückliefern
                 .contentType(MediaType.IMAGE_JPEG)
                 .body(new ByteArrayResource(bytes));
     }
