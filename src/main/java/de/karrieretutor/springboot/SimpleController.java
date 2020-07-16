@@ -104,8 +104,7 @@ public class SimpleController {
                 warenkorb.getProdukte().remove(gefundenesProdukt);
                 message = messageSource.getMessage("cart.removed", new Object[]{gefundenesProdukt.getName()}, locale);
             } else {
-                message = "Produkt mit ID \"" + id + "\" nicht im Warenkorb gefunden.";
-                message = messageSource.getMessage("cart.removed", new Object[]{gefundenesProdukt.getName()}, locale);
+                message = messageSource.getMessage("cart.not.found", new Object[]{gefundenesProdukt.getName()}, locale);
             }
         }
         redirect.addFlashAttribute("message", message);
