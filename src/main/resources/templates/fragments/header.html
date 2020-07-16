@@ -14,7 +14,7 @@ function switchLanguage(select) {
         <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
             <a href="/index.html" class="mdl-navigation__link"
                  th:classappend="${titel=='Index'}?is-active" th:text="#{nav.portfolio}"></a>
-            <a href="/warenkorb.html" sec:authorize="!isAuthenticated()" class="mdl-navigation__link"
+                <a href="/warenkorb.html" sec:authorize="!isAuthenticated()" class="mdl-navigation__link"
                th:classappend="${titel=='Warenkorb'}?is-active">
                 <span th:text="#{nav.cart}" class="mdl-badge"
                   th:data-badge="${warenkorb.produkte.size()}"/>
