@@ -4,6 +4,7 @@ import de.karrieretutor.springboot.domain.Produkt;
 import de.karrieretutor.springboot.domain.ProduktRepository;
 import de.karrieretutor.springboot.domain.Warenkorb;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -22,11 +23,15 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Locale;
 import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/")
 public class SimpleController {
+    @Autowired
+    MessageSource messageSource;
+
     @Autowired
     ProduktRepository produktRepository;
     Warenkorb warenkorb = new Warenkorb();
@@ -74,14 +79,14 @@ public class SimpleController {
     }
 
     @GetMapping("/kaufen")
-    public String kaufen(@RequestParam Long id, Model model, RedirectAttributes redirect) {
-        String message = "Produkt mit der ID \"" + id + "\" nicht gefunden.";
+    public String kaufen(@RequestParam Long id, Model model, RedirectAttributes redirect, Locale locale) {
+        String message = messageSource.getMessage("cart.product.id.not.found", new Object[]{id}, locale);
         if (id != null) {
             Optional<Produkt> produktDB = produktRepository.findById(id);
             if (produktDB.isPresent()) {
                 Produkt aktuellesProdukt = produktDB.get();
                 warenkorb.getProdukte().add(aktuellesProdukt);
-                message = "Produkt \"" + aktuellesProdukt.getName() + "\" zum Warenkorb hinzugefügt.";
+                message = messageSource.getMessage("cart.added", new Object[]{aktuellesProdukt.getName()}, locale);
             }
         }
         redirect.addFlashAttribute("message", message);
@@ -89,17 +94,18 @@ public class SimpleController {
     }
 
     @GetMapping("/entfernen")
-    public String entfernen(@RequestParam Long id, Model model, RedirectAttributes redirect) {
-        String message = "Produkt nicht gefunden.";
+    public String entfernen(@RequestParam Long id, Model model, RedirectAttributes redirect, Locale locale) {
+        String message = messageSource.getMessage("cart.product.id.not.found", new Object[]{id}, locale);
         if (id != null) {
             Produkt gefundenesProdukt = warenkorb.getProdukte().stream()
                     .filter(p -> id.equals(p.getId()))
                     .findFirst().get();
             if (gefundenesProdukt != null) {
                 warenkorb.getProdukte().remove(gefundenesProdukt);
-                message = "Produkt \"" + gefundenesProdukt.getName() + "\" vom Warenkorb entfernt.";
+                message = messageSource.getMessage("cart.removed", new Object[]{gefundenesProdukt.getName()}, locale);
             } else {
                 message = "Produkt mit ID \"" + id + "\" nicht im Warenkorb gefunden.";
+                message = messageSource.getMessage("cart.removed", new Object[]{gefundenesProdukt.getName()}, locale);
             }
         }
         redirect.addFlashAttribute("message", message);

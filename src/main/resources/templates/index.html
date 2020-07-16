@@ -73,14 +73,16 @@
             </div>
         </div>
         <dialog class="mdl-dialog" style="width:400px; top: 100px">
-            <h4 class="mdl-dialog__title">Sind Sie sicher?</h4>
+            <h4 class="mdl-dialog__title" th:text="#{title.dialog}"/>
             <div class="mdl-dialog__content">
-                <p>Wollen Sie dieses Produkt wirklich löschen?</p>
+                <p th:text="#{label.dialog}"/>
             </div>
             <div class="mdl-dialog__actions">
-                <a href="#" id="loeschenLink"><button type="button" class="mdl-button">Ja</button></a>
-                <button type="button" class="mdl-button close"
-                onclick="document.querySelector('dialog').close()">Nein</button>
+                <a href="#" id="loeschenLink">
+                    <button type="button" class="mdl-button" th:text="#{button.yes}"/>
+                </a>
+                <button type="button" class="mdl-button close" th:text="#{button.no}"
+                    onclick="document.querySelector('dialog').close()"/>
             </div>
         </dialog>
         <footer th:replace="fragments/footer"/>
