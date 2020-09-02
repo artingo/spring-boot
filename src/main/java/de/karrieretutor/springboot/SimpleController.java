@@ -3,6 +3,8 @@ package de.karrieretutor.springboot;
 import de.karrieretutor.springboot.domain.Produkt;
 import de.karrieretutor.springboot.domain.ProduktRepository;
 import de.karrieretutor.springboot.domain.Warenkorb;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.core.io.ByteArrayResource;
@@ -29,12 +31,14 @@ import java.util.Optional;
 @Controller
 @RequestMapping(value = "/")
 public class SimpleController {
+    Logger LOG = LoggerFactory.getLogger(SimpleController.class);
+
     @Autowired
     MessageSource messageSource;
 
     @Autowired
     ProduktRepository produktRepository;
-    Warenkorb warenkorb = new Warenkorb();
+    public Warenkorb warenkorb = new Warenkorb();
 
     @GetMapping("/")
     public String homePage(Model model) {
@@ -80,7 +84,9 @@ public class SimpleController {
 
     @GetMapping("/kaufen")
     public String kaufen(@RequestParam Long id, Model model, RedirectAttributes redirect, Locale locale) {
-        String message = messageSource.getMessage("cart.product.id.not.found", new Object[]{id}, locale);
+        LOG.debug("/kaufen id:{}, locale:{}", id, locale);
+        LOG.trace("/kaufen model:{}", model);
+        String message = messageSource.getMessage("cart.product.id.not.found", new String[]{String.valueOf(id)}, locale);
         if (id != null) {
             Optional<Produkt> produktDB = produktRepository.findById(id);
             if (produktDB.isPresent()) {
