@@ -1,8 +1,6 @@
 package de.karrieretutor.springboot;
 
-import de.karrieretutor.springboot.domain.Produkt;
-import de.karrieretutor.springboot.domain.ProduktRepository;
-import de.karrieretutor.springboot.domain.Warenkorb;
+import de.karrieretutor.springboot.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
@@ -25,6 +20,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -39,16 +36,27 @@ public class SimpleController {
     @Autowired
     ProduktRepository produktRepository;
     public Warenkorb warenkorb = new Warenkorb();
+    List<Produkt> produkte = new ArrayList<>();
 
     @GetMapping("/")
     public String homePage(Model model) {
         return "redirect:/index.html";
     }
 
+    @GetMapping("/index.html")
+    public String shop(Model model, Locale locale) {
+        model.addAttribute("titel", "Index");
+        if (produkte.isEmpty()) {
+            produktRepository.findAll().forEach(produkte::add);
+        }
+        model.addAttribute("produkte", produkte);
+        model.addAttribute("warenkorb", this.warenkorb);
+        return "index";
+    }
+
     @GetMapping("/{name}.html")
     public String htmlMapping(@PathVariable(name = "name") String name, Model model) {
         model.addAttribute("titel", StringUtils.capitalize(name));
-        model.addAttribute("produkte", produktRepository.findAll());
         model.addAttribute("warenkorb", this.warenkorb);
         return name;
     }
@@ -73,13 +81,6 @@ public class SimpleController {
                 // TODO: Dateiname zurückliefern
                 .contentType(MediaType.IMAGE_JPEG)
                 .body(new ByteArrayResource(bytes));
-    }
-
-    @GetMapping("/warenkorb.html")
-    public String ladeWarenkorb(@RequestParam(required = false) Long id, Model model) {
-        model.addAttribute("titel", "Warenkorb");
-        model.addAttribute("warenkorb", this.warenkorb);
-        return "warenkorb";
     }
 
     @GetMapping("/kaufen")

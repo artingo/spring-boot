@@ -31,7 +31,7 @@
 				<tbody>
 					<tr th:each="produkt:${warenkorb.produkte}">
 						<td class="mdl-data-table__cell--non-numeric">
-							<img th:if="${produkt.datei}" th:src="@{/fotos/}+${produkt.id}"
+							<img th:if="${produkt.datei}" th:src="'data:image/jpeg;base64,'+${produkt.date64}"
 					         th:alt="${produkt.dateiname}" height="30" border="0"/>
 						</td>
 						<td th:text="${produkt.name}" class="mdl-data-table__cell--non-numeric"></td>

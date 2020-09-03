@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Base64;
 
 @Entity
 public class Produkt {
@@ -108,6 +109,10 @@ public class Produkt {
     }
     public void setDatei(byte[] datei) {
         this.datei = datei;
+    }
+
+    public String getDate64() {
+        return Base64.getEncoder().encodeToString(datei);
     }
 
 }
