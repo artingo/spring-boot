@@ -1,5 +1,7 @@
 package de.karrieretutor.springboot.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -29,6 +31,7 @@ public class Produkt {
 
     private String dateiname;
 
+    @JsonIgnore
     @Lob
     private byte[] datei;
 
@@ -40,6 +43,12 @@ public class Produkt {
         this.herkunft = herkunft;
         this.kategorie = kategorie;
         this.unterkategorie = unterkategorie;
+    }
+
+    public Produkt(String name, String herkunft, Kategorie kategorie, Unterkategorie unterkategorie, Long id, double preis) {
+        this(name, herkunft, kategorie, unterkategorie);
+        this.id = id;
+        this.preis = preis;
     }
 
     public Long getId() {
