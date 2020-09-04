@@ -1,6 +1,8 @@
 package de.karrieretutor.springboot;
 
-import de.karrieretutor.springboot.domain.*;
+import de.karrieretutor.springboot.domain.Produkt;
+import de.karrieretutor.springboot.domain.ProduktRepository;
+import de.karrieretutor.springboot.domain.Warenkorb;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
@@ -43,6 +48,11 @@ public class SimpleController {
         return "redirect:/index.html";
     }
 
+    @GetMapping("/app")
+    public String app() {
+        return "redirect:/app/index.html";
+    }
+
     @GetMapping("/index.html")
     public String shop(Model model, Locale locale) {
         model.addAttribute("titel", "Index");
@@ -63,12 +73,10 @@ public class SimpleController {
 
     @GetMapping("/fotos/{id}")
     public ResponseEntity<Resource> fotos(@PathVariable Long id) throws IOException, URISyntaxException {
-        Produkt produkt = new Produkt();
         byte[] bytes = new byte[0];
         if (id != null) {
-            Optional<Produkt> produktDB = produktRepository.findById(id);
-            if (produktDB.isPresent()) {
-                produkt = produktDB.get();
+            Produkt produkt = getProdukt(id);
+            if (produkt != null) {
                 bytes = produkt.getDatei();
                 // wenn kein Bild hochgeladen wurde, dann lade das Standard-Bild
                 if (bytes == null || bytes.length == 0) {
@@ -78,22 +86,18 @@ public class SimpleController {
             }
         }
         return ResponseEntity.ok()
-                // TODO: Dateiname zurückliefern
-                .contentType(MediaType.IMAGE_JPEG)
-                .body(new ByteArrayResource(bytes));
+            .contentType(MediaType.IMAGE_JPEG)
+            .body(new ByteArrayResource(bytes));
     }
 
     @GetMapping("/kaufen")
     public String kaufen(@RequestParam Long id, Model model, RedirectAttributes redirect, Locale locale) {
-        LOG.debug("/kaufen id:{}, locale:{}", id, locale);
-        LOG.trace("/kaufen model:{}", model);
         String message = messageSource.getMessage("cart.product.id.not.found", new String[]{String.valueOf(id)}, locale);
         if (id != null) {
-            Optional<Produkt> produktDB = produktRepository.findById(id);
-            if (produktDB.isPresent()) {
-                Produkt aktuellesProdukt = produktDB.get();
-                warenkorb.getProdukte().add(aktuellesProdukt);
-                message = messageSource.getMessage("cart.added", new Object[]{aktuellesProdukt.getName()}, locale);
+            Produkt produkt = getProdukt(id);
+            if (produkt != null) {
+                warenkorb.getProdukte().add(produkt);
+                message = messageSource.getMessage("cart.added", new String[]{produkt.getName()}, locale);
             }
         }
         redirect.addFlashAttribute("message", message);
@@ -122,5 +126,16 @@ public class SimpleController {
         model.addAttribute("titel", "Warenkorb");
         model.addAttribute("warenkorb", warenkorb);
         return "redirect:/warenkorb.html";
+    }
+
+    private Produkt getProdukt(Long id) {
+        Optional<Produkt> produktDB;
+        if (!produkte.isEmpty()) {
+            produktDB = produkte.stream().filter(p -> p.getId() == id).findFirst();
+        } else {
+            LOG.debug("loading from Repository");
+            produktDB = produktRepository.findById(id);
+        }
+        return produktDB.isPresent() ? produktDB.get() : null;
     }
 }
