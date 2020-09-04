@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="de">
+<head>
+	<title>Shop</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="description" content="A web shop that uses Material Design Lite.">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+
+	<link rel="stylesheet" href="/fonts.css"/>
+	<link rel="stylesheet" href="/material.grey-pink.min.css"/>
+	<link rel="stylesheet" href="/styles.css"/>
+	<link rel="stylesheet" href="/icons.css"/>
+
+	<script src="/vue.js"></script>
+	<script src="components.js"></script>
+	<script language="JavaScript">
+	window.onload = function() {
+		var app = new Vue({
+			el: '#app',
+			data: function() {
+				return {
+					warenkorb: {produkte: []}
+				}
+			},
+			methods: {
+			},
+			created: function () {
+				let tempWarenkorb = localStorage.getItem("warenkorb")
+				if (tempWarenkorb) {
+					this.warenkorb = JSON.parse(tempWarenkorb)
+				}
+			}
+		});
+	}
+	</script>
+</head>
+<body>
+<div id="app" class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+	<app-header active="about" :badge="warenkorb.produkte.length"></app-header>
+	<drawer></drawer>
+
+	<main class="mdl-layout__content">
+		<div class="portfolio-max-width">
+			<div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp">
+				<div class="mdl-card__title">
+					<h2 class="mdl-card__title-text">Über uns</h2>
+				</div>
+				<div class="mdl-card__media">
+					<img class="article-image" src="/images/about-header.jpg" border="0" alt="">
+				</div>
+
+				<div class="mdl-grid portfolio-copy">
+					<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Über diese Web-App</h3>
+					<div class="mdl-cell mdl-cell--8-col mdl-card__supporting-text no-padding ">
+						<p>Diese <a href="https://de.wikipedia.org/wiki/Webanwendung" target="_blank">Web-App</a> ist im Rahmen des
+							<a href="https://www.karrieretutor.de/azav/java/" target="_blank">Java-Kurses</a>
+							von <a href="https://www.karrieretutor.de" target="_blank">karriere tutor</a>&trade; entstanden.
+							Der Server-Teil basiert auf <a href="https://spring.io/projects/spring-boot" target="_blank">Spring Boot</a>
+							und verwendet <a href="https://de.wikipedia.org/wiki/Representational_State_Transfer" target="_blank">REST-Services</a>
+							im <a href="https://de.wikipedia.org/wiki/JavaScript_Object_Notation" target="_blank">JSON-Format</a>.
+							Der Client-Teil verwendet <a href="https://getmdl.io/started/index.html" target="_blank">Material Design Lite</a>
+							und <a href="https://vuejs.org/v2/guide/" target="_blank">Vue.js</a>. Der Source-Code befindet sich auf
+							<a href="https://github.com/artingo/spring-boot" target="_blank">GitHub</a> und eine Demo-Version wird auf
+							<a href="https://karrieretutor-shop.herokuapp.com" target="_blank">Heroku</a> gehosted.
+						</p>
+					</div>
+
+					<div class="mdl-cell mdl-cell--8-col mdl-card__supporting-text no-padding">
+						<strong>&copy;opyright</strong>
+						<div itemscope itemtype="http://schema.org/ScholarlyArticle">
+							<address class="mdl-card__supporting-text no-padding">
+								<a href="http://artingo.net" target="_blank">artingo.net</a><br/>
+								<span itemprop="author">Alfred Walther</span><br/>
+								Elisabethenstr. 19<br/>
+								D-61239 Ober-Mörlen, Germany
+							</address>
+							<p></p>
+							<p>Em@il: <a href="mailTo://office@artingo.net">office@artingo.net</a><br/>
+								Skype: <a href="skype:artingo.net?chat">artingo.net</a>
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<app-footer></app-footer>
+	</main>
+</div>
+<script src="/material.min.js"></script>
+</body>
+</html>

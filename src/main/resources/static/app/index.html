@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="de">
+<head>
+	<title>Shop</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="description" content="A web shop that uses Material Design Lite.">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+
+	<link rel="stylesheet" href="/fonts.css"/>
+	<link rel="stylesheet" href="/material.grey-pink.min.css"/>
+	<link rel="stylesheet" href="/styles.css"/>
+	<link rel="stylesheet" href="/icons.css"/>
+
+	<script src="/vue.js"></script>
+	<script src="components.js"></script>
+	<script language="JavaScript">
+	window.onload = function() {
+		var app = new Vue({
+			el: '#app',
+			data: function() {
+				return {
+					produkte:[],
+					warenkorb: {
+						produkte: [],
+						gesamtpreis: 0.0
+					},
+					message: "",
+				}
+			},
+			methods: {
+				kaufen: function(id) {
+					this.produkte.forEach((produkt, index, produkte) => {
+						if (produkt.id == id) {
+							this.warenkorb.gesamtpreis += produkt.preis
+							this.warenkorb.produkte.push(produkt)
+							this.message = `Produkt "${produkt.name}" zum Warenkorb hinzugefügt.`
+							localStorage.setItem("warenkorb", JSON.stringify(this.warenkorb))
+							return
+						}
+					})
+				}
+			},
+			created: function () {
+				let tempWarenkorb = localStorage.getItem("warenkorb")
+				if (tempWarenkorb) {
+					this.warenkorb = JSON.parse(tempWarenkorb)
+				}
+				fetch("/app/produkte", {headers: {"Content-Type": "application/json; charset=utf-8"}})
+					.then(res => res.json())
+					.then(responseData => {
+						this.produkte = responseData
+					})
+			}
+		});
+	}
+	</script>
+</head>
+<body>
+<div id="app" class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+	<app-header active="index"
+		:badge="warenkorb.produkte.length"></app-header>
+	<drawer></drawer>
+
+	<main class="mdl-layout__content">
+		<div class="portfolio-max-width">
+			<h4 v-show="message">{{message}}</h4>
+			<div class="mdl-grid">
+				<div v-for="produkt in produkte"
+				     class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--12-col-phone
+							mdl-card mdl-shadow--4dp portfolio-card">
+					<div class="mdl-card__media">
+						<img :src="'/fotos/'+produkt.id" :alt="produkt.name" width="100%" border="0"/>
+					</div>
+					<div class="mdl-card__title">
+						<h2 class="mdl-card__title-text">{{produkt.name}}</h2>
+					</div>
+					<div class="mdl-card__supporting-text">
+						<label>Herkunft:</label>  {{produkt.herkunft}}<br/>
+						<label>Kategorie:</label> {{produkt.kategorie}}<br/>
+						<label>Farbe:</label>     {{produkt.unterkategorie}}<br/>
+						<label>Preis:</label>     {{produkt.preisFormatiert}} &euro;
+					</div>
+					<div class="mdl-card__actions mdl-card--border">
+						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
+						   href="#" @click="kaufen(produkt.id)">
+							Kaufen
+							<i class="material-icons">add_shopping_cart</i></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<app-footer></app-footer>
+	</main>
+</div>
+<script src="/material.min.js"></script>
+</body>
+</html>

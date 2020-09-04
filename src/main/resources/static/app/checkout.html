@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="de">
+<head>
+	<title>Warenkorb</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="description" content="A web shop that uses Material Design Lite.">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+
+	<link rel="stylesheet" href="/fonts.css"/>
+	<link rel="stylesheet" href="/material.grey-pink.min.css"/>
+	<link rel="stylesheet" href="/styles.css"/>
+	<link rel="stylesheet" href="/icons.css"/>
+
+	<script src="/vue.js"></script>
+	<script src="components.js"></script>
+	<script type="text/javascript" language="JavaScript">
+		window.onload = function () {
+			var app = new Vue({
+				el: '#app',
+				data: {
+					warenkorb: {
+						produkte: [],
+						gesamtpreis: 0.0
+					}
+				},
+				methods: {},
+				created: function () {
+					let tempWarenkorb = localStorage.getItem("warenkorb")
+					if (tempWarenkorb) {
+						this.warenkorb = JSON.parse(tempWarenkorb)
+					}
+				}
+			})
+		}
+	</script>
+</head>
+<body>
+<div id="app" class="mdl-layout mdl-js-layout mdl-layout--fixed-header has-drawer is-upgraded">
+	<app-header active="checkout" :badge="warenkorb.produkte.length"></app-header>
+	<drawer></drawer>
+
+	<main class="mdl-layout__content">
+		<div class="portfolio-max-width">
+			<button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+			        style="float:right; font-size:larger" data-upgraded=",MaterialButton,MaterialRipple">Jetzt kaufen<span
+				class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></button>
+
+			<div class="mdl-cell mdl-cell--10-col mdl-card mdl-shadow--4dp">
+				<div class="mdl-card__title">
+					<span class="mdl-card__title-text">Warenkorb</span>
+				</div>
+				<table class="mdl-data-table mdl-js-data-table" data-upgraded=",MaterialDataTable">
+					<thead>
+					<tr>
+						<th class="mdl-data-table__cell--non-numeric" width="20%">Bild</th>
+						<th class="mdl-data-table__cell--non-numeric">Produkt</th>
+						<th width="20%">Preis</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr v-for="produkt in warenkorb.produkte">
+						<td class="mdl-data-table__cell--non-numeric">
+							<img :src="'/fotos/'+produkt.id" :alt="produkt.name" height="30" border="0"/>
+						</td>
+						<td class="mdl-data-table__cell--non-numeric">{{produkt.name}}</td>
+						<td>{{produkt.preisFormatiert}} €</td>
+					</tr>
+					</tbody>
+					<tfoot>
+					<tr>
+						<td></td>
+						<td class="mdl-data-table__cell--non-numeric">
+							Anzahl der Produkte:
+							{{warenkorb.produkte.length}}
+						</td>
+						<td><span>Gesamtpreis:</span>
+							{{warenkorb.gesamtpreis}} €
+						</td>
+					</tr>
+					</tfoot>
+				</table>
+			</div>
+
+			<form action="#" method="post" autocomplete="on">
+				<div class="mdl-cell mdl-cell--10-col mdl-card mdl-shadow--4dp">
+					<div class="mdl-card__title">
+						<span class="mdl-card__title-text">Lieferadresse</span>
+					</div>
+					<div class="mdl-card__supporting-text">
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded"
+						>
+							<input class="mdl-textfield__input" type="text" id="vorname">
+							<label class="mdl-textfield__label" for="street">Vorname</label>
+							<span class="mdl-textfield__error">
+						</span></div>
+
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded"
+						>
+							<input class="mdl-textfield__input" type="text" id="name">
+							<label class="mdl-textfield__label" for="name">Name</label>
+							<span class="mdl-textfield__error">
+						</span></div>
+
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded" style="width:604px"
+						>
+							<input class="mdl-textfield__input" type="text" id="street">
+							<label class="mdl-textfield__label" for="street">Straße und Hausnummer</label>
+							<span class="mdl-textfield__error">
+						</span></div>
+						<br>
+
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded"
+						>
+							<input class="mdl-textfield__input" type="text" id="plz">
+							<label class="mdl-textfield__label" for="street">PLZ</label>
+							<span class="mdl-textfield__error">
+						</span></div>
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded"
+						>
+							<input class="mdl-textfield__input" type="text" id="ort">
+							<label class="mdl-textfield__label" for="ort">Ort</label>
+							<span class="mdl-textfield__error">
+						</span></div>
+					</div>
+				</div>
+
+				<div class="mdl-cell mdl-cell--10-col mdl-card mdl-shadow--4dp">
+					<div class="mdl-card__title">
+						<div class="mdl-card__title-text">Zahlungsart</div>
+					</div>
+					<ul class="mdl-card__supporting-text mdl-list">
+						<li class="mdl-list__item mdl-list__item--three-line">
+							<span class="mdl-list__item-primary-content">
+								<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="list-option-1">
+									<input type="radio" id="list-option-1" class="mdl-radio__button" name="options" value="1"/>
+									<span class="mdl-radio__label">Bankeinzug</span>
+								</label>
+								<span class="mdl-list__item-text-body">
+									<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded">
+										<input class="mdl-textfield__input" type="text" id="iban">
+										<label class="mdl-textfield__label" for="iban">IBAN</label>
+										<span class="mdl-textfield__error"></span>
+									</div>
+								</span>
+							</span>
+						</li>
+
+						<li class="mdl-list__item mdl-list__item--three-line">
+					    <span class="mdl-list__item-primary-content">
+						    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="list-option-2">
+				          <input type="radio" id="list-option-2" class="mdl-radio__button" name="options" value="2">
+							    <span class="mdl-radio__label">Kreditkarte</span>
+						    </label>
+								<span class="mdl-list__item-text-body">
+									<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded">
+										<input class="mdl-textfield__input" type="text" id="kreditkarte">
+										<label class="mdl-textfield__label" for="kreditkarte">Kreditkarten-Nummer</label>
+										<span class="mdl-textfield__error"></span>
+									</div>
+								</span>
+					    </span>
+						</li>
+
+						<li class="mdl-list__item mdl-list__item--three-line">
+					    <span class="mdl-list__item-primary-content">
+						    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="list-option-3">
+				          <input type="radio" id="list-option-3" class="mdl-radio__button" name="options" value="3">
+							    <span class="mdl-radio__label">Paypal</span>
+						    </label>
+								<span class="mdl-list__item-text-body">
+									<a href="https://developer.paypal.com/classic-home/" target="paypal"
+									   onclick="window.open('', 'paypal', 'width=500,height=600,top=200')">
+										<img src="/images/paypal-button.png">
+									</a>
+								</span>
+					    </span>
+						</li>
+					</ul>
+				</div>
+			</form>
+		</div>
+
+		<app-footer></app-footer>
+	</main>
+</div>
+<script src="/material.min.js"></script>
+</body>
+</html>

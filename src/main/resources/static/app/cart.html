@@ -13,146 +13,79 @@
 	<link rel="stylesheet" href="/icons.css"/>
 
 	<script src="/vue.js"></script>
+	<script src="components.js"></script>
 	<script type="text/javascript" language="JavaScript">
   window.onload = function () {
     var app = new Vue({
-        el: '#app',
-        data: {
-            warenkorb:  {
-                produkte:[],
-                gesamtpreis: 0.0
-            },
-            dialogDisplay: 'none',
-            currentId: null
+      el: '#app',
+      data: {
+        warenkorb:  {
+            produkte:[],
+            gesamtpreis: 0.0
         },
-        methods: {
-            showDialog: function(id) {
-                this.currentId = id
-                this.dialogDisplay = 'block'
-            },
-            closeDialog: function() {
-                this.dialogDisplay = 'none'
-            },
-            entfernen: function (id) {
-                this.warenkorb.produkte.forEach((produkt, index, produkte) => {
-                    if (produkt.id == id) {
-                        produkte.splice(index, 1)
-                        localStorage.setItem("warenkorb", JSON.stringify(this.warenkorb))
-                        this.closeDialog()
-                        return
-                    }
-                })
-            }
-        },
-        created: function () {
-            let tempWarenkorb = localStorage.getItem("warenkorb")
-		        if (tempWarenkorb) {
-                this.warenkorb = JSON.parse(tempWarenkorb)
-            } else {
-                fetch("/app/warenkorb", {headers: {"Content-Type": "application/json; charset=utf-8"}})
-                  .then(res => res.json())
-                  .then(responseData => {
-                    this.warenkorb = responseData
-                    localStorage.setItem("warenkorb", JSON.stringify(responseData))
-                  })
-                  .catch(err => { console.log(err) }
-                )
-		        }
-        }
+	      message: "",
+        dialogDisplay: 'none',
+        currentId: null
+      },
+      methods: {
+          showDialog: function(id) {
+              this.currentId = id
+              this.dialogDisplay = 'block'
+          },
+          closeDialog: function() {
+              this.dialogDisplay = 'none'
+          },
+          entfernen: function (id) {
+              this.warenkorb.produkte.forEach((produkt, index, produkte) => {
+                  if (produkt.id == id) {
+	                  this.warenkorb.gesamtpreis -= produkt.preis
+                    produkte.splice(index, 1)
+	                  this.message = `Produkt "${produkt.name}" vom Warenkorb entfernt.`
+                    localStorage.setItem("warenkorb", JSON.stringify(this.warenkorb))
+                    this.closeDialog()
+                    return
+                  }
+              })
+          }
+      },
+	    created: function () {
+		    let tempWarenkorb = localStorage.getItem("warenkorb")
+		    if (tempWarenkorb) {
+			    this.warenkorb = JSON.parse(tempWarenkorb)
+		    }
+	    }
     })
   }
-
-  function renderWarenkorb(warenkorb) {
-          let grid = document.querySelector(".mdl-grid")
-
-          for (produkt of warenkorb.produkte) {
-              let card = grid.childNodes[0].cloneNode(true)
-              grid.appendChild(card)
-
-              const img = new Image(278);
-              img.src = "/fotos/" + produkt.id;
-              let imgContainer = document.querySelector(".mdl-card__media")
-              imgContainer.appendChild(img)
-
-              document.querySelector(".mdl-card__title-text").innerHTML = produkt.name
-              let spans = document.querySelectorAll(".mdl-card__supporting-text span")
-              spans[0].innerHTML = produkt.herkunft
-              spans[1].innerHTML = produkt.kategorie
-              spans[2].innerHTML = produkt.unterkategorie
-              spans[3].innerHTML = produkt.preisFormatiert
-          }
-          let badge = document.querySelector(".mdl-badge")
-          badge.setAttribute("data-badge", warenkorb.produkte.length)
-          grid.removeChild(grid.childNodes[1])
-      }
 	</script>
 </head>
 <body>
 <div id="app" class="mdl-layout mdl-js-layout mdl-layout--fixed-header has-drawer is-upgraded">
-	<header class="mdl-layout__header mdl-layout__header--waterfall portfolio-header">
-		<div class="mdl-layout__header-row portfolio-logo-row">
-			<span class="mdl-layout__title"><div class="portfolio-logo"></div></span>
-		</div>
-		<div class="mdl-layout__header-row portfolio-navigation-row mdl-layout--large-screen-only">
-			<nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
-				<a href="/index.html" class="mdl-navigation__link">Shop</a>
-				<a href="/app/cart.html" class="mdl-navigation__link is-active">
-					<span class="mdl-badge" :data-badge="warenkorb.produkte.length">Warenkorb</span>
-				</a>
-				<a href="/checkout.html" class="mdl-navigation__link">
-					<span>Zur Kasse</span>
-					<i class="material-icons">exit_to_app</i>
-				</a>
+	<app-header active="cart" :badge="warenkorb.produkte.length"></app-header>
+	<drawer></drawer>
 
-				<a href="/about.html" class="mdl-navigation__link">Über uns</a>
-			</nav>
-			<span>
-          <span>Sprache</span><br/>
-          <select id="locales" onchange="location.search='?lang='+this.value">
-              <option value="">-- Wählen --</option>
-              <option value="en">Englisch</option>
-              <option value="de" selected="selected">Deutsch</option>
-          </select>
-      </span>
-			<span>
-          <a href="/login" class="mdl-navigation__link">Anmelden</a>
-      </span>
-
-		</div>
-	</header>
-	<div class="mdl-layout__drawer mdl-layout--small-screen-only">
-		<nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
-			<a class="mdl-navigation__link" href="/index.html">Shop</a>
-			<a class="mdl-navigation__link" href="/app/cart.html">Warenkorb</a>
-			<a class="mdl-navigation__link" href="/checkout.html">Zur Kasse</a>
-			<a class="mdl-navigation__link" href="/about.html">Über uns</a>
-			<a class="mdl-navigation__link" href="/login">Anmelden</a>
-		</nav>
-	</div>
 	<main class="mdl-layout__content">
 		<div class=" portfolio-max-width">
+			<h4 v-show="message">{{message}}</h4>
 			<h2 v-if="!warenkorb.produkte.length">Warenkorb ist leer</h2>
 			<div v-else class="mdl-grid">
-				<div v-for="produkt in warenkorb.produkte" class="mdl-cell mdl-card mdl-shadow--4dp portfolio-card">
+				<div v-for="produkt in warenkorb.produkte"
+				     class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--12-col-phone
+				      mdl-card mdl-shadow--4dp portfolio-card">
 					<div class="mdl-card__media">
-						<img :src="'/fotos/'+produkt.id" width="278"/>
+						<img :src="'/fotos/'+produkt.id" :alt="produkt.name" width="100%" border="0"/>
 					</div>
 					<div class="mdl-card__title">
 						<h2 class="mdl-card__title-text">{{produkt.name}}</h2>
 					</div>
 					<div class="mdl-card__supporting-text">
-						<label>Herkunft:</label>
-						<span>{{produkt.herkunft}}</span><br/>
-						<label>Kategorie:</label>
-						<span>{{produkt.kategorie}}</span><br/>
-						<label>Farbe:</label>
-						<span>{{produkt.unterkategorie}}</span><br/>
-						<label>Preis:</label>
-						<span>{{produkt.preisFormatiert}} &euro;</span>
+						<label>Herkunft:</label>  {{produkt.herkunft}}<br/>
+						<label>Kategorie:</label> {{produkt.kategorie}}<br/>
+						<label>Farbe:</label>     {{produkt.unterkategorie}}<br/>
+						<label>Preis:</label>     {{produkt.preisFormatiert}} &euro;
 					</div>
 					<div class="mdl-card__actions mdl-card--border">
 						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
-						   href="#" v-on:click="showDialog(produkt.id)">
+						   href="#" @click="showDialog(produkt.id)">
 							<span>Entfernen</span>
 							<i class="material-icons">remove_shopping_cart</i>
 						</a>
@@ -162,27 +95,17 @@
 
 		</div>
 		<dialog class="mdl-dialog"
-        v-bind:style="{display:dialogDisplay, width:'50%', top:'10%', zIndex:100}">
+        :style="{display:dialogDisplay, width:'40%', top:'10%', zIndex:100}">
 			<h4 class="mdl-dialog__title">Sind Sie sicher?</h4>
 			<div class="mdl-dialog__content">
 				<p>Wollen Sie dieses Produkt wirklich löschen?</p>
 			</div>
 			<div class="mdl-dialog__actions">
-				<button type="button" class="mdl-button" v-on:click="entfernen(currentId)">Ja</button>
-				<button type="button" class="mdl-button close" v-on:click="closeDialog()">Nein</button>
+				<button type="button" class="mdl-button" @click="entfernen(currentId)">Ja</button>
+				<button type="button" class="mdl-button close" @click="closeDialog()">Nein</button>
 			</div>
 		</dialog>
-		<footer class="mdl-mini-footer">
-			<div class="mdl-mini-footer__left-section">
-				<div class="mdl-logo">Produkt-Shop</div>
-			</div>
-			<div class="mdl-mini-footer__right-section">
-				<ul class="mdl-mini-footer__link-list">
-					<li><a href="#">Hilfe</a></li>
-					<li><a href="#">Impressum</a></li>
-				</ul>
-			</div>
-		</footer>
+		<app-footer></app-footer>
 	</main>
 </div>
 <script src="/material.min.js"></script>

@@ -1,15 +1,19 @@
 package de.karrieretutor.springboot;
 
-import de.karrieretutor.springboot.domain.*;
+import de.karrieretutor.springboot.domain.Produkt;
+import de.karrieretutor.springboot.domain.ProduktRepository;
+import de.karrieretutor.springboot.domain.Warenkorb;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 @org.springframework.web.bind.annotation.RestController
 @RequestMapping(value = "/app/")
@@ -17,13 +21,11 @@ public class RestController {
     Logger LOG = LoggerFactory.getLogger(RestController.class);
 
     @Autowired
-    MessageSource messageSource;
-
-    @Autowired
     ProduktRepository produktRepository;
 
     @Autowired
     SimpleController simpleController;
+    List<Produkt> produkte = new ArrayList<>();
 
 
     @GetMapping("/warenkorb")
@@ -40,9 +42,21 @@ public class RestController {
 
     @GetMapping("/produkte")
     public List<Produkt> ladeProdukte() {
-        List<Produkt> produkte = new ArrayList<>();
-        produktRepository.findAll().forEach(produkte::add);
+        if (produkte.isEmpty()) {
+            produktRepository.findAll().forEach(produkte::add);
+        }
         return produkte;
+    }
+
+    @GetMapping("/messages")
+    public Properties ladeMessages() {
+        InputStream input = RestController.class.getClassLoader().getResourceAsStream("messages_de.properties");
+        Properties prop = new Properties();
+        try {
+            prop.load(input);
+        } catch (IOException e) {
+        }
+        return prop;
     }
 
 }
