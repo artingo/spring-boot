@@ -8,9 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -31,13 +33,6 @@ public class RestController {
     @GetMapping("/warenkorb")
     public Warenkorb ladeWarenkorb() {
         return simpleController.warenkorb;
-/*
-        Warenkorb testDaten = new Warenkorb();
-        testDaten.getProdukte().add(new Produkt("Segyway", "Taiwan", Kategorie.KAT1, Unterkategorie.SUBKAT1, 1L, 499.0));
-        testDaten.getProdukte().add(new Produkt("Scooter", "HongKong", Kategorie.KAT1, Unterkategorie.SUBKAT2, 2L, 299.0));
-        testDaten.getProdukte().add(new Produkt("Hoverboard", "Korea", Kategorie.KAT1, Unterkategorie.SUBKAT3, 3L, 199.00));
-        return testDaten;
-*/
     }
 
     @GetMapping("/produkte")
@@ -49,12 +44,16 @@ public class RestController {
     }
 
     @GetMapping("/messages")
-    public Properties ladeMessages() {
-        InputStream input = RestController.class.getClassLoader().getResourceAsStream("messages_de.properties");
+    public Properties ladeMessages(@RequestParam(defaultValue = "de") String lang) {
         Properties prop = new Properties();
+        String fileName = "messages_" + lang.toLowerCase() + ".properties";
+        InputStream input = RestController.class.getClassLoader().getResourceAsStream(fileName);
         try {
-            prop.load(input);
-        } catch (IOException e) {
+            if (input==null)
+                RestController.class.getClassLoader().getResourceAsStream("messages_en.properties");
+            prop.load(new InputStreamReader(input, Charset.forName("UTF-8")));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return prop;
     }
