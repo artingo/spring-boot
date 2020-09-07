@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="de">
 <head>
-	<title>Shop</title>
+	<title v-t="'nav.portfolio'"></title>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="description" content="A web shop that uses Material Design Lite.">
@@ -12,12 +12,20 @@
 	<link rel="stylesheet" href="/styles.css"/>
 	<link rel="stylesheet" href="/icons.css"/>
 
-	<script src="/vue.js"></script>
+	<script src="/js/vue.min.js"></script>
+	<script src="/js/vue-i18n.min.js"></script>
 	<script src="components.js"></script>
+
 	<script language="JavaScript">
-	window.onload = function() {
-		var app = new Vue({
+	loadLanguage().then(function() {
+		new Vue({
+			i18n: i18n,
 			el: '#app',
+			components: {
+				'app-header': AppHeader,
+				'drawer':     Drawer,
+				'app-footer': AppFooter
+			},
 			data: function() {
 				return {
 					produkte:[],
@@ -34,7 +42,7 @@
 						if (produkt.id == id) {
 							this.warenkorb.gesamtpreis += produkt.preis
 							this.warenkorb.produkte.push(produkt)
-							this.message = `Produkt "${produkt.name}" zum Warenkorb hinzugefügt.`
+							this.message = i18n.t('cart.added', [produkt.name])
 							localStorage.setItem("warenkorb", JSON.stringify(this.warenkorb))
 							return
 						}
@@ -46,25 +54,24 @@
 				if (tempWarenkorb) {
 					this.warenkorb = JSON.parse(tempWarenkorb)
 				}
-				fetch("/app/produkte", {headers: {"Content-Type": "application/json; charset=utf-8"}})
+				fetch("/app/produkte", {headers: {"Content-Type": "application/json"}})
 					.then(res => res.json())
 					.then(responseData => {
 						this.produkte = responseData
 					})
 			}
-		});
-	}
+		})
+	})
 	</script>
 </head>
 <body>
 <div id="app" class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-	<app-header active="index"
-		:badge="warenkorb.produkte.length"></app-header>
+	<app-header active="index" :badge="warenkorb.produkte.length"></app-header>
 	<drawer></drawer>
 
 	<main class="mdl-layout__content">
 		<div class="portfolio-max-width">
-			<h4 v-show="message">{{message}}</h4>
+			<h4 v-show="message" v-text="message"></h4>
 			<div class="mdl-grid">
 				<div v-for="produkt in produkte"
 				     class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--12-col-phone
@@ -76,15 +83,15 @@
 						<h2 class="mdl-card__title-text">{{produkt.name}}</h2>
 					</div>
 					<div class="mdl-card__supporting-text">
-						<label>Herkunft:</label>  {{produkt.herkunft}}<br/>
-						<label>Kategorie:</label> {{produkt.kategorie}}<br/>
-						<label>Farbe:</label>     {{produkt.unterkategorie}}<br/>
-						<label>Preis:</label>     {{produkt.preisFormatiert}} &euro;
+						<label v-t="'label.origin.short'"></label>      {{produkt.herkunft}}<br/>
+						<label v-t="'label.category.short'"></label>    {{$t(produkt.kategorie)}}<br/>
+						<label v-t="'label.subcategory.short'"></label> {{$t(produkt.unterkategorie)}}<br/>
+						<label v-t="'label.price.short'"></label>       {{produkt.preisFormatiert}} &euro;
 					</div>
 					<div class="mdl-card__actions mdl-card--border">
 						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
 						   href="#" @click="kaufen(produkt.id)">
-							Kaufen
+							{{$t('button.buy')}}
 							<i class="material-icons">add_shopping_cart</i></a>
 					</div>
 				</div>
@@ -93,6 +100,6 @@
 		<app-footer></app-footer>
 	</main>
 </div>
-<script src="/material.min.js"></script>
+<script src="/js/material.min.js"></script>
 </body>
 </html>
