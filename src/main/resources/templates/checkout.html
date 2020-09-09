@@ -10,8 +10,8 @@
 	<main class="mdl-layout__content">
 		<div class="portfolio-max-width">
 			<button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
-        style="float:right; font-size:larger"
-				th:text="#{button.buy.now}">
+			        style="float:right; font-size:larger"
+			        th:text="#{button.buy.now}">
 			</button>
 			<h2 th:if="${warenkorb.produkte.isEmpty()}" th:text="#{cart.no.products}"></h2>
 			<h4 th:if="${message}" th:text="${message}"></h4>
@@ -21,24 +21,24 @@
 					<span class="mdl-card__title-text" th:text="#{nav.cart}"/>
 				</div>
 				<table class="mdl-data-table mdl-js-data-table">
-				<thead>
+					<thead>
 					<tr>
-						<th class="mdl-data-table__cell--non-numeric" width="20%"th:text="#{table.image}"></th>
+						<th class="mdl-data-table__cell--non-numeric" width="20%" th:text="#{table.image}"></th>
 						<th class="mdl-data-table__cell--non-numeric" th:text="#{table.description}"></th>
 						<th width="20%" th:text="#{table.price}"></th>
 					</tr>
-				</thead>
-				<tbody>
+					</thead>
+					<tbody>
 					<tr th:each="produkt:${warenkorb.produkte}">
 						<td class="mdl-data-table__cell--non-numeric">
-							<img th:if="${produkt.datei}" th:src="'data:image/jpeg;base64,'+${produkt.date64}"
-					         th:alt="${produkt.dateiname}" height="30" border="0"/>
+							<img th:if="${produkt.datei}" th:src="@{/fotos/}+${produkt.id}"
+							     th:alt="${produkt.dateiname}" height="30" border="0"/>
 						</td>
 						<td th:text="${produkt.name}" class="mdl-data-table__cell--non-numeric"></td>
-						<td><span th:text="${produkt.preisFormatiert}"/>  &euro;</td>
+						<td><span th:text="${produkt.preisFormatiert}"/> &euro;</td>
 					</tr>
-				</tbody>
-				<tfoot>
+					</tbody>
+					<tfoot>
 					<tr>
 						<td></td>
 						<td class="mdl-data-table__cell--non-numeric">
@@ -46,19 +46,19 @@
 							<span th:text="${warenkorb.produkte.size()}"/>
 						</td>
 						<td><span th:text="#{label.total.price}"/>
-								<span th:text="${warenkorb.gesamtpreis}"/> &euro;
+							<span th:text="${warenkorb.gesamtpreis}"/> &euro;
 						</td>
 					</tr>
-			</tfoot>
+					</tfoot>
 				</table>
 			</div>
 
 			<form action="#" method="post" autocomplete="on">
-			<div class="mdl-cell mdl-cell--10-col mdl-card mdl-shadow--4dp">
-				<div class="mdl-card__title">
-					<span class="mdl-card__title-text" th:text="#{title.shipping.address}"/>
-				</div>
-				<div class="mdl-card__supporting-text">
+				<div class="mdl-cell mdl-cell--10-col mdl-card mdl-shadow--4dp">
+					<div class="mdl-card__title">
+						<span class="mdl-card__title-text" th:text="#{title.shipping.address}"/>
+					</div>
+					<div class="mdl-card__supporting-text">
 						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 							<input class="mdl-textfield__input" type="text" id="vorname"/>
 							<label class="mdl-textfield__label" for="street" th:text="#{label.shipping.prename}"/>
@@ -72,11 +72,12 @@
 						</div>
 
 						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
-							style="width:604px">
+						     style="width:604px">
 							<input class="mdl-textfield__input" type="text" id="street"/>
 							<label class="mdl-textfield__label" for="street" th:text="#{label.shipping.address}"/>
 							<span class="mdl-textfield__error"/>
-						</div><br/>
+						</div>
+						<br/>
 
 						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 							<input class="mdl-textfield__input" type="text" id="plz"/>
@@ -88,15 +89,15 @@
 							<label class="mdl-textfield__label" for="ort" th:text="#{label.shipping.city}"/>
 							<span class="mdl-textfield__error"/>
 						</div>
+					</div>
 				</div>
-			</div>
 
-			<div class="mdl-cell mdl-cell--10-col mdl-card mdl-shadow--4dp">
-				<div class="mdl-card__title">
-					<div class="mdl-card__title-text" th:text="#{title.shipping.payment}"/>
-				</div>
-				<ul class="mdl-card__supporting-text mdl-list">
-					<li class="mdl-list__item mdl-list__item--three-line">
+				<div class="mdl-cell mdl-cell--10-col mdl-card mdl-shadow--4dp">
+					<div class="mdl-card__title">
+						<div class="mdl-card__title-text" th:text="#{title.shipping.payment}"/>
+					</div>
+					<ul class="mdl-card__supporting-text mdl-list">
+						<li class="mdl-list__item mdl-list__item--three-line">
 						<span class="mdl-list__item-primary-content">
 							<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="list-option-1">
 								<input type="radio" id="list-option-1" class="mdl-radio__button" name="options" value="1"/>
@@ -110,9 +111,9 @@
 								</div>
 							</span>
 						</span>
-					</li>
+						</li>
 
-					<li class="mdl-list__item mdl-list__item--three-line">
+						<li class="mdl-list__item mdl-list__item--three-line">
 			    <span class="mdl-list__item-primary-content">
 				    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="list-option-2">
 		          <input type="radio" id="list-option-2" class="mdl-radio__button" name="options" value="2"/>
@@ -126,24 +127,26 @@
 							</div>
 						</span>
 			    </span>
-					</li>
+						</li>
 
-					<li class="mdl-list__item mdl-list__item--three-line">
+						<li class="mdl-list__item mdl-list__item--three-line">
 			    <span class="mdl-list__item-primary-content">
 				    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="list-option-3">
 		          <input type="radio" id="list-option-3" class="mdl-radio__button" name="options" value="3"/>
 					    <span class="mdl-radio__label" th:text="#{label.payment.paypal}"/>
 				    </label>
 						<span class="mdl-list__item-text-body">
+<!--
 							<a href="https://developer.paypal.com/classic-home/" target="paypal"
 							   onclick="window.open('', 'paypal', 'width=500,height=600,top=200')">
 								<img src="/images/paypal-button.png"/>
 							</a>
+-->
 						</span>
 			    </span>
-					</li>
-				</ul>
-			</div>
+						</li>
+					</ul>
+				</div>
 			</form>
 		</div>
 

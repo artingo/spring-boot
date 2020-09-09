@@ -23,7 +23,7 @@ const AppHeader = {
 	template:
 	`<header class="mdl-layout__header mdl-layout__header--waterfall portfolio-header">
 		<div class="mdl-layout__header-row portfolio-logo-row">
-			<div class="portfolio-logo"></div>
+			<a href="/"><div class="portfolio-logo"></div></a>
 		</div>
 		<div class="mdl-layout__header-row portfolio-navigation-row mdl-layout--large-screen-only">
 			<nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">

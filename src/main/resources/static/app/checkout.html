@@ -154,21 +154,21 @@
 						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded"
 							:class="{'is-invalid': isInvalid.vorname}">
 							<input class="mdl-textfield__input" type="text" id="vorname" v-model="adresse.vorname">
-							<label class="mdl-textfield__label" for="street" v-t="'address.firstname'"></label>
+							<label class="mdl-textfield__label" for="street" v-t="'label.shipping.prename'"></label>
 							<span class="mdl-textfield__error" v-t="'validation.adresse.vorname'"></span>
 						</div>
 
 						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded"
 				      :class="{'is-invalid': isInvalid.nachname}">
 							<input class="mdl-textfield__input" type="text" id="name" v-model="adresse.nachname">
-							<label class="mdl-textfield__label" for="name" v-t="'address.lastname'"></label>
+							<label class="mdl-textfield__label" for="name" v-t="'label.shipping.name'"></label>
 							<span class="mdl-textfield__error" v-t="'validation.adresse.nachname'"></span>
 						</div>
 
 						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded" style="width:604px"
 				      :class="{'is-invalid': isInvalid.strasse}">
 							<input class="mdl-textfield__input" type="text" id="street" v-model="adresse.strasse">
-							<label class="mdl-textfield__label" for="street" v-t="'address.street'"></label>
+							<label class="mdl-textfield__label" for="street" v-t="'label.shipping.address'"></label>
 							<span class="mdl-textfield__error" v-t="'validation.adresse.strasse'"></span>
 						</div>
 						<br>
@@ -176,13 +176,13 @@
 						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded"
 				      :class="{'is-invalid': isInvalid.plz}">
 							<input class="mdl-textfield__input" type="text" id="plz" v-model="adresse.plz">
-							<label class="mdl-textfield__label" for="plz" v-t="'address.zip'"></label>
+							<label class="mdl-textfield__label" for="plz" v-t="'label.shipping.zip'"></label>
 							<span class="mdl-textfield__error" v-t="'validation.adresse.plz'"></span>
 						</div>
 						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded"
 				      :class="{'is-invalid': isInvalid.ort}">
 							<input class="mdl-textfield__input" type="text" id="ort" v-model="adresse.ort">
-							<label class="mdl-textfield__label" for="ort" v-t="'address.city'"></label>
+							<label class="mdl-textfield__label" for="ort" v-t="'label.shipping.city'"></label>
 							<span class="mdl-textfield__error" v-t="'validation.adresse.ort'"></span>
 						</div>
 					</div>
@@ -202,7 +202,7 @@
 								<span class="mdl-list__item-text-body">
 									<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded">
 										<input class="mdl-textfield__input" type="text" id="iban">
-										<label class="mdl-textfield__label" for="iban" v-t="'payment.iban'"></label>
+										<label class="mdl-textfield__label" for="iban" v-t="'label.payment.iban'"></label>
 										<span class="mdl-textfield__error"></span>
 									</div>
 								</span>
@@ -218,7 +218,7 @@
 								<span class="mdl-list__item-text-body">
 									<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded">
 										<input class="mdl-textfield__input" type="text" id="kreditkarte">
-										<label class="mdl-textfield__label" for="kreditkarte" v-t="'payment.cardnumber'"></label>
+										<label class="mdl-textfield__label" for="kreditkarte" v-t="'label.payment.card.nr'"></label>
 										<span class="mdl-textfield__error"></span>
 									</div>
 								</span>
@@ -234,7 +234,7 @@
 								<span class="mdl-list__item-text-body">
 									<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded">
 										<input class="mdl-textfield__input" type="text" id="email">
-										<label class="mdl-textfield__label" for="email" v-t="'payment.email'"></label>
+										<label class="mdl-textfield__label" for="email" v-t="'label.payment.email'"></label>
 										<span class="mdl-textfield__error"></span>
 									</div>
 <!--

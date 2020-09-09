@@ -25,6 +25,18 @@
 				'app-header': AppHeader,
 				'drawer':     Drawer,
 				'app-footer': AppFooter
+			},
+			data: {
+				warenkorb: {
+					produkte: [],
+					gesamtpreis: 0.0
+				}
+			},
+			created: function () {
+				let tempWarenkorb = localStorage.getItem("warenkorb")
+				if (tempWarenkorb) {
+					this.warenkorb = JSON.parse(tempWarenkorb)
+				}
 			}
 		});
 	})
@@ -32,7 +44,7 @@
 </head>
 <body>
 <div id="app" class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-	<app-header active="about"></app-header>
+	<app-header active="about" :badge="warenkorb.produkte.length"></app-header>
 	<drawer></drawer>
 
 	<main class="mdl-layout__content">
@@ -46,19 +58,9 @@
 				</div>
 
 				<div class="mdl-grid portfolio-copy">
-					<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Über diese Web-App</h3>
+					<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline" v-t="'about.title'"></h3>
 					<div class="mdl-cell mdl-cell--8-col mdl-card__supporting-text no-padding ">
-						<p>Diese <a href="https://de.wikipedia.org/wiki/Webanwendung" target="_blank">Web-App</a> ist im Rahmen des
-							<a href="https://www.karrieretutor.de/azav/java/" target="_blank">Java-Kurses</a>
-							von <a href="https://www.karrieretutor.de" target="_blank">karriere tutor</a>&trade; entstanden.
-							Der Server-Teil basiert auf <a href="https://spring.io/projects/spring-boot" target="_blank">Spring Boot</a>
-							und verwendet <a href="https://de.wikipedia.org/wiki/Representational_State_Transfer" target="_blank">REST-Services</a>
-							im <a href="https://de.wikipedia.org/wiki/JavaScript_Object_Notation" target="_blank">JSON-Format</a>.
-							Der Client-Teil verwendet <a href="https://getmdl.io/started/index.html" target="_blank">Material Design Lite</a>
-							und <a href="https://vuejs.org/v2/guide/" target="_blank">Vue.js</a>. Der Source-Code befindet sich auf
-							<a href="https://github.com/artingo/spring-boot" target="_blank">GitHub</a> und eine Demo-Version wird auf
-							<a href="https://karrieretutor-shop.herokuapp.com" target="_blank">Heroku</a> gehosted.
-						</p>
+						<p v-html="$t('about.p1')"></p>
 					</div>
 
 					<div class="mdl-cell mdl-cell--8-col mdl-card__supporting-text no-padding">
