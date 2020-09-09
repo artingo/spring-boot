@@ -1,20 +1,17 @@
 package de.karrieretutor.springboot;
 
-import de.karrieretutor.springboot.domain.Produkt;
-import de.karrieretutor.springboot.domain.ProduktRepository;
-import de.karrieretutor.springboot.domain.Warenkorb;
+import de.karrieretutor.springboot.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 
 @org.springframework.web.bind.annotation.RestController
@@ -24,6 +21,9 @@ public class RestController {
 
     @Autowired
     ProduktRepository produktRepository;
+
+    @Autowired
+    KundenRepository kundenRepository;
 
     @Autowired
     SimpleController simpleController;
@@ -49,7 +49,7 @@ public class RestController {
         String fileName = "messages_" + lang.toLowerCase() + ".properties";
         InputStream input = RestController.class.getClassLoader().getResourceAsStream(fileName);
         try {
-            if (input==null)
+            if (input == null)
                 RestController.class.getClassLoader().getResourceAsStream("messages_en.properties");
             prop.load(new InputStreamReader(input, Charset.forName("UTF-8")));
         } catch (Exception e) {
@@ -58,4 +58,21 @@ public class RestController {
         return prop;
     }
 
+    @PostMapping("/bestellen")
+    public Long bestellen(@RequestBody Kunde kunde) {
+        Kunde gespeicherterKunde = kundenRepository.save(kunde);
+        return gespeicherterKunde.getId();
+    }
+
+    @GetMapping("/kunde")
+    public Kunde kundeLaden(@RequestParam Long id) {
+        Kunde kunde = new Kunde();
+        if (id != null) {
+            Optional<Kunde> kundeDB = kundenRepository.findById(id);
+            if (kundeDB.isPresent()) {
+                kunde = kundeDB.get();
+            }
+        }
+        return kunde;
+    }
 }

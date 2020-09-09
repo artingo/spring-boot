@@ -16,10 +16,10 @@
 	<script src="/js/vue-i18n.min.js"></script>
 	<script src="components.js"></script>
 
-	<script language="JavaScript">
+	<script type="text/javascript" language="JavaScript">
 	loadLanguage().then(function() {
 		new Vue({
-			i18n: i18n,
+			i18n,
 			el: '#app',
 			components: {
 				'app-header': AppHeader,

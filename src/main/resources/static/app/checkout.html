@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="de">
 <head>
-	<title>Warenkorb</title>
+	<title v-t="'button.checkout'"></title>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="description" content="A web shop that uses Material Design Lite.">
@@ -12,27 +12,83 @@
 	<link rel="stylesheet" href="/styles.css"/>
 	<link rel="stylesheet" href="/icons.css"/>
 
-	<script src="/vue.js"></script>
+	<script src="/js/vue.min.js"></script>
+	<script src="/js/vue-i18n.min.js"></script>
 	<script src="components.js"></script>
+
 	<script type="text/javascript" language="JavaScript">
-		window.onload = function () {
-			var app = new Vue({
-				el: '#app',
-				data: {
-					warenkorb: {
-						produkte: [],
-						gesamtpreis: 0.0
-					}
+	loadLanguage().then(function () {
+		new Vue({
+			i18n: i18n,
+			el: '#app',
+			components: {
+				'app-header': AppHeader,
+				'drawer':     Drawer,
+				'app-footer': AppFooter
+			},
+			data: {
+				warenkorb: {
+					produkte: [],
+					gesamtpreis: 0.0
 				},
-				methods: {},
-				created: function () {
-					let tempWarenkorb = localStorage.getItem("warenkorb")
-					if (tempWarenkorb) {
-						this.warenkorb = JSON.parse(tempWarenkorb)
+				adresse: {
+					id: '',
+					vorname: '',
+					nachname: '',
+					strasse: '',
+					plz: '',
+					ort: ''
+				},
+				isInvalid: {
+					vorname: false,
+					nachname: false,
+					strasse: false,
+					plz: false,
+					ort: false,
+				},
+				message: ''
+			},
+			methods: {
+				validierung: function(e) {
+					let isValid = true
+					for(const key in this.adresse) {
+						if (key!='id' && !this.adresse[key]) {
+							this.isInvalid[key] = true
+							isValid = false
+						}
+					}
+					if (isValid) {
+						fetch('/app/bestellen', {
+							method: 'POST',
+							headers: { 'Content-Type': 'application/json' },
+							body: JSON.stringify(this.adresse)
+						})
+						.then(res => res.json())
+						.then(kundenId => {
+							const msgKey = (kundenId!=-1) ? 'order.success' : 'order.failure'
+							this.message = i18n.t(msgKey)
+							this.adresse.id = kundenId
+							localStorage.setItem('kundenId', kundenId)
+						})
 					}
 				}
-			})
-		}
+			},
+			created: function () {
+				let tempWarenkorb = localStorage.getItem("warenkorb")
+				if (tempWarenkorb) {
+					this.warenkorb = JSON.parse(tempWarenkorb)
+				}
+				let kundenId = localStorage.getItem('kundenId')
+				if (kundenId) {
+					fetch('/app/kunde?id='+kundenId)
+						.then(res => res.json())
+						.then(kunde => {
+							this.adresse = kunde
+						})
+				}
+			}
+		})
+	})
 	</script>
 </head>
 <body>
@@ -40,22 +96,28 @@
 	<app-header active="checkout" :badge="warenkorb.produkte.length"></app-header>
 	<drawer></drawer>
 
+
 	<main class="mdl-layout__content">
 		<div class="portfolio-max-width">
+			<h4 v-show="message" v-text="message"></h4>
 			<button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
-			        style="float:right; font-size:larger" data-upgraded=",MaterialButton,MaterialRipple">Jetzt kaufen<span
-				class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></button>
+			        style="float:right; font-size:larger" @click="validierung">
+				{{$t('button.buy.now')}}
+				<span class="mdl-button__ripple-container">
+					<span class="mdl-ripple"></span>
+				</span>
+			</button>
 
 			<div class="mdl-cell mdl-cell--10-col mdl-card mdl-shadow--4dp">
 				<div class="mdl-card__title">
-					<span class="mdl-card__title-text">Warenkorb</span>
+					<span class="mdl-card__title-text" v-t="'nav.cart'"></span>
 				</div>
 				<table class="mdl-data-table mdl-js-data-table" data-upgraded=",MaterialDataTable">
 					<thead>
 					<tr>
-						<th class="mdl-data-table__cell--non-numeric" width="20%">Bild</th>
-						<th class="mdl-data-table__cell--non-numeric">Produkt</th>
-						<th width="20%">Preis</th>
+						<th width="20%" class="mdl-data-table__cell--non-numeric" v-t="'table.image'"></th>
+						<th class="mdl-data-table__cell--non-numeric" v-t="'table.description'"></th>
+						<th width="20%" v-t="'table.price'"></th>
 					</tr>
 					</thead>
 					<tbody>
@@ -71,10 +133,10 @@
 					<tr>
 						<td></td>
 						<td class="mdl-data-table__cell--non-numeric">
-							Anzahl der Produkte:
+							{{$t('label.total.number')}}
 							{{warenkorb.produkte.length}}
 						</td>
-						<td><span>Gesamtpreis:</span>
+						<td>{{$t('label.total.price')}}
 							{{warenkorb.gesamtpreis}} €
 						</td>
 					</tr>
@@ -82,46 +144,47 @@
 				</table>
 			</div>
 
-			<form action="#" method="post" autocomplete="on">
+			<form id="adresse" action="#" method="post" autocomplete="on" @submit="validierung">
 				<div class="mdl-cell mdl-cell--10-col mdl-card mdl-shadow--4dp">
 					<div class="mdl-card__title">
 						<span class="mdl-card__title-text">Lieferadresse</span>
 					</div>
 					<div class="mdl-card__supporting-text">
+						<input type="hidden" id="id" v-model="adresse.id">
 						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded"
-						>
-							<input class="mdl-textfield__input" type="text" id="vorname">
+							:class="{'is-invalid': isInvalid.vorname}">
+							<input class="mdl-textfield__input" type="text" id="vorname" v-model="adresse.vorname">
 							<label class="mdl-textfield__label" for="street">Vorname</label>
-							<span class="mdl-textfield__error">
-						</span></div>
+							<span class="mdl-textfield__error" v-t="'validation.adresse.vorname'"></span>
+						</div>
 
 						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded"
-						>
-							<input class="mdl-textfield__input" type="text" id="name">
+				      :class="{'is-invalid': isInvalid.nachname}">
+							<input class="mdl-textfield__input" type="text" id="name" v-model="adresse.nachname">
 							<label class="mdl-textfield__label" for="name">Name</label>
-							<span class="mdl-textfield__error">
-						</span></div>
+							<span class="mdl-textfield__error" v-t="'validation.adresse.nachname'"></span>
+						</div>
 
 						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded" style="width:604px"
-						>
-							<input class="mdl-textfield__input" type="text" id="street">
+				      :class="{'is-invalid': isInvalid.strasse}">
+							<input class="mdl-textfield__input" type="text" id="street" v-model="adresse.strasse">
 							<label class="mdl-textfield__label" for="street">Straße und Hausnummer</label>
-							<span class="mdl-textfield__error">
-						</span></div>
+							<span class="mdl-textfield__error" v-t="'validation.adresse.strasse'"></span>
+						</div>
 						<br>
 
 						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded"
-						>
-							<input class="mdl-textfield__input" type="text" id="plz">
+				      :class="{'is-invalid': isInvalid.plz}">
+							<input class="mdl-textfield__input" type="text" id="plz" v-model="adresse.plz">
 							<label class="mdl-textfield__label" for="street">PLZ</label>
-							<span class="mdl-textfield__error">
-						</span></div>
+							<span class="mdl-textfield__error" v-t="'validation.adresse.plz'"></span>
+						</div>
 						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded"
-						>
-							<input class="mdl-textfield__input" type="text" id="ort">
+				      :class="{'is-invalid': isInvalid.ort}">
+							<input class="mdl-textfield__input" type="text" id="ort" v-model="adresse.ort">
 							<label class="mdl-textfield__label" for="ort">Ort</label>
-							<span class="mdl-textfield__error">
-						</span></div>
+							<span class="mdl-textfield__error" v-t="'validation.adresse.ort'"></span>
+						</div>
 					</div>
 				</div>
 
@@ -169,10 +232,17 @@
 							    <span class="mdl-radio__label">Paypal</span>
 						    </label>
 								<span class="mdl-list__item-text-body">
+									<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded">
+										<input class="mdl-textfield__input" type="text" id="email">
+										<label class="mdl-textfield__label" for="email">Email-Adresse</label>
+										<span class="mdl-textfield__error"></span>
+									</div>
+<!--
 									<a href="https://developer.paypal.com/classic-home/" target="paypal"
 									   onclick="window.open('', 'paypal', 'width=500,height=600,top=200')">
 										<img src="/images/paypal-button.png">
 									</a>
+-->
 								</span>
 					    </span>
 						</li>
@@ -184,6 +254,6 @@
 		<app-footer></app-footer>
 	</main>
 </div>
-<script src="/material.min.js"></script>
+<script src="/js/material.min.js"></script>
 </body>
 </html>

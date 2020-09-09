@@ -131,6 +131,7 @@ public class SimpleController {
     private Produkt getProdukt(Long id) {
         Optional<Produkt> produktDB;
         if (!produkte.isEmpty()) {
+            LOG.debug("loading from Cache");
             produktDB = produkte.stream().filter(p -> p.getId() == id).findFirst();
         } else {
             LOG.debug("loading from Repository");

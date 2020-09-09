@@ -1,6 +1,6 @@
 const index = location.search.indexOf('lang=')
 const	lang = (index==-1)? localStorage.getItem('lang')||'de' : location.search.substring(index + 5, index + 7).toLowerCase()
-let i18n = new VueI18n({
+const i18n = new VueI18n({
 	locale: lang,
 	messages: {},
 })
@@ -11,7 +11,7 @@ function loadLanguage(locale) {
 		.then(res => res.json())
 		.then(responseData => {
 			i18n.setLocaleMessage(locale, responseData)
-			i18n.locale = locale;
+			i18n.locale = locale
 			localStorage.setItem('lang', locale)
 			document.querySelector('html').setAttribute('lang', locale)
 		})
@@ -47,11 +47,24 @@ const AppHeader = {
 			</nav>
 		</div>
 	</header>`,
-	props: ["badge", "active"],
+	props: ['active', 'badge'],
 	data: function() {
-		return { lang: lang }
+		return {
+			lang: lang,
+			warenkorb: {produkte: []}
+		}
 	},
 	watch: { lang: loadLanguage },
+	created: function () {
+		let localWarenkorb = localStorage.getItem("warenkorb")
+		if (localWarenkorb) {
+			this.warenkorb = JSON.parse(localWarenkorb)
+		}
+	},
+	style: `
+	.className {
+	}
+	`
 }
 
 const Drawer = {

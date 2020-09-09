@@ -29,6 +29,8 @@ public class Produkt {
     @Min(value = 1, message = "{validation.produkt.preis}")
     private double preis = 1;
 
+    // TODO: Anzahl einbauen
+
     private String dateiname;
 
     @Lob
