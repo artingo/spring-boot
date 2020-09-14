@@ -50,7 +50,7 @@
                              th:classappend="${#fields.hasErrors('kategorie')}?is-invalid">
                             <select class="mdl-textfield__input" name="kategorie" id="kategorie" th:field="${produkt.kategorie}">
                                 <option value="" th:text="#{select}"></option>
-                                <option th:each="kategorie : ${T(de.karrieretutor.springboot.domain.Kategorie).values()}"
+                                <option th:each="kategorie : ${T(de.karrieretutor.springboot.enums.Kategorie).values()}"
                                         th:value="${kategorie}" th:text="#{${kategorie.messageKey}}"></option>
                             </select>
                             <label class="mdl-textfield__label select" for="kategorie" th:text="#{label.category}"></label>
@@ -60,7 +60,7 @@
                              th:classappend="${#fields.hasErrors('unterkategorie')}?is-invalid">
                             <select class="mdl-textfield__input" name="unterkategorie" id="unterkategorie" th:field="${produkt.unterkategorie}">
                                 <option value="" th:text="#{select}"></option>
-                                <option th:each="unterkategorie : ${T(de.karrieretutor.springboot.domain.Unterkategorie).values()}"
+                                <option th:each="unterkategorie : ${T(de.karrieretutor.springboot.enums.Unterkategorie).values()}"
                                         th:value="${unterkategorie}" th:text="#{${unterkategorie.messageKey}}"></option>
                             </select>
                             <label class="mdl-textfield__label select" for="unterkategorie" th:text="#{label.subcategory}"></label>
