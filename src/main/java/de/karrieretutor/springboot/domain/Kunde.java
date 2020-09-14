@@ -1,9 +1,13 @@
 package de.karrieretutor.springboot.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.karrieretutor.springboot.enums.Zahlungsart;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static javax.persistence.CascadeType.ALL;
 
 @Entity
 public class Kunde {
@@ -11,16 +15,20 @@ public class Kunde {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    String vorname;
-    String nachname;
-    String strasse;
-    String plz;
-    String ort;
+    private String vorname;
+    private String nachname;
+    private String strasse;
+    private String plz;
+    private String ort;
 
-    Zahlungsart zahlungsart;
-    String iban;
-    String kreditkartenNr;
-    String email;
+    private Zahlungsart zahlungsart;
+    private String iban;
+    private String kreditkartenNr;
+    private String email;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "kunde", cascade = ALL)
+    private List<Bestellung> bestellungen = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -90,6 +98,13 @@ public class Kunde {
     }
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<Bestellung> getBestellungen() {
+        return bestellungen;
+    }
+    public void setBestellungen(List<Bestellung> bestellungen) {
+        this.bestellungen = bestellungen;
     }
 
     @Override
