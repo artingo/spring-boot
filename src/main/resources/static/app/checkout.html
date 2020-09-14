@@ -11,84 +11,127 @@
 	<link rel="stylesheet" href="/material.grey-pink.min.css"/>
 	<link rel="stylesheet" href="/styles.css"/>
 	<link rel="stylesheet" href="/icons.css"/>
+	<style type="text/css">
+		#payment .mdl-textfield {
+			margin-bottom: 10px;
+		}
+		#payment .mdl-card__supporting-text > label {
+			display: block;
+		}
+	</style>
 
 	<script src="/js/vue.min.js"></script>
 	<script src="/js/vue-i18n.min.js"></script>
 	<script src="components.js"></script>
 
 	<script type="text/javascript" language="JavaScript">
-	loadLanguage().then(function () {
-		new Vue({
-			i18n: i18n,
-			el: '#app',
-			components: {
-				'app-header': AppHeader,
-				'drawer':     Drawer,
-				'app-footer': AppFooter
-			},
-			data: {
-				warenkorb: {
-					produkte: [],
-					gesamtpreis: 0.0
+		loadLanguage().then(function () {
+			new Vue({
+				i18n: i18n,
+				el: '#app',
+				components: {
+					'app-header': AppHeader,
+					'drawer': Drawer,
+					'app-footer': AppFooter
 				},
-				adresse: {
-					id: '',
-					vorname: '',
-					nachname: '',
-					strasse: '',
-					plz: '',
-					ort: ''
+				data: {
+					warenkorb: {
+						produkte: [],
+						gesamtpreis: 0.0
+					},
+					kunde: {
+						id: '',
+						vorname: '',
+						nachname: '',
+						strasse: '',
+						plz: '',
+						ort: '',
+						zahlungsart: null,
+						iban: '',
+						kreditkartenNr: '',
+						email: ''
+					},
+					isInvalid: {
+						vorname: false,
+						nachname: false,
+						strasse: false,
+						plz: false,
+						ort: false,
+						// zahlungsart: false
+					},
+					message: ''
 				},
-				isInvalid: {
-					vorname: false,
-					nachname: false,
-					strasse: false,
-					plz: false,
-					ort: false,
-				},
-				message: ''
-			},
-			methods: {
-				validierung: function(e) {
-					let isValid = true
-					for(const key in this.adresse) {
-						if (key!='id' && !this.adresse[key]) {
-							this.isInvalid[key] = true
-							isValid = false
+				methods: {
+					validierung: function (e) {
+						let isValid = true
+						for (const key in this.isInvalid) {
+							if (!this.kunde[key]) {
+								this.isInvalid[key] = true
+								isValid = false
+							}
 						}
+						// console.log('zahlungsart', this.kunde.zahlungsart)
+						/*switch (this.kunde.zahlungsart) {
+							case 0:
+								isValid = !(this.kunde.iban)
+								this.isInvalid.iban = true;
+								break
+							case 1:
+								isValid = !(this.kunde.kreditkartenNr)
+								this.isInvalid.kreditkartenNr = true;
+								break
+							case 2:
+								isValid = !(this.kunde.email)
+								this.isInvalid.email = true
+						}*/
+						// if (!this.kunde.iban) {
+						// 	this.isInvalid.iban = true
+						// 	isValid = false
+						// }
+
+						if (isValid) {
+							let postData = this.buildJSON();
+							console.log('postData', postData)
+							fetch('/app/bestellen', {
+								method: 'POST',
+								headers: { 'Content-Type': 'application/json' },
+								body: JSON.stringify(postData)
+							})
+							.then(res => res.json())
+							.then(kundenId => {
+								const msgKey = (kundenId!=-1) ? 'order.success' : 'order.failure'
+								this.message = i18n.t(msgKey)
+								this.kunde.id = kundenId
+								localStorage.setItem('kundenId', kundenId)
+							})
+						}
+					},
+					buildJSON: function () {
+						let data = {
+							kunde: this.kunde,
+							produkte: this.warenkorb.produkte.map(p => {return {
+								produkt: p
+							}})
+						}
+						return data;
 					}
-					if (isValid) {
-						fetch('/app/bestellen', {
-							method: 'POST',
-							headers: { 'Content-Type': 'application/json' },
-							body: JSON.stringify(this.adresse)
-						})
-						.then(res => res.json())
-						.then(kundenId => {
-							const msgKey = (kundenId!=-1) ? 'order.success' : 'order.failure'
-							this.message = i18n.t(msgKey)
-							this.adresse.id = kundenId
-							localStorage.setItem('kundenId', kundenId)
-						})
+				},
+				created: function () {
+					let tempWarenkorb = localStorage.getItem("warenkorb")
+					if (tempWarenkorb) {
+						this.warenkorb = JSON.parse(tempWarenkorb)
+					}
+					let kundenId = localStorage.getItem('kundenId')
+					if (kundenId) {
+						fetch('/app/kunde?id=' + kundenId)
+							.then(res => res.json())
+							.then(kunde => {
+								this.kunde = kunde
+							})
 					}
 				}
-			},
-			created: function () {
-				let tempWarenkorb = localStorage.getItem("warenkorb")
-				if (tempWarenkorb) {
-					this.warenkorb = JSON.parse(tempWarenkorb)
-				}
-				let kundenId = localStorage.getItem('kundenId')
-				if (kundenId) {
-					fetch('/app/kunde?id='+kundenId)
-						.then(res => res.json())
-						.then(kunde => {
-							this.adresse = kunde
-						})
-				}
-			}
+			})
 		})
-	})
 	</script>
 </head>
 <body>
@@ -150,103 +193,89 @@
 						<span class="mdl-card__title-text" v-t="'title.shipping.address'"></span>
 					</div>
 					<div class="mdl-card__supporting-text">
-						<input type="hidden" id="id" v-model="adresse.id">
-						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded"
-							:class="{'is-invalid': isInvalid.vorname}">
-							<input class="mdl-textfield__input" type="text" id="vorname" v-model="adresse.vorname">
+						<input type="hidden" id="id" v-model="kunde.id">
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-dirty"
+						     :class="{'is-invalid': isInvalid.vorname}">
+							<input class="mdl-textfield__input" type="text" id="vorname" v-model="kunde.vorname">
 							<label class="mdl-textfield__label" for="street" v-t="'label.shipping.prename'"></label>
 							<span class="mdl-textfield__error" v-t="'validation.adresse.vorname'"></span>
 						</div>
 
-						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded"
-				      :class="{'is-invalid': isInvalid.nachname}">
-							<input class="mdl-textfield__input" type="text" id="name" v-model="adresse.nachname">
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-dirty"
+						     :class="{'is-invalid': isInvalid.nachname}">
+							<input class="mdl-textfield__input" type="text" id="name" v-model="kunde.nachname">
 							<label class="mdl-textfield__label" for="name" v-t="'label.shipping.name'"></label>
 							<span class="mdl-textfield__error" v-t="'validation.adresse.nachname'"></span>
 						</div>
 
-						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded" style="width:604px"
-				      :class="{'is-invalid': isInvalid.strasse}">
-							<input class="mdl-textfield__input" type="text" id="street" v-model="adresse.strasse">
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-dirty" style="width:604px"
+						     :class="{'is-invalid': isInvalid.strasse}">
+							<input class="mdl-textfield__input" type="text" id="street" v-model="kunde.strasse">
 							<label class="mdl-textfield__label" for="street" v-t="'label.shipping.address'"></label>
 							<span class="mdl-textfield__error" v-t="'validation.adresse.strasse'"></span>
 						</div>
 						<br>
 
-						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded"
-				      :class="{'is-invalid': isInvalid.plz}">
-							<input class="mdl-textfield__input" type="text" id="plz" v-model="adresse.plz">
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-dirty"
+						     :class="{'is-invalid': isInvalid.plz}">
+							<input class="mdl-textfield__input" type="text" id="plz" v-model="kunde.plz">
 							<label class="mdl-textfield__label" for="plz" v-t="'label.shipping.zip'"></label>
 							<span class="mdl-textfield__error" v-t="'validation.adresse.plz'"></span>
 						</div>
-						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded"
-				      :class="{'is-invalid': isInvalid.ort}">
-							<input class="mdl-textfield__input" type="text" id="ort" v-model="adresse.ort">
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-dirty"
+						     :class="{'is-invalid': isInvalid.ort}">
+							<input class="mdl-textfield__input" type="text" id="ort" v-model="kunde.ort">
 							<label class="mdl-textfield__label" for="ort" v-t="'label.shipping.city'"></label>
 							<span class="mdl-textfield__error" v-t="'validation.adresse.ort'"></span>
 						</div>
 					</div>
 				</div>
 
-				<div class="mdl-cell mdl-cell--10-col mdl-card mdl-shadow--4dp">
+				<div id="payment" class="mdl-cell mdl-cell--10-col mdl-card mdl-shadow--4dp">
 					<div class="mdl-card__title">
 						<div class="mdl-card__title-text" v-t="'title.shipping.payment'"></div>
 					</div>
-					<ul class="mdl-card__supporting-text mdl-list">
-						<li class="mdl-list__item mdl-list__item--three-line">
-							<span class="mdl-list__item-primary-content">
-								<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="list-option-1">
-									<input type="radio" id="list-option-1" class="mdl-radio__button" name="options" value="1"/>
-									<span class="mdl-radio__label" v-t="'enum.payment.1'"></span>
-								</label>
-								<span class="mdl-list__item-text-body">
-									<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded">
-										<input class="mdl-textfield__input" type="text" id="iban">
-										<label class="mdl-textfield__label" for="iban" v-t="'label.payment.iban'"></label>
-										<span class="mdl-textfield__error"></span>
-									</div>
-								</span>
-							</span>
-						</li>
+					<div class="mdl-textfield" style="margin-top:-2.5em; padding-left:16px">
+						<span class="mdl-textfield__error" v-t="'validation.zahlungsart.zahlungsart'"></span>
+					</div>
 
-						<li class="mdl-list__item mdl-list__item--three-line">
-					    <span class="mdl-list__item-primary-content">
-						    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="list-option-2">
-				          <input type="radio" id="list-option-2" class="mdl-radio__button" name="options" value="2">
-							    <span class="mdl-radio__label" v-t="'enum.payment.2'"></span>
-						    </label>
-								<span class="mdl-list__item-text-body">
-									<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded">
-										<input class="mdl-textfield__input" type="text" id="kreditkarte">
-										<label class="mdl-textfield__label" for="kreditkarte" v-t="'label.payment.card.nr'"></label>
-										<span class="mdl-textfield__error"></span>
-									</div>
-								</span>
-					    </span>
-						</li>
+					<div class="mdl-card__supporting-text" style="margin-top:0; padding-top:0">
+						<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="list-option-1">
+							<input type="radio" id="list-option-1" class="mdl-radio__button" name="options"
+							       v-model="kunde.zahlungsart" value="0"/>
+							<span class="mdl-radio__label" v-t="'enum.payment.1'"></span>
+						</label>
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-dirty"
+						     :class="{'is-invalid': isInvalid.iban}">
+							<input class="mdl-textfield__input" type="text" id="iban" v-model="kunde.iban">
+							<label class="mdl-textfield__label" for="iban" v-t="'label.payment.iban'"></label>
+							<span class="mdl-textfield__error" v-t="'validation.zahlungsart.iban'"></span>
+						</div>
 
-						<li class="mdl-list__item mdl-list__item--three-line">
-					    <span class="mdl-list__item-primary-content">
-						    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="list-option-3">
-				          <input type="radio" id="list-option-3" class="mdl-radio__button" name="options" value="3">
-							    <span class="mdl-radio__label" v-t="'enum.payment.3'"></span>
-						    </label>
-								<span class="mdl-list__item-text-body">
-									<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-upgraded">
-										<input class="mdl-textfield__input" type="text" id="email">
-										<label class="mdl-textfield__label" for="email" v-t="'label.payment.email'"></label>
-										<span class="mdl-textfield__error"></span>
-									</div>
-<!--
-									<a href="https://developer.paypal.com/classic-home/" target="paypal"
-									   onclick="window.open('', 'paypal', 'width=500,height=600,top=200')">
-										<img src="/images/paypal-button.png">
-									</a>
--->
-								</span>
-					    </span>
-						</li>
-					</ul>
+						<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="list-option-2">
+							<input type="radio" id="list-option-2" class="mdl-radio__button" name="options"
+							       v-model="kunde.zahlungsart" value="1">
+							<span class="mdl-radio__label" v-t="'enum.payment.2'"></span>
+						</label>
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-dirty"
+						     :class="{'is-invalid': isInvalid.kreditkartenNr}">
+							<input class="mdl-textfield__input" type="text" id="kreditkarte" v-model="kunde.kreditkartenNr">
+							<label class="mdl-textfield__label" for="kreditkarte" v-t="'label.payment.card.nr'"></label>
+							<span class="mdl-textfield__error" v-t="'validation.zahlungsart.karte'"></span>
+						</div>
+
+						<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="list-option-3">
+							<input type="radio" id="list-option-3" class="mdl-radio__button" name="options"
+							       v-model="kunde.zahlungsart" value="2">
+							<span class="mdl-radio__label" v-t="'enum.payment.3'"></span>
+						</label>
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-dirty"
+						     :class="{'is-invalid': isInvalid.email}">
+							<input class="mdl-textfield__input" type="text" id="email" v-model="kunde.email">
+							<label class="mdl-textfield__label" for="email" v-t="'label.payment.email'"></label>
+							<span class="mdl-textfield__error" v-t="'validation.zahlungsart.email'"></span>
+						</div>
+					</div>
 				</div>
 			</form>
 		</div>

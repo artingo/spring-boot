@@ -1,6 +1,7 @@
 package de.karrieretutor.springboot;
 
 import de.karrieretutor.springboot.domain.*;
+import de.karrieretutor.springboot.service.BestellService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class RestController {
 
     @Autowired
     KundenRepository kundenRepository;
+
+    @Autowired
+    BestellService bestellService;
 
     @Autowired
     SimpleController simpleController;
@@ -59,13 +63,17 @@ public class RestController {
     }
 
     @PostMapping("/bestellen")
-    public Long bestellen(@RequestBody Kunde kunde) {
-        Kunde gespeicherterKunde = kundenRepository.save(kunde);
-        return gespeicherterKunde.getId();
+    public Long bestellen(@RequestBody Bestellung bestellung) {
+        Kunde kunde = bestellung.getKunde();
+        if (kunde.getId()==null) {
+            kundenRepository.save(kunde);
+        }
+        bestellService.speichere(bestellung, true);
+        return kunde.getId();
     }
 
-    @GetMapping("/kunde")
-    public Kunde kundeLaden(@RequestParam Long id) {
+    @GetMapping("/kunde/{id}")
+    public Kunde kundeLaden(@PathVariable Long id) {
         Kunde kunde = new Kunde();
         if (id != null) {
             Optional<Kunde> kundeDB = kundenRepository.findById(id);
@@ -74,5 +82,10 @@ public class RestController {
             }
         }
         return kunde;
+    }
+
+    @GetMapping("/bestellung/{id}")
+    public Bestellung bestellung(@PathVariable Long id) {
+        return bestellService.lade(id);
     }
 }
