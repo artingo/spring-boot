@@ -9,8 +9,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static de.karrieretutor.springboot.domain.Kategorie.KAT1;
-import static de.karrieretutor.springboot.domain.Unterkategorie.KEINE_AHNUNG;
+import static de.karrieretutor.springboot.enums.Kategorie.KAT1;
+import static de.karrieretutor.springboot.enums.Unterkategorie.KEINE_AHNUNG;
 import static java.util.Optional.of;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

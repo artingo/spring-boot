@@ -1,4 +1,4 @@
-package de.karrieretutor.springboot.domain;
+package de.karrieretutor.springboot.enums;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
