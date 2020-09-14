@@ -8,7 +8,7 @@
             </Pattern>
         </layout>
     </appender>
-    <root level="info">
+    <root level="warn">
         <appender-ref ref="Console"/>
     </root>
     <logger name="de.karrieretutor.springboot" level="debug" additivity="false">
