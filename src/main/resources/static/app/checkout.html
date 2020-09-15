@@ -123,7 +123,7 @@
 					}
 					let kundenId = localStorage.getItem('kundenId')
 					if (kundenId) {
-						fetch('/app/kunde?id=' + kundenId)
+						fetch('/app/kunde/' + kundenId)
 							.then(res => res.json())
 							.then(kunde => {
 								this.kunde = kunde

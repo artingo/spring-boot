@@ -65,4 +65,13 @@ public class Bestellung {
         produkte.forEach(p -> p.setBestellung(this));
         this.produkte = produkte;
     }
+
+    public String getGesamtpreis() {
+        double gesamtpreis = 0;
+        for(BestelltesProdukt p : produkte) {
+            gesamtpreis += p.getProdukt().getPreis();
+        }
+        return String.format("%.2f", gesamtpreis);
+
+    }
 }

@@ -20,6 +20,8 @@ public class Warenkorb {
         this.produkte = produkte;
     }
 
+    //TODO: Anzahl einbauen
+
     public String getGesamtpreis() {
         double gesamtpreis = 0;
         for(Produkt p : produkte) {

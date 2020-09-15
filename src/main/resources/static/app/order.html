@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="de">
+<head>
+	<title v-t="'order.title'"></title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="description" content="A web shop that uses Material Design Lite.">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+
+	<link rel="stylesheet" href="/fonts.css"/>
+	<link rel="stylesheet" href="/material.grey-pink.min.css"/>
+	<link rel="stylesheet" href="/styles.css"/>
+	<link rel="stylesheet" href="/icons.css"/>
+	<style type="text/css">
+		#payment .mdl-textfield {
+			margin-bottom: 10px;
+		}
+		#payment .mdl-card__supporting-text > label {
+			display: block;
+		}
+	</style>
+
+	<script src="/js/vue.min.js"></script>
+	<script src="/js/vue-i18n.min.js"></script>
+	<script src="components.js"></script>
+
+	<script type="text/javascript" language="JavaScript">
+		loadLanguage().then(function () {
+			new Vue({
+				i18n: i18n,
+				el: '#app',
+				components: {
+					'app-header': AppHeader,
+					'drawer': Drawer,
+					'app-footer': AppFooter
+				},
+				data: {
+					bestellung: {
+						produkte: []
+					},
+					message: ''
+				},
+				methods: {},
+				created: function () {
+					let bestellId = localStorage.getItem('bestellId')
+					if (bestellId) {
+						fetch('/app/bestellung/' + bestellId)
+							.then(res => res.json())
+							.then(bestellung => {
+								this.bestellung = bestellung
+							})
+					}
+				}
+			})
+		})
+	</script>
+</head>
+<body>
+<div id="app" class="mdl-layout mdl-js-layout mdl-layout--fixed-header has-drawer is-upgraded">
+	<app-header active="checkout"></app-header>
+	<drawer></drawer>
+
+
+	<main class="mdl-layout__content">
+		<div class="portfolio-max-width">
+			<h4 v-show="message" v-text="message"></h4>
+
+			<div class="mdl-cell mdl-cell--10-col mdl-card mdl-shadow--4dp">
+				<div class="mdl-card__title">
+					<span class="mdl-card__title-text" v-t="'order.title'"></span>
+				</div>
+				<table class="mdl-data-table mdl-js-data-table" data-upgraded=",MaterialDataTable">
+					<thead>
+					<tr>
+						<th width="20%" class="mdl-data-table__cell--non-numeric" v-t="'table.image'"></th>
+						<th class="mdl-data-table__cell--non-numeric" v-t="'table.description'"></th>
+						<th width="20%" v-t="'table.price'"></th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr v-for="p in bestellung.produkte" :set="produkt=p.produkt">
+						<td class="mdl-data-table__cell--non-numeric">
+							<img :src="'/fotos/'+produkt.id" :alt="produkt.name" height="30" border="0"/>
+						</td>
+						<td class="mdl-data-table__cell--non-numeric">{{produkt.name}}</td>
+						<td>{{produkt.preisFormatiert}} €</td>
+					</tr>
+					</tbody>
+					<tfoot>
+					<tr>
+						<td></td>
+						<td class="mdl-data-table__cell--non-numeric">
+							{{$t('label.total.number')}}
+							{{bestellung.produkte.length}}
+						</td>
+						<td>{{$t('label.total.price')}}
+							{{bestellung.gesamtpreis}} €
+						</td>
+					</tr>
+					</tfoot>
+				</table>
+			</div>
+		</div>
+
+		<app-footer></app-footer>
+	</main>
+</div>
+<script src="/js/material.min.js"></script>
+</body>
+</html>
