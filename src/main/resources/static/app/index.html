@@ -10,7 +10,7 @@
 	<link rel="stylesheet" href="/css/material.grey-pink.min.css"/>
 	<link rel="stylesheet" href="/css/styles.css"/>
 
-	<script src="/js/vue.min.js"></script>
+	<script src="/js/vue.js"></script>
 	<script src="/js/vue-i18n.min.js"></script>
 	<script src="components.js"></script>
 
@@ -41,14 +41,14 @@
 							this.warenkorb.gesamtpreis += produkt.preis
 							this.warenkorb.produkte.push(produkt)
 							this.message = i18n.t('cart.added', [produkt.name])
-							localStorage.setItem("warenkorb", JSON.stringify(this.warenkorb))
+							sessionStorage.setItem(WARENKORB, JSON.stringify(this.warenkorb))
 							return
 						}
 					})
 				}
 			},
 			created: function () {
-				let tempWarenkorb = localStorage.getItem("warenkorb")
+				let tempWarenkorb = sessionStorage.getItem(WARENKORB)
 				if (tempWarenkorb) {
 					this.warenkorb = JSON.parse(tempWarenkorb)
 				}
@@ -64,7 +64,7 @@
 </head>
 <body>
 <div id="app" class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-	<app-header active="index" title="nav.portfolio"></app-header>
+	<app-header active="index" title="nav.portfolio" :badge="warenkorb.produkte.length"></app-header>
 	<drawer></drawer>
 
 	<main class="mdl-layout__content">

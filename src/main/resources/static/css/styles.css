@@ -135,7 +135,7 @@ img.article-image {
   max-width: 1280px;
   margin: auto;
 }
-.portfolio-max-width .mdl-card {
+.portfolio-max-width .mdl-grid {
   margin: 5px auto;
 }
 
@@ -206,6 +206,11 @@ footer {
 
 .mdl-data-table tfoot {
     font-size: larger;
+}
+
+.center {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* fallback */

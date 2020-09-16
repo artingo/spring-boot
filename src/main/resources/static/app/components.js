@@ -1,22 +1,33 @@
 const index = location.search.indexOf('lang=')
-const	lang = (index==-1)? localStorage.getItem('lang')||'de' : location.search.substring(index + 5, index + 7).toLowerCase()
+const	lang = (index==-1)? sessionStorage.getItem('lang')||'de' : location.search.substring(index + 5, index + 7).toLowerCase()
 const i18n = new VueI18n({
 	locale: lang,
 	messages: {},
 })
+const WARENKORB = 'warenkorb'
 
 function loadLanguage(locale) {
 	locale = locale || lang
-	// console.log(i18n.messages[locale])
-	return fetch("/app/messages?lang=" + locale, {	headers: { "Content-Type": "application/json" }	})
-		.then(res => res.json())
-		.then(responseData => {
-			i18n.setLocaleMessage(locale, responseData)
-			i18n.locale = locale
-			localStorage.setItem('lang', locale)
-			// sessionStorage.setItem('lang_'+locale, responseData)
-			document.querySelector('html').setAttribute('lang', locale)
-		})
+	const messages = sessionStorage.getItem('messages_' + locale)
+	if (messages) {
+		console.log('loading from sessionStorage')
+		setMessages(locale, JSON.parse(messages))
+		return new Promise(resolve => setTimeout(resolve, 10))
+	} else {
+		return fetch("/app/messages?lang=" + locale, {headers: {"Content-Type": "application/json"}})
+			.then(res => res.json())
+			.then(messages => {
+				console.log('loading from Server')
+				setMessages(locale, messages)
+			})
+	}
+}
+function setMessages(locale, messages) {
+	i18n.setLocaleMessage(locale, messages)
+	i18n.locale = locale
+	sessionStorage.setItem('lang', locale)
+	sessionStorage.setItem('messages_' + locale, JSON.stringify(messages))
+	document.querySelector('html').setAttribute('lang', locale)
 }
 
 const AppHeader = {
@@ -31,9 +42,10 @@ const AppHeader = {
 			<nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
 				<a href="index.html" class="mdl-navigation__link" :class="{'is-active':active=='index'}" v-t="'nav.portfolio'"></a>
 				<a href="cart.html"  class="mdl-navigation__link" :class="{'is-active':active=='cart'}">
-					<span class="mdl-badge" :data-badge="warenkorb.produkte.length" v-t="'nav.cart'"></span>
+					<span class="mdl-badge" :data-badge="cartItems" v-t="'nav.cart'"></span>
 				</a>
-				<a v-if="warenkorb.produkte.length>0"	href="checkout.html" class="mdl-navigation__link" :class="{'is-active':active=='checkout'}">
+				<a v-if="cartItems>0"	href="checkout.html" class="mdl-navigation__link" 
+					:class="{'is-active':active=='checkout'}">
 					{{$t('button.checkout')}}
 					<i class="material-icons">exit_to_app</i>
 				</a>
@@ -49,7 +61,7 @@ const AppHeader = {
 			</nav>
 		</div>
 	</header>`,
-	props: ['active', 'title'],
+	props: ['active', 'title', 'badge'],
 	data: function() {
 		return {
 			lang: lang,
@@ -57,15 +69,17 @@ const AppHeader = {
 		}
 	},
 	watch: {
-		lang: (newValue) => {
-			let browserTitle = this.title
-			loadLanguage(newValue).then(function() {
-				document.title = i18n.t(browserTitle)
-			})
+		lang: function(newValue) {
+			loadLanguage(newValue).then(() => document.title = i18n.t(this.title))
+		}
+	},
+	computed: {
+		cartItems: function() {
+			return this.badge || this.warenkorb.produkte.length
 		}
 	},
 	created: function() {
-		let localWarenkorb = localStorage.getItem("warenkorb")
+		let localWarenkorb = sessionStorage.getItem("warenkorb")
 		if (localWarenkorb) {
 			this.warenkorb = JSON.parse(localWarenkorb)
 		}
