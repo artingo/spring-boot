@@ -7,12 +7,14 @@ const i18n = new VueI18n({
 
 function loadLanguage(locale) {
 	locale = locale || lang
+	// console.log(i18n.messages[locale])
 	return fetch("/app/messages?lang=" + locale, {	headers: { "Content-Type": "application/json" }	})
 		.then(res => res.json())
 		.then(responseData => {
 			i18n.setLocaleMessage(locale, responseData)
 			i18n.locale = locale
 			localStorage.setItem('lang', locale)
+			// sessionStorage.setItem('lang_'+locale, responseData)
 			document.querySelector('html').setAttribute('lang', locale)
 		})
 }
@@ -29,9 +31,9 @@ const AppHeader = {
 			<nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
 				<a href="index.html" class="mdl-navigation__link" :class="{'is-active':active=='index'}" v-t="'nav.portfolio'"></a>
 				<a href="cart.html"  class="mdl-navigation__link" :class="{'is-active':active=='cart'}">
-					<span class="mdl-badge" :data-badge="badge" v-t="'nav.cart'"></span>
+					<span class="mdl-badge" :data-badge="warenkorb.produkte.length" v-t="'nav.cart'"></span>
 				</a>
-				<a v-if="badge>0"	href="checkout.html" class="mdl-navigation__link" :class="{'is-active':active=='checkout'}">
+				<a v-if="warenkorb.produkte.length>0"	href="checkout.html" class="mdl-navigation__link" :class="{'is-active':active=='checkout'}">
 					{{$t('button.checkout')}}
 					<i class="material-icons">exit_to_app</i>
 				</a>
@@ -47,25 +49,29 @@ const AppHeader = {
 			</nav>
 		</div>
 	</header>`,
-	props: ['active', 'badge', 'title'],
+	props: ['active', 'title'],
 	data: function() {
 		return {
 			lang: lang,
 			warenkorb: {produkte: []}
 		}
 	},
-	watch: { lang: loadLanguage },
-	created: function () {
+	watch: {
+		lang: (newValue) => {
+			let browserTitle = this.title
+			loadLanguage(newValue).then(function() {
+				document.title = i18n.t(browserTitle)
+			})
+		}
+	},
+	created: function() {
 		let localWarenkorb = localStorage.getItem("warenkorb")
 		if (localWarenkorb) {
 			this.warenkorb = JSON.parse(localWarenkorb)
 		}
-		document.title = this.title
+		document.title = i18n.t(this.title)
 	},
-	style: `
-	.className {
-	}
-	`
+	style: ``
 }
 
 const Drawer = {

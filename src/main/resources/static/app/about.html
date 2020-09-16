@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="de">
 <head>
-	<title v-t="'nav.about'"></title>
+	<title></title>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="description" content="A web shop that uses Material Design Lite.">
@@ -24,25 +24,14 @@
 				'drawer':     Drawer,
 				'app-footer': AppFooter
 			},
-			data: {
-				warenkorb: {
-					produkte: [],
-					gesamtpreis: 0.0
-				}
-			},
-			created: function () {
-				let tempWarenkorb = localStorage.getItem("warenkorb")
-				if (tempWarenkorb) {
-					this.warenkorb = JSON.parse(tempWarenkorb)
-				}
-			}
+			data: {}
 		});
 	})
 	</script>
 </head>
 <body>
 <div id="app" class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-	<app-header active="about" :badge="warenkorb.produkte.length"></app-header>
+	<app-header active="about" title="nav.about"></app-header>
 	<drawer></drawer>
 
 	<main class="mdl-layout__content">

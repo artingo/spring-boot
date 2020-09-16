@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="de">
 <head>
-	<title v-t="'button.checkout'"></title>
+	<title></title>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="description" content="A web shop that uses Material Design Lite.">
@@ -23,126 +23,126 @@
 	<script src="components.js"></script>
 
 	<script type="text/javascript" language="JavaScript">
-		loadLanguage().then(function () {
-			new Vue({
-				i18n: i18n,
-				el: '#app',
-				components: {
-					'app-header': AppHeader,
-					'drawer': Drawer,
-					'app-footer': AppFooter
+	loadLanguage().then(function () {
+		new Vue({
+			i18n: i18n,
+			el: '#app',
+			components: {
+				'app-header': AppHeader,
+				'drawer': Drawer,
+				'app-footer': AppFooter
+			},
+			data: {
+				warenkorb: {
+					produkte: [],
+					gesamtpreis: 0.0
 				},
-				data: {
-					warenkorb: {
-						produkte: [],
-						gesamtpreis: 0.0
-					},
-					kunde: {
-						id: '',
-						vorname: '',
-						nachname: '',
-						strasse: '',
-						plz: '',
-						ort: '',
-						zahlungsart: null,
-						iban: '',
-						kreditkartenNr: '',
-						email: ''
-					},
-					isInvalid: {
-						vorname: false,
-						nachname: false,
-						strasse: false,
-						plz: false,
-						ort: false,
-						// zahlungsart: false
-					},
-					message: ''
+				kunde: {
+					id: '',
+					vorname: '',
+					nachname: '',
+					strasse: '',
+					plz: '',
+					ort: '',
+					zahlungsart: null,
+					iban: '',
+					kreditkartenNr: '',
+					email: ''
 				},
-				methods: {
-					validierung: function (e) {
-						let isValid = true
-						for (const key in this.isInvalid) {
-							if (!this.kunde[key]) {
-								this.isInvalid[key] = true
-								isValid = false
-							}
+				isInvalid: {
+					vorname: false,
+					nachname: false,
+					strasse: false,
+					plz: false,
+					ort: false,
+					// zahlungsart: false
+				},
+				message: ''
+			},
+			methods: {
+				validierung: function (e) {
+					let isValid = true
+					for (const key in this.isInvalid) {
+						if (!this.kunde[key]) {
+							this.isInvalid[key] = true
+							isValid = false
 						}
-						// console.log('zahlungsart', this.kunde.zahlungsart)
-						/*switch (this.kunde.zahlungsart) {
-							case 0:
-								isValid = !(this.kunde.iban)
-								this.isInvalid.iban = true;
-								break
-							case 1:
-								isValid = !(this.kunde.kreditkartenNr)
-								this.isInvalid.kreditkartenNr = true;
-								break
-							case 2:
-								isValid = !(this.kunde.email)
-								this.isInvalid.email = true
-						}*/
-						// if (!this.kunde.iban) {
-						// 	this.isInvalid.iban = true
-						// 	isValid = false
-						// }
+					}
+					// console.log('zahlungsart', this.kunde.zahlungsart)
+					/*switch (this.kunde.zahlungsart) {
+						case 0:
+							isValid = !(this.kunde.iban)
+							this.isInvalid.iban = true;
+							break
+						case 1:
+							isValid = !(this.kunde.kreditkartenNr)
+							this.isInvalid.kreditkartenNr = true;
+							break
+						case 2:
+							isValid = !(this.kunde.email)
+							this.isInvalid.email = true
+					}*/
+					// if (!this.kunde.iban) {
+					// 	this.isInvalid.iban = true
+					// 	isValid = false
+					// }
 
-						if (isValid) {
-							this.bestellen()
-						}
-					},
-					bestellen: function() {
-						let postData = this.buildJSON();
-						console.log('postData', postData)
-						fetch('/app/bestellen', {
-							method: 'POST',
-							headers: { 'Content-Type': 'application/json' },
-							body: JSON.stringify(postData)
-						})
-							.then(res => res.json())
-							.then(kundenId => {
-								const msgKey = (kundenId!=-1) ? 'order.success' : 'order.failure'
-								this.message = i18n.t(msgKey)
-								this.kunde.id = kundenId
-								localStorage.setItem('kundenId', kundenId)
-								this.warenkorb = {
-									produkte: [],
-									gesamtpreis: 0.0
-								}
-								localStorage.setItem("warenkorb", JSON.stringify(this.warenkorb))
-							})
-					},
-					buildJSON: function () {
-						let data = {
-							kunde: this.kunde,
-							produkte: this.warenkorb.produkte.map(p => {return {
-								produkt: p
-							}})
-						}
-						return data;
+					if (isValid) {
+						this.bestellen()
 					}
 				},
-				created: function () {
-					let tempWarenkorb = localStorage.getItem("warenkorb")
-					if (tempWarenkorb) {
-						this.warenkorb = JSON.parse(tempWarenkorb)
+				bestellen: function() {
+					let postData = this.buildJSON();
+					console.log('postData', postData)
+					fetch('/app/bestellen', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify(postData)
+					})
+						.then(res => res.json())
+						.then(kundenId => {
+							const msgKey = (kundenId!=-1) ? 'order.success' : 'order.failure'
+							this.message = i18n.t(msgKey)
+							this.kunde.id = kundenId
+							localStorage.setItem('kundenId', kundenId)
+							this.warenkorb = {
+								produkte: [],
+								gesamtpreis: 0.0
+							}
+							localStorage.setItem("warenkorb", JSON.stringify(this.warenkorb))
+						})
+				},
+				buildJSON: function () {
+					let data = {
+						kunde: this.kunde,
+						produkte: this.warenkorb.produkte.map(p => {return {
+							produkt: p
+						}})
 					}
-					let kundenId = localStorage.getItem('kundenId')
-					if (kundenId) {
-						fetch('/app/kunde/' + kundenId)
-							.then(res => res.json())
-							.then(kunde => {
-								this.kunde = kunde
-							})
-					}
+					return data;
 				}
-			})
+			},
+			created: function () {
+				let tempWarenkorb = localStorage.getItem("warenkorb")
+				if (tempWarenkorb) {
+					this.warenkorb = JSON.parse(tempWarenkorb)
+				}
+				let kundenId = localStorage.getItem('kundenId')
+				if (kundenId) {
+					fetch('/app/kunde/' + kundenId)
+						.then(res => res.json())
+						.then(kunde => {
+							this.kunde = kunde
+						})
+				}
+			}
 		})
+	})
 	</script>
 </head>
 <body>
 <div id="app" class="mdl-layout mdl-js-layout mdl-layout--fixed-header has-drawer is-upgraded">
-	<app-header active="checkout" :badge="warenkorb.produkte.length"></app-header>
+	<app-header active="checkout" title="button.checkout"></app-header>
 	<drawer></drawer>
 	<main class="mdl-layout__content">
 		<div class="portfolio-max-width">
