@@ -128,6 +128,9 @@ img.article-image {
   max-width: 1280px;
   margin: auto;
 }
+.portfolio-max-width .mdl-card {
+  margin: 5px auto;
+}
 
 .portfolio-copy {
   max-width: 700px;

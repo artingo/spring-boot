@@ -90,21 +90,29 @@
 						// }
 
 						if (isValid) {
-							let postData = this.buildJSON();
-							console.log('postData', postData)
-							fetch('/app/bestellen', {
-								method: 'POST',
-								headers: { 'Content-Type': 'application/json' },
-								body: JSON.stringify(postData)
-							})
+							this.bestellen()
+						}
+					},
+					bestellen: function() {
+						let postData = this.buildJSON();
+						console.log('postData', postData)
+						fetch('/app/bestellen', {
+							method: 'POST',
+							headers: { 'Content-Type': 'application/json' },
+							body: JSON.stringify(postData)
+						})
 							.then(res => res.json())
 							.then(kundenId => {
 								const msgKey = (kundenId!=-1) ? 'order.success' : 'order.failure'
 								this.message = i18n.t(msgKey)
 								this.kunde.id = kundenId
 								localStorage.setItem('kundenId', kundenId)
+								this.warenkorb = {
+									produkte: [],
+									gesamtpreis: 0.0
+								}
+								localStorage.setItem("warenkorb", JSON.stringify(this.warenkorb))
 							})
-						}
 					},
 					buildJSON: function () {
 						let data = {
@@ -144,7 +152,7 @@
 		<div class="portfolio-max-width">
 			<h4 v-show="message" v-text="message"></h4>
 			<button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
-			        style="float:right; font-size:larger" @click="validierung">
+			        style="position: absolute; right:14%; z-index:99; font-size:larger" @click="validierung">
 				{{$t('button.buy.now')}}
 				<span class="mdl-button__ripple-container">
 					<span class="mdl-ripple"></span>
