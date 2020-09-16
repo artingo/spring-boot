@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -17,17 +16,14 @@ public class BestellService {
     BestellungRepository bestellRepository;
 
     @Transactional(readOnly = true)
-    public List<Bestellung> alleBestellungen() {
-        List<Bestellung> result = new ArrayList<>();
-        this.bestellRepository.findAll().forEach(result::add);
-        return result;
+    public Bestellung lade(Long id) {
+        return this.bestellRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Order not found for ID: " + id));
     }
 
     @Transactional(readOnly = true)
-    public Bestellung lade(Long id) {
-        return this.bestellRepository
-                .findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found for ID: " + id));
+    public List<Bestellung> bestellungenVonKunde(Long kundenId) {
+        return this.bestellRepository.findByKundeId(kundenId);
     }
 
     @Transactional()

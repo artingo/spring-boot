@@ -86,4 +86,9 @@ public class RestController {
     public Bestellung bestellung(@PathVariable Long id) {
         return bestellService.lade(id);
     }
+
+    @GetMapping("/bestellungen/{kundenId}")
+    public List<Bestellung> bestellungen(@PathVariable Long kundenId) {
+        return bestellService.bestellungenVonKunde(kundenId);
+    }
 }
