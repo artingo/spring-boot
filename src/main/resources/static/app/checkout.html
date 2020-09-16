@@ -146,13 +146,11 @@
 <div id="app" class="mdl-layout mdl-js-layout mdl-layout--fixed-header has-drawer is-upgraded">
 	<app-header active="checkout" :badge="warenkorb.produkte.length"></app-header>
 	<drawer></drawer>
-
-
 	<main class="mdl-layout__content">
 		<div class="portfolio-max-width">
 			<h4 v-show="message" v-text="message"></h4>
 			<button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
-			        style="position: absolute; right:14%; z-index:99; font-size:larger" @click="validierung">
+        id="buy-button" @click="validierung">
 				{{$t('button.buy.now')}}
 				<span class="mdl-button__ripple-container">
 					<span class="mdl-ripple"></span>
@@ -287,7 +285,6 @@
 				</div>
 			</form>
 		</div>
-
 		<app-footer></app-footer>
 	</main>
 </div>

@@ -72,6 +72,13 @@
     background-color: rgba(197, 197, 197, 0.44);
 }
 
+#buy-button {
+  position: absolute;
+  right:14%;
+  z-index:99;
+  font-size:larger;
+}
+
 .portfolio-navigation-row .is-active {
   position: relative;
   font-weight: bold;
