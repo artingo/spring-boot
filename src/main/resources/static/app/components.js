@@ -47,7 +47,7 @@ const AppHeader = {
 			</nav>
 		</div>
 	</header>`,
-	props: ['active', 'badge'],
+	props: ['active', 'badge', 'title'],
 	data: function() {
 		return {
 			lang: lang,
@@ -60,6 +60,7 @@ const AppHeader = {
 		if (localWarenkorb) {
 			this.warenkorb = JSON.parse(localWarenkorb)
 		}
+		document.title = this.title
 	},
 	style: `
 	.className {

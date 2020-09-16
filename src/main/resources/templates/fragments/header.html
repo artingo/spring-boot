@@ -7,14 +7,14 @@
     <div class="mdl-layout__header-row portfolio-navigation-row mdl-layout--large-screen-only">
 
         <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
-            <a href="/index.html" class="mdl-navigation__link"
+            <a href="/app/index.html" class="mdl-navigation__link"
                th:classappend="${titel=='Index'}?is-active" th:text="#{nav.portfolio}"></a>
-            <a href="/warenkorb.html" sec:authorize="!isAuthenticated()" class="mdl-navigation__link"
+            <a href="/app/cart.html" sec:authorize="!isAuthenticated()" class="mdl-navigation__link"
                th:classappend="${titel=='Warenkorb'}?is-active">
-            <span th:text="#{nav.cart}" class="mdl-badge"
+	            <span th:text="#{nav.cart}" class="mdl-badge"
                   th:data-badge="${warenkorb.produkte.size()}"/>
             </a>
-            <a href="/checkout.html" sec:authorize="!isAuthenticated()" th:if="${titel=='Checkout' || !warenkorb.produkte.isEmpty()}"
+            <a href="/app/checkout.html" sec:authorize="!isAuthenticated()" th:if="${titel=='Checkout' || !warenkorb.produkte.isEmpty()}"
                class="mdl-navigation__link" th:classappend="${titel=='Checkout'}?is-active">
                 <span th:text="#{button.checkout}"></span>
                 <i class="material-icons">exit_to_app</i>
@@ -22,7 +22,7 @@
             <a sec:authorize="isAuthenticated()"
                href="/admin/bearbeiten.html" class="mdl-navigation__link"
                th:classappend="${titel=='bearbeiten'}?is-active" th:text="#{nav.product}"></a>
-            <a href="/about.html" class="mdl-navigation__link"
+            <a href="/app/about.html" class="mdl-navigation__link"
                th:classappend="${titel=='About'}?is-active" th:text="#{nav.about}"></a>
         </nav>
         <span>

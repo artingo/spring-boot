@@ -17,6 +17,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/admin/**")       //admin pages
             .authenticated().and().formLogin().permitAll()
             // logout redirects to start page
-            .and().logout().logoutSuccessUrl("/index.html");
+            .and().logout().logoutSuccessUrl("/app/index.html");
     }
 }
