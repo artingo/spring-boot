@@ -13,7 +13,7 @@ import static javax.persistence.CascadeType.ALL;
 @Entity
 public class Bestellung {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @JsonFormat(pattern = "dd.MM.yyyy hh:mm")
