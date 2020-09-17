@@ -68,7 +68,9 @@
 					<tbody>
 					<tr v-for="bestellung in bestellungen">
 						<td class="mdl-data-table__cell--non-numeric">{{bestellung.id}}</td>
-						<td class="mdl-data-table__cell--non-numeric">{{bestellung.datum}}</td>
+						<td class="mdl-data-table__cell--non-numeric">
+							<a :href="'order.html?id='+bestellung.id">{{bestellung.datum}}</a>
+						</td>
 						<td class="" align="center">{{bestellung.produkte.length}}</td>
 						<td>{{bestellung.gesamtpreis}} €</td>
 					</tr>

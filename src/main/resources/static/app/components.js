@@ -1,32 +1,32 @@
+const WARENKORB='warenkorb', LANG='lang', MESSAGES='messages_'
 const index = location.search.indexOf('lang=')
-const	lang = (index==-1)? sessionStorage.getItem('lang')||'de' : location.search.substring(index + 5, index + 7).toLowerCase()
+const	lang = (index==-1)? localStorage.getItem(LANG)||'de' : location.search.substring(index + 5, index + 7).toLowerCase()
 const i18n = new VueI18n({
 	locale: lang,
 	messages: {},
 })
-const WARENKORB = 'warenkorb'
 
 function loadLanguage(locale) {
 	locale = locale || lang
-	const messages = sessionStorage.getItem('messages_' + locale)
-	if (messages) {
+	const msgStorage = sessionStorage.getItem(MESSAGES + locale)
+	if (msgStorage) {
 		console.log('loading from sessionStorage')
-		setMessages(locale, JSON.parse(messages))
-		return new Promise(resolve => setTimeout(resolve, 10))
+		setMessages(locale, JSON.parse(msgStorage))
+		return new Promise(resolve => setTimeout(resolve, 0))
 	} else {
 		return fetch("/app/messages?lang=" + locale, {headers: {"Content-Type": "application/json"}})
 			.then(res => res.json())
-			.then(messages => {
+			.then(msgServer => {
 				console.log('loading from Server')
-				setMessages(locale, messages)
+				setMessages(locale, msgServer)
+				sessionStorage.setItem(MESSAGES + locale, JSON.stringify(msgServer))
 			})
 	}
 }
 function setMessages(locale, messages) {
 	i18n.setLocaleMessage(locale, messages)
 	i18n.locale = locale
-	sessionStorage.setItem('lang', locale)
-	sessionStorage.setItem('messages_' + locale, JSON.stringify(messages))
+	localStorage.setItem(LANG, locale)
 	document.querySelector('html').setAttribute('lang', locale)
 }
 
@@ -49,6 +49,7 @@ const AppHeader = {
 					{{$t('button.checkout')}}
 					<i class="material-icons">exit_to_app</i>
 				</a>
+				<a href="orders.html" class="mdl-navigation__link" :class="{'is-active':active=='orders'}" v-t="'nav.orders'"></a>
 				<a href="about.html" class="mdl-navigation__link" :class="{'is-active':active=='about'}" v-t="'nav.about'"></a>
 				<span>
 					{{$t('lang.change')}}<br/>
@@ -79,7 +80,7 @@ const AppHeader = {
 		}
 	},
 	created: function() {
-		let localWarenkorb = sessionStorage.getItem("warenkorb")
+		let localWarenkorb = sessionStorage.getItem(WARENKORB)
 		if (localWarenkorb) {
 			this.warenkorb = JSON.parse(localWarenkorb)
 		}
@@ -96,6 +97,7 @@ const Drawer = {
 		<a class="mdl-navigation__link" href="index.html" v-t="'nav.portfolio'"></a>
 		<a class="mdl-navigation__link" href="cart.html" v-t="'nav.cart'"></a>
 		<a class="mdl-navigation__link" href="checkout.html" v-t="'button.checkout'"></a>
+		<a class="mdl-navigation__link" href="orders.html" v-t="'nav.orders'"></a>
 		<a class="mdl-navigation__link" href="about.html" v-t="'nav.about'"></a>
 		<a class="mdl-navigation__link" href="/login" v-t="'nav.login'"></a>
 	</nav>
