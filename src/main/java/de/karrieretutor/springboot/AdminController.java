@@ -2,6 +2,7 @@ package de.karrieretutor.springboot;
 
 import de.karrieretutor.springboot.domain.Produkt;
 import de.karrieretutor.springboot.domain.ProduktRepository;
+import de.karrieretutor.springboot.service.ProduktService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,9 @@ import java.util.Optional;
 @RequestMapping(value = "/admin/")
 public class AdminController {
     @Autowired
+    ProduktService produktService;
+
+    @Autowired
     MessageSource messageSource;
 
     @Autowired
@@ -30,13 +34,7 @@ public class AdminController {
 
     @GetMapping("bearbeiten.html")
     public String bearbeiten(@RequestParam(required = false, name = "id") Long id, Model model) {
-        Produkt aktuellesProdukt = new Produkt();
-        if (id != null) {
-            Optional<Produkt> produktDB = produktRepository.findById(id);
-            if (produktDB.isPresent()) {
-                aktuellesProdukt = produktDB.get();
-            }
-        }
+        Produkt aktuellesProdukt = (id != null)? produktService.getProdukt(id) : new Produkt();
         model.addAttribute("titel", "bearbeiten");
         model.addAttribute("produkt", aktuellesProdukt);
         return "admin/bearbeiten";
@@ -53,11 +51,12 @@ public class AdminController {
         }
         produkt.setDateiname(file.getOriginalFilename());
         produkt.setDatei(file.getBytes());
-        produktRepository.save(produkt);
+        Produkt neuesProdukt = produktRepository.save(produkt);
+        produktService.updateProdukt(neuesProdukt);
 
         String message = messageSource.getMessage("product.saved", new Object[]{produkt.getName()}, locale);
         redirect.addFlashAttribute("message", message);
-        model.addAttribute("produkte", produktRepository.findAll());
+        model.addAttribute("produkte", produktService.ladeProdukte());
         return "redirect:/index.html";
     }
 
@@ -70,8 +69,13 @@ public class AdminController {
             if (produktDB.isPresent()) {
                 Produkt produkt = produktDB.get();
                 String message = messageSource.getMessage("product.deleted", new Object[]{produkt.getName()}, locale);
+                try {
+                    produktRepository.delete(produkt);
+                    produktService.deleteProdukt(id);
+                } catch(Exception e) {
+                    message = messageSource.getMessage("product.delete.not.possible", new Object[]{produkt.getName()}, locale);
+                }
                 redirect.addFlashAttribute("message", message);
-                produktRepository.delete(produkt);
             }
         }
         return "redirect:/index.html";

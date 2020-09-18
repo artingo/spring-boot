@@ -3,6 +3,7 @@ package de.karrieretutor.springboot;
 import de.karrieretutor.springboot.domain.Produkt;
 import de.karrieretutor.springboot.domain.ProduktRepository;
 import de.karrieretutor.springboot.domain.Warenkorb;
+import de.karrieretutor.springboot.service.ProduktService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +26,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/")
@@ -36,12 +34,14 @@ public class SimpleController {
     Logger LOG = LoggerFactory.getLogger(SimpleController.class);
 
     @Autowired
+    ProduktService produktService;
+
+    @Autowired
     MessageSource messageSource;
 
     @Autowired
     ProduktRepository produktRepository;
     public Warenkorb warenkorb = new Warenkorb();
-    List<Produkt> produkte = new ArrayList<>();
 
     @GetMapping("/")
     public String homePage(Model model) {
@@ -56,10 +56,7 @@ public class SimpleController {
     @GetMapping("/index.html")
     public String shop(Model model, Locale locale) {
         model.addAttribute("titel", "Index");
-        if (produkte.isEmpty()) {
-            produktRepository.findAll().forEach(produkte::add);
-        }
-        model.addAttribute("produkte", produkte);
+        model.addAttribute("produkte", produktService.ladeProdukte());
         model.addAttribute("warenkorb", this.warenkorb);
         return "index";
     }
@@ -75,7 +72,7 @@ public class SimpleController {
     public ResponseEntity<Resource> fotos(@PathVariable Long id) throws IOException, URISyntaxException {
         byte[] bytes = new byte[0];
         if (id != null) {
-            Produkt produkt = getProdukt(id);
+            Produkt produkt = produktService.getProdukt(id);
             if (produkt != null) {
                 bytes = produkt.getDatei();
                 // wenn kein Bild hochgeladen wurde, dann lade das Standard-Bild
@@ -94,7 +91,7 @@ public class SimpleController {
     public String kaufen(@RequestParam Long id, Model model, RedirectAttributes redirect, Locale locale) {
         String message = messageSource.getMessage("cart.product.id.not.found", new String[]{String.valueOf(id)}, locale);
         if (id != null) {
-            Produkt produkt = getProdukt(id);
+            Produkt produkt = produktService.getProdukt(id);
             if (produkt != null) {
                 warenkorb.getProdukte().add(produkt);
                 message = messageSource.getMessage("cart.added", new String[]{produkt.getName()}, locale);
@@ -128,15 +125,5 @@ public class SimpleController {
         return "redirect:/warenkorb.html";
     }
 
-    private Produkt getProdukt(Long id) {
-        Optional<Produkt> produktDB;
-        if (!produkte.isEmpty()) {
-            LOG.debug("loading from Cache");
-            produktDB = produkte.stream().filter(p -> p.getId() == id).findFirst();
-        } else {
-            LOG.debug("loading from Repository");
-            produktDB = produktRepository.findById(id);
-        }
-        return produktDB.isPresent() ? produktDB.get() : null;
-    }
+
 }
