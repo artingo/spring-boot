@@ -204,6 +204,18 @@ footer {
     font-size: larger;
 }
 
+.mdl-data-table th,
+.mdl-data-table td {
+  text-align: left;
+}
+
+.centered {
+  text-align: center !important;
+}
+.right {
+  text-align: right !important;
+}
+
 .mdl-data-table tfoot {
     font-size: larger;
 }
