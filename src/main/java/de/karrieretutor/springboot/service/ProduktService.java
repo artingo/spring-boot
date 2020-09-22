@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +22,7 @@ public class ProduktService {
     private ProduktRepository produktRepository;
     private List<Produkt> cachedProdukte = new ArrayList<>();
 
+    @PostConstruct
     @Transactional(readOnly = true)
     public List<Produkt> ladeProdukte() {
         if (cachedProdukte.isEmpty()) {

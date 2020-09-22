@@ -71,16 +71,13 @@ public class SimpleController {
     @GetMapping("/fotos/{id}")
     public ResponseEntity<Resource> fotos(@PathVariable Long id) throws IOException, URISyntaxException {
         byte[] bytes = new byte[0];
-        if (id != null) {
-            Produkt produkt = produktService.getProdukt(id);
-            if (produkt != null) {
-                bytes = produkt.getDatei();
-                // wenn kein Bild hochgeladen wurde, dann lade das Standard-Bild
-                if (bytes == null || bytes.length == 0) {
-                    URL imageURL = this.getClass().getClassLoader().getResource("./static/images/no-image.png");
-                    bytes = Files.readAllBytes(Paths.get(imageURL.toURI()));
-                }
-            }
+        Produkt produkt = produktService.getProdukt(id);
+        if (produkt == null || produkt.getDatei() == null || produkt.getDatei().length==0) {
+            // wenn kein Bild hochgeladen wurde, dann lade das Standard-Bild
+            URL imageURL = this.getClass().getClassLoader().getResource("./static/images/no-image.png");
+            bytes = Files.readAllBytes(Paths.get(imageURL.toURI()));
+        } else {
+            bytes = produkt.getDatei();
         }
         return ResponseEntity.ok()
             .contentType(MediaType.IMAGE_JPEG)

@@ -15,32 +15,32 @@
 	<script src="components.js"></script>
 
 	<script type="text/javascript" language="JavaScript">
-		loadLanguage().then(function () {
-			new Vue({
-				i18n: i18n,
-				el: '#app',
-				components: {
-					'app-header': AppHeader,
-					'drawer': Drawer,
-					'app-footer': AppFooter
-				},
-				data: {
-					bestellungen: [],
-					message: ''
-				},
-				methods: {},
-				created: function () {
-					let kundenId = localStorage.getItem('kundenId')
-					if (kundenId) {
-						fetch('/app/bestellungen/' + kundenId)
-							.then(res => res.json())
-							.then(bestellungen => {
-								this.bestellungen = bestellungen
-							})
-					}
+	loadLanguage().then(function () {
+		new Vue({
+			i18n: i18n,
+			el: '#app',
+			components: {
+				'app-header': AppHeader,
+				'drawer': Drawer,
+				'app-footer': AppFooter
+			},
+			data: {
+				bestellungen: [],
+				message: ''
+			},
+			methods: {},
+			created: function () {
+				let kundenId = localStorage.getItem('kundenId')
+				if (kundenId) {
+					fetch('/app/bestellungen/' + kundenId)
+						.then(res => res.json())
+						.then(bestellungen => {
+							this.bestellungen = bestellungen
+						})
 				}
-			})
+			}
 		})
+	})
 	</script>
 </head>
 <body>
@@ -48,10 +48,10 @@
 	<app-header active="orders" title="orders.title"></app-header>
 	<drawer></drawer>
 
-
 	<main class="mdl-layout__content">
 		<div class="portfolio-max-width">
 			<h4 v-show="message" v-text="message"></h4>
+
 			<div class="center mdl-cell mdl-cell--6-col mdl-card mdl-shadow--4dp">
 				<div class="mdl-card__title">
 					<span class="mdl-card__title-text" v-t="'orders.title'"></span>
@@ -72,12 +72,14 @@
 						<td class="centered">{{bestellung.produkte.length}}</td>
 						<td class="right">{{bestellung.gesamtpreis}} €</td>
 					</tr>
-					<tr v-for="p in bestellung.produkte">
-						<td class="centered">{{p.produkt.id}}</td>
+<!--
+					<tr v-for="p in bestellung.produkte" class="">
+						<td class="centered">{{p.id}}</td>
 						<td>{{p.produkt.name}}</td>
 						<td>{{p.produkt.anzahl}}</td>
 						<td class="right">{{p.produkt.preisFormatiert}}</td>
 					</tr>
+-->
 					</tbody>
 					<tfoot>
 					<tr>

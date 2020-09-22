@@ -32,8 +32,9 @@
 				},
 				methods: {},
 				created: function () {
-					let bestellId = localStorage.getItem('bestellId')
-					if (bestellId) {
+					let index = location.search.indexOf('id=')
+					if (index) {
+						let bestellId = location.search.substring(index+3, location.search.length)
 						fetch('/app/bestellung/' + bestellId)
 							.then(res => res.json())
 							.then(bestellung => {
@@ -49,13 +50,11 @@
 <div id="app" class="mdl-layout mdl-js-layout mdl-layout--fixed-header has-drawer is-upgraded">
 	<app-header active="order" title="order.title"></app-header>
 	<drawer></drawer>
-
-
 	<main class="mdl-layout__content">
 		<div class="portfolio-max-width">
 			<h4 v-show="message" v-text="message"></h4>
 
-			<div class="mdl-cell mdl-cell--10-col mdl-card mdl-shadow--4dp">
+			<div class="center mdl-cell mdl-cell--8-col mdl-card mdl-shadow--4dp">
 				<div class="mdl-card__title">
 					<span class="mdl-card__title-text" v-t="'order.title'"></span>
 				</div>
@@ -68,12 +67,12 @@
 					</tr>
 					</thead>
 					<tbody>
-					<tr v-for="p in bestellung.produkte" :set="produkt=p.produkt">
+					<tr v-for="p in bestellung.produkte">
 						<td class="mdl-data-table__cell--non-numeric">
-							<img :src="'/fotos/'+produkt.id" :alt="produkt.name" height="30" border="0"/>
+							<img :src="'fotos/'+p.produkt.id" :alt="p.produkt.name" height="30" border="0"/>
 						</td>
-						<td class="mdl-data-table__cell--non-numeric">{{produkt.name}}</td>
-						<td>{{produkt.preisFormatiert}} €</td>
+						<td class="mdl-data-table__cell--non-numeric">{{p.produkt.name}}</td>
+						<td>{{p.produkt.preisFormatiert}} €</td>
 					</tr>
 					</tbody>
 					<tfoot>
