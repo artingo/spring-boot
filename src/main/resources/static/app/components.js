@@ -110,7 +110,9 @@ const AppFooter = {
 	template:
 	`<footer class="mdl-mini-footer">
 		<div class="mdl-mini-footer__left-section">
-			<div class="mdl-logo" v-t="'footer.title'"></div>
+			<div class="mdl-logo">
+        <a href="/index.html" v-t="'footer.title'"></a>
+			</div>
 		</div>
 		<div class="mdl-mini-footer__right-section">
 			<ul class="mdl-mini-footer__link-list">
