@@ -1,0 +1,38 @@
+<!doctype html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title th:text="${titel}"></title>
+    <link th:replace="fragments/styles"/>
+</head>
+
+<body>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header th:replace="fragments/header"></header>
+    <main class="mdl-layout__content">
+        <div class="mdl-grid portfolio-max-width">
+
+            <div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp">
+                <div class="mdl-card__title">
+                    <h2 class="mdl-card__title-text" th:text="#{nav.help}"></h2>
+                </div>
+
+                <div class="mdl-grid portfolio-copy">
+                    <div class="mdl-cell mdl-cell--8-col mdl-card__supporting-text no-padding ">
+                        <p>
+                            What is the purpose of this website?
+                            <br />
+                            <br />
+                            This website doesn't aim for a commercial purpose! It is a demo game-shop for learning website skills!
+
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <footer th:replace="fragments/footer"/>
+    </main>
+</div>
+</body>
+</html>

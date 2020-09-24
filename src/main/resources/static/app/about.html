@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="de">
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="description" content="A web shop that uses Material Design Lite.">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+
+	<link rel="stylesheet" href="/css/material.grey-pink.min.css"/>
+	<link rel="stylesheet" href="/css/styles.css"/>
+
+	<script src="/js/vue.js"></script>
+	<script src="/js/vue-i18n.min.js"></script>
+	<script src="components.js"></script>
+
+	<script language="JavaScript">
+	loadLanguage().then(function() {
+		new Vue({
+			i18n: i18n,
+			el: '#app',
+			components: {
+				'app-header': AppHeader,
+				'drawer':     Drawer,
+				'app-footer': AppFooter
+			},
+			data: {}
+		});
+	})
+	</script>
+</head>
+<body>
+<div id="app" class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+	<app-header active="about" title="nav.about"></app-header>
+	<drawer></drawer>
+
+	<main class="mdl-layout__content">
+		<div class="portfolio-max-width">
+			<div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp">
+				<div class="mdl-card__title">
+					<h2 class="mdl-card__title-text" v-t="'nav.about'"></h2>
+				</div>
+				<div class="mdl-card__media">
+					<img class="article-image" src="/images/about-header.jpg" border="0" alt="">
+				</div>
+
+				<div class="mdl-grid portfolio-copy">
+					<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline" v-t="'about.title'"></h3>
+					<div class="mdl-cell mdl-cell--8-col mdl-card__supporting-text no-padding ">
+						<p v-html="$t('about.p1')"></p>
+					</div>
+
+					<div class="mdl-cell mdl-cell--8-col mdl-card__supporting-text no-padding">
+						<strong>&copy;opyright</strong>
+						<div itemscope itemtype="http://schema.org/ScholarlyArticle">
+							<address class="mdl-card__supporting-text no-padding">
+								<a href="http://artingo.net" target="_blank">artingo.net</a><br/>
+								<span itemprop="author">Alfred Walther</span><br/>
+								Elisabethenstr. 19<br/>
+								D-61239 Ober-Mörlen, Germany
+							</address>
+							<p></p>
+							<p>Em@il: <a href="mailTo://office@artingo.net">office@artingo.net</a><br/>
+								Skype: <a href="skype:artingo.net?chat">artingo.net</a>
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<app-footer></app-footer>
+	</main>
+</div>
+<script src="/js/material.min.js"></script>
+</body>
+</html>

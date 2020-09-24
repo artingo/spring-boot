@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="de">
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="A web shop that uses Material Design Lite.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+
+    <link rel="stylesheet" href="/css/material.grey-pink.min.css"/>
+    <link rel="stylesheet" href="/css/styles.css"/>
+
+    <script src="/js/vue.js"></script>
+    <script src="/js/vue-i18n.min.js"></script>
+    <script src="components.js"></script>
+
+    <script type="text/javascript" language="JavaScript">
+        loadLanguage().then(function () {
+            new Vue({
+                i18n: i18n,
+                el: '#app',
+                components: {
+                    'app-header': AppHeader,
+                    'drawer': Drawer,
+                    'app-footer': AppFooter
+                },
+                data: {
+                    bestellung: {
+                        kunde: {},
+                        produkte: []
+                    },
+                    message: ''
+                },
+                methods: {},
+                created: function () {
+                    let index = location.search.indexOf("id=")
+                    if (index > -1) {
+                        let bestellId = location.search.substring(index + 3, location.search.length)
+                        console.log(bestellId)
+                        fetch('/app/bestellung/' + bestellId)
+                            .then(res => res.json())
+                            .then(bestellung => {
+                                this.bestellung = bestellung
+                            })
+                    }
+                }
+            })
+        })
+    </script>
+</head>
+<body>
+<div id="app" class="mdl-layout mdl-js-layout mdl-layout--fixed-header has-drawer is-upgraded">
+    <app-header active="order" title="order.title"></app-header>
+    <drawer></drawer>
+
+
+    <main class="mdl-layout__content">
+        <div class="portfolio-max-width">
+            <h4 v-show="message" v-text="message"></h4>
+
+            <div class="center mdl-cell mdl-cell--6-col mdl-card mdl-shadow--4dp">
+                <div class="mdl-card__title">
+                    <H2>
+                        <div class="mdl-card__title-text">
+                            {{`${$t('order.title')} - ${$t('label.order.nr')} ${bestellung.id}`}}
+                        </div>
+
+                        <div class="mdl-card__subtitle-text">
+                            {{`${$t('label.order.date')}: ${bestellung.datum}`}}
+                        </div>
+                    </H2>
+                </div>
+
+
+                <table class="mdl-data-table mdl-js-data-table" data-upgraded=",MaterialDataTable">
+                    <thead>
+                    <tr>
+                        <th width="20%" class="mdl-data-table__cell--non-numeric" v-t="'table.image'"></th>
+                        <th class="mdl-data-table__cell--non-numeric" v-t="'table.description'"></th>
+                        <th width="20%" v-t="'table.price'"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="p in bestellung.produkte">
+                        <td class="mdl-data-table__cell--non-numeric">
+                            <img :src="'/fotos/'+p.produkt.id" :alt="p.produkt.name" height="30" border="0"/>
+                        </td>
+                        <td class="mdl-data-table__cell--non-numeric">{{p.produkt.name}}</td>
+                        <td>{{p.produkt.preisFormatiert}} €</td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td></td>
+                        <td class="mdl-data-table__cell--non-numeric">
+                            {{$t('label.total.number')}}
+                            {{bestellung.produkte.length}}
+                        </td>
+                        <td>{{$t('label.total.price')}}
+                            {{bestellung.gesamtpreis}} €
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+
+            <div class="center mdl-cell mdl-cell--6-col mdl-card mdl-shadow--4dp" v-if="bestellung.kunde.id">
+                <div class="mdl-card__title">
+                    <H2>
+                        <div class="mdl-card__title-text" v-t="'title.shipping.address'"></div>
+                    </H2>
+                </div>
+
+                <div class="mdl-card__supporting-text" :set="kunde=bestellung.kunde">
+                    <input type="hidden" id="id" v-model="kunde.id">
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label has-placeholder">
+                        <span class="mdl-textfield__input" v-text="kunde.vorname" placeholder=""></span>
+                        <label class="mdl-textfield__label" v-t="'label.shipping.prename'"></label>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label has-placeholder">
+                        <span class="mdl-textfield__input" v-text="kunde.nachname" placeholder=""></span>
+                        <label class="mdl-textfield__label" v-t="'label.shipping.name'"></label>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label has-placeholder"
+                         style="width:604px">
+                        <span class="mdl-textfield__input" v-text="kunde.strasse" placeholder=""></span>
+                        <label class="mdl-textfield__label" v-t="'label.shipping.address'"></label>
+                    </div>
+                    <br>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label has-placeholder">
+                        <span class="mdl-textfield__input" v-text="kunde.plz" placeholder=""></span>
+                        <label class="mdl-textfield__label" v-t="'label.shipping.zip'"></label>
+                    </div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label has-placeholder">
+                        <span class="mdl-textfield__input" v-text="kunde.ort" placeholder=""></span>
+                        <label class="mdl-textfield__label" v-t="'label.shipping.city'"></label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <app-footer></app-footer>
+    </main>
+</div>
+<script src="/js/material.min.js"></script>
+</body>
+</html>

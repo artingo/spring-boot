@@ -11,9 +11,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .anyRequest()
-                .permitAll()
-                .and().csrf().disable();
+        http.cors().and().csrf().disable()
+            .authorizeRequests()
+            .antMatchers("/*").permitAll() //public pages
+            .antMatchers("/admin/**")       //admin pages
+            .authenticated().and().formLogin().permitAll()
+            // logout redirects to start page
+            .and().logout().logoutSuccessUrl("/app/index.html");
     }
 }

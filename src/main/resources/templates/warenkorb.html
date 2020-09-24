@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${titel}"></title>
+    <link th:replace="fragments/styles"/>
+    <script type="text/javascript" src="/js/dialog-polyfill.js"></script>
+    <script type="text/javascript" language="JavaScript">
+    window.onload = function () {
+        var dialog = document.querySelector('dialog');
+        if (!dialog.showModal) {
+          dialogPolyfill.registerDialog(dialog);
+        }
+    }
+
+    function loeschenBestaetigen(url) {
+        document.querySelector('#loeschenLink').href = url;
+        document.querySelector('dialog').showModal();
+    }
+    </script>
+</head>
+<body>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <div th:replace="fragments/header"></div>
+    <main class="mdl-layout__content">
+        <div class=" portfolio-max-width">
+            <h2 th:if="${warenkorb.produkte.isEmpty()}" th:text="#{cart.no.products}"></h2>
+            <h4 th:if="${message}" th:text="${message}"></h4>
+            <div class="mdl-grid">
+                <div th:each="produkt : ${warenkorb.produkte}"
+                     class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--12-col-phone
+                      mdl-card mdl-shadow--4dp portfolio-card">
+                    <div class="mdl-card__media">
+                        <img th:if="${produkt.datei}" th:src="@{/fotos/}+${produkt.id}"
+                             th:alt="${produkt.dateiname}" width="100%" border="0"/>
+                    </div>
+                    <div class="mdl-card__title">
+                        <h2 class="mdl-card__title-text" th:text="${produkt.name}"></h2>
+                    </div>
+                    <div class="mdl-card__supporting-text">
+                        <label th:text="#{label.origin.short}"></label>
+                        <span th:text="${produkt.herkunft}"></span><br/>
+                        <label th:text="#{label.category.short}"></label>
+                        <span th:text="#{${produkt.kategorie.messageKey}}"></span><br/>
+                        <label th:text="#{label.subcategory.short}"></label>
+                        <span th:text="#{${produkt.unterkategorie.messageKey}}"></span><br/>
+                        <label th:text="#{label.price.short}"></label>
+                        <span><span th:text="${produkt.preisFormatiert}"></span> &euro;</span>
+                    </div>
+                    <div class="mdl-card__actions mdl-card--border">
+                        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
+                           th:href="@{/entfernen(id=${produkt.id})}"
+                           onclick="loeschenBestaetigen(this.href); return false">
+                            <span th:text="#{button.remove}"></span>
+                            <i class="material-icons">remove_shopping_cart</i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <dialog class="mdl-dialog" style="width:400px; top: 100px">
+            <h4 class="mdl-dialog__title" th:text="#{title.dialog}"/>
+            <div class="mdl-dialog__content">
+                <p th:text="#{label.dialog}"/>
+            </div>
+            <div class="mdl-dialog__actions">
+                <a href="#" id="loeschenLink">
+                    <button type="button" class="mdl-button" th:text="#{button.yes}"/>
+                </a>
+                <button type="button" class="mdl-button close" th:text="#{button.no}"
+                        onclick="document.querySelector('dialog').close()"/>
+            </div>
+        </dialog>
+        <footer th:replace="fragments/footer"/>
+    </main>
+</div>
+</body>
+</html>

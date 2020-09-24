@@ -1,0 +1,97 @@
+<!doctype html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title th:text="#{nav.product}"></title>
+    <link th:replace="fragments/styles"/>
+    <script>
+    function showPreview(input) {
+        document.getElementById('dateiname').textContent = input.files[0].name;
+        document.getElementById('preview').src = URL.createObjectURL(input.files[0]);
+    }
+    </script>
+</head>
+<body>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header th:replace="fragments/header"></header>
+    <main class="mdl-layout__content">
+        <div class="mdl-grid portfolio-max-width portfolio-contact">
+            <div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp">
+                <div class="mdl-card__title">
+                    <h2 class="mdl-card__title-text" th:text="#{h2.edit.product}"></h2>
+                </div>
+                <div class="mdl-card__media">
+                    <img class="article-image" src="/images/contact-image.jpg" border="0" alt="">
+                </div>
+                <div class="mdl-card__supporting-text">
+                    <p th:text="#{h3.edit.product}"></p>
+
+                    <form action="#" th:action="@{/admin/speichern}" th:object="${produkt}" method="post" autocomplete="on"
+                      enctype="multipart/form-data">
+                        <input type="hidden" th:field="${produkt.id}" id="id"/>
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                             th:classappend="${#fields.hasErrors('name')}?is-invalid">
+                            <input class="mdl-textfield__input" type="text" th:field="${produkt.name}" id="name">
+                            <label class="mdl-textfield__label" for="name" th:text="#{label.name}"></label>
+                            <span class="mdl-textfield__error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                        </div>
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                             th:classappend="${#fields.hasErrors('herkunft')}?is-invalid">
+                            <input class="mdl-textfield__input" type="text" th:field="${produkt.herkunft}" id="herkunft">
+                            <label class="mdl-textfield__label" for="herkunft" th:text="#{label.origin}"></label>
+                            <span class="mdl-textfield__error" th:if="${#fields.hasErrors('herkunft')}" th:errors="${produkt.herkunft}"></span>
+                        </div>
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                             th:classappend="${#fields.hasErrors('preis')}?is-invalid">
+                            <input class="mdl-textfield__input" type="number" min="1" step="0.01" th:field="${produkt.preis}" id="preis">
+                            <label class="mdl-textfield__label" for="preis" th:text="#{label.price}"></label>
+                            <span class="mdl-textfield__error" th:if="${#fields.hasErrors('preis')}" th:errors="${produkt.preis}"></span>
+                        </div>
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                             th:classappend="${#fields.hasErrors('kategorie')}?is-invalid">
+                            <select class="mdl-textfield__input" name="kategorie" id="kategorie" th:field="${produkt.kategorie}">
+                                <option value="" th:text="#{select}"></option>
+                                <option th:each="kategorie : ${T(de.karrieretutor.springboot.enums.Kategorie).values()}"
+                                        th:value="${kategorie}" th:text="#{${kategorie.messageKey}}"></option>
+                            </select>
+                            <label class="mdl-textfield__label select" for="kategorie" th:text="#{label.category}"></label>
+                            <span class="mdl-textfield__error" th:if="${#fields.hasErrors('kategorie')}" th:errors="${produkt.kategorie}"></span>
+                        </div>
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                             th:classappend="${#fields.hasErrors('unterkategorie')}?is-invalid">
+                            <select class="mdl-textfield__input" name="unterkategorie" id="unterkategorie" th:field="${produkt.unterkategorie}">
+                                <option value="" th:text="#{select}"></option>
+                                <option th:each="unterkategorie : ${T(de.karrieretutor.springboot.enums.Unterkategorie).values()}"
+                                        th:value="${unterkategorie}" th:text="#{${unterkategorie.messageKey}}"></option>
+                            </select>
+                            <label class="mdl-textfield__label select" for="unterkategorie" th:text="#{label.subcategory}"></label>
+                            <span class="mdl-textfield__error" th:if="${#fields.hasErrors('unterkategorie')}" th:errors="${produkt.unterkategorie}"></span>
+                        </div>
+
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-dirty is-upgraded">
+                            <label class="mdl-textfield__label select" th:text="#{label.file}"></label>
+                            <label for="file">
+                                <input type="file" name="file" id="file" class="hidden" accept="image/*"
+                                       onchange="showPreview(this)"/>
+                                <span id="dateiname" th:text="${produkt.dateiname}"/>
+                                <span class="mdl-button mdl-js-button mdl-js-ripple-effect" style="top:12px"
+                                    th:title="#{button.upload}">
+                                    <i class="material-icons">cloud_upload</i>
+                                </span>
+                            </label>
+                            <img th:if="${produkt.datei}" th:src="@{/fotos/}+${produkt.id}"
+                                 id="preview" class="mdl-shadow--4dp" height="100" align="right"/>
+                            <img th:unless="${produkt.datei}" src="/images/no-image.png"
+                                 id="preview" class="mdl-shadow--4dp" height="100" align="right"/>
+                        </div>
+
+                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                            type="submit" th:text="#{button.save}"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <footer th:replace="fragments/footer"/>
+    </main>
+</div>
+</body>
+</html>

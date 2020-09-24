@@ -1,0 +1,55 @@
+<!doctype html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title th:text="${titel}"></title>
+    <link th:replace="fragments/styles"/>
+</head>
+
+<body>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header th:replace="fragments/header"></header>
+    <main class="mdl-layout__content">
+        <div class="mdl-grid portfolio-max-width">
+
+            <div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp">
+                <div class="mdl-card__title">
+                    <h2 class="mdl-card__title-text" th:text="#{nav.reviews}"></h2>
+                </div>
+                <div class="mdl-card__media">
+                    <img class="article-image" src=" images/contact-image.jpg" border="0" alt="">
+                </div>
+
+                <div class="mdl-grid portfolio-copy">
+                    <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">GamStar</h3>
+                    <div class="mdl-cell mdl-cell--8-col mdl-card__supporting-text no-padding ">
+                        <p>
+                            "This is the best game-shop!"
+                        </p>
+                    </div>
+
+
+                    <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">PC Gmer</h3>
+
+                    <div class="mdl-cell mdl-cell--8-col mdl-card__supporting-text no-padding ">
+                        <p>
+                            "Best offers and most friendly and quick customer support!"
+                        </p>
+                    </div>
+
+                    <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">GameSpt</h3>
+
+                    <div class="mdl-cell mdl-cell--8-col mdl-card__supporting-text no-padding ">
+                        <p>
+                            "Best game offers and fast delivery!"
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <footer th:replace="fragments/footer"/>
+    </main>
+</div>
+</body>
+</html>

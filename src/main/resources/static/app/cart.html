@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="de">
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="description" content="A web shop that uses Material Design Lite.">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+
+	<link rel="stylesheet" href="/css/material.grey-pink.min.css"/>
+	<link rel="stylesheet" href="/css/styles.css"/>
+
+	<script src="/js/vue.js"></script>
+	<script src="/js/vue-i18n.min.js"></script>
+	<script src="components.js"></script>
+
+	<script type="text/javascript" language="JavaScript">
+	loadLanguage().then(function () {
+		new Vue({
+			el: '#app',
+			i18n: i18n,
+			components: {
+				'app-header': AppHeader,
+				'drawer':     Drawer,
+				'app-footer': AppFooter
+			},
+			data: {
+				warenkorb:  {
+					produkte:[],
+					gesamtpreis: 0.0
+				},
+				message: "",
+				dialogDisplay: 'none',
+				currentId: null
+			},
+			methods: {
+				showDialog: function(id) {
+					this.currentId = id
+					this.dialogDisplay = 'block'
+				},
+				closeDialog: function() {
+					this.dialogDisplay = 'none'
+				},
+				entfernen: function (id) {
+					this.warenkorb.produkte.forEach((produkt, index, produkte) => {
+						if (produkt.id == id) {
+							this.warenkorb.gesamtpreis -= produkt.preis
+							produkte.splice(index, 1)
+							this.message = i18n.t('cart.removed', [produkt.name])
+							sessionStorage.setItem(WARENKORB, JSON.stringify(this.warenkorb))
+							this.closeDialog()
+							return
+						}
+					})
+				}
+			},
+			created: function () {
+				let tempWarenkorb = sessionStorage.getItem(WARENKORB)
+				if (tempWarenkorb) {
+					this.warenkorb = JSON.parse(tempWarenkorb)
+				}
+			}
+		})
+		})
+	</script>
+</head>
+<body>
+<div id="app" class="mdl-layout mdl-js-layout mdl-layout--fixed-header has-drawer is-upgraded">
+	<app-header active="cart" title="nav.cart" :badge="warenkorb.produkte.length"></app-header>
+	<drawer></drawer>
+
+	<main class="mdl-layout__content">
+		<div class=" portfolio-max-width">
+			<h4 v-show="message">{{message}}</h4>
+			<h2 v-if="!warenkorb.produkte.length" v-t="'cart.no.products'"></h2>
+			<div v-else class="mdl-grid">
+				<div v-for="produkt in warenkorb.produkte"
+				     class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--12-col-phone
+				      mdl-card mdl-shadow--4dp portfolio-card">
+					<div class="mdl-card__media">
+						<img :src="'fotos/'+produkt.id" :alt="produkt.name" width="100%" border="0"/>
+					</div>
+					<div class="mdl-card__title">
+						<h2 class="mdl-card__title-text">{{produkt.name}}</h2>
+					</div>
+					<div class="mdl-card__supporting-text">
+						<label v-t="'label.origin.short'"></label>      {{produkt.herkunft}}<br/>
+						<label v-t="'label.category.short'"></label>    {{$t(produkt.kategorie)}}<br/>
+						<label v-t="'label.subcategory.short'"></label> {{$t(produkt.unterkategorie)}}<br/>
+						<label v-t="'label.price.short'"></label>       {{produkt.preisFormatiert}} &euro;
+					</div>
+					<div class="mdl-card__actions mdl-card--border">
+						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
+						   href="#" @click="showDialog(produkt.id)">
+							{{$t('button.remove')}}
+							<i class="material-icons">remove_shopping_cart</i>
+						</a>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<dialog class="mdl-dialog"
+        :style="{display:dialogDisplay, width:'40%', top:'10%', zIndex:100}">
+			<h4 class="mdl-dialog__title" v-t="'title.dialog'"></h4>
+			<div class="mdl-dialog__content">
+				<p v-t="'label.dialog'"></p>
+			</div>
+			<div class="mdl-dialog__actions">
+				<button type="button" class="mdl-button" @click="entfernen(currentId)" v-t="'button.yes'"></button>
+				<button type="button" class="mdl-button close" @click="closeDialog()" v-t="'button.no'"></button>
+			</div>
+		</dialog>
+		<app-footer></app-footer>
+	</main>
+</div>
+<script src="/js/material.min.js"></script>
+</body>
+</html>

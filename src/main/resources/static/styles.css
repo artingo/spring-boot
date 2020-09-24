@@ -1,6 +1,11 @@
+.mdl-layout__header {
+  color: white;
+}
 .portfolio-header {
   position: relative;
   background-image: url(images/header-bg.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .portfolio-header .mdl-layout__header-row {
@@ -13,6 +18,7 @@
 .mdl-layout__title {
   font-size: 14px;
   text-align: center;
+  text-align: center;
   font-weight: 300;
 }
 
@@ -22,6 +28,7 @@
 
 .portfolio-logo-row {
   min-height: 200px;
+  text-shadow: 2px 4px rgba(0,0,0,1);
 }
 
 .is-compact .portfolio-logo-row {
@@ -43,15 +50,21 @@
 }
 
 .portfolio-navigation-row {
-  background-color: rgba(0, 0, 0, 0.08);
+
   text-transform: uppercase;
-  height: 45px;
+  height: 40px;
+  background-color: black;
+  color: white;
+  width: 100%;
+  margin: 0 auto;
 }
+
 
 .portfolio-navigation-row  .mdl-navigation {
   text-align: center;
   max-width: 900px;
   width: 100%;
+  color: white;
 }
 
 .portfolio-navigation-row .mdl-navigation__link {
@@ -59,15 +72,19 @@
       -ms-flex: 1;
           flex: 1;
   line-height: 42px;
+  color: white;
 }
 
 .portfolio-header .mdl-layout__drawer-button {
-    background-color: rgba(197, 197, 197, 0.44);
+    background-color: white;
 }
 
 .portfolio-navigation-row .is-active {
   position: relative;
   font-weight: bold;
+  background-color: orange;
+  height: 40px;
+  color: black;
 }
 
 .portfolio-navigation-row .is-active:after {
@@ -108,14 +125,21 @@
   background: rgba(0, 0, 0, 0.2);
 }
 
+.mdl-card__media {
+  overflow:hidden;
+  height: 200px;
+  background-color: inherit;
+}
 img.article-image {
-  width: 100%;
-  height: auto;
+  height: 100%;
 }
 
 .portfolio-max-width {
-  max-width: 900px;
+  max-width: 1280px;
   margin: auto;
+}
+.portfolio-max-width .mdl-card {
+  margin: 5px auto;
 }
 
 .portfolio-copy {
@@ -168,3 +192,21 @@ footer {
   background-size: cover;
 }
 
+.mdl-textfield__label.select {
+    top: 0px;
+}
+
+.mdl-card__supporting-text > label {
+    display: inline-block;
+    width: 8em;
+    font-weight: 700;
+}
+
+.mdl-data-table th {
+    background-color: #EEEEEE;
+    font-size: larger;
+}
+
+.mdl-data-table tfoot {
+    font-size: larger;
+}

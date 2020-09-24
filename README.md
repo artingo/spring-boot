@@ -1,2 +1,3 @@
 # spring-boot
-A boilerplate Spring Boot project with Material Design Lite
+A boilerplate Spring Boot project with Material Design Lite.
+Using Spring Security, PostGreSQL database, File upload and many more...

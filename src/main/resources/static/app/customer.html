@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="de">
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="description" content="A web shop that uses Material Design Lite.">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+
+	<link rel="stylesheet" href="/css/material.grey-pink.min.css"/>
+	<link rel="stylesheet" href="/css/styles.css"/>
+	<style type="text/css">
+		.mdl-card {
+			width: 100%;
+		}
+	</style>
+
+	<script src="/js/vue.js"></script>
+	<script src="/js/vue-i18n.min.js"></script>
+	<script src="components.js"></script>
+
+	<script type="text/javascript" language="JavaScript">
+	loadLanguage().then(function () {
+		new Vue({
+			i18n: i18n,
+			el: '#app',
+			components: {
+				'app-header': AppHeader,
+				'drawer': Drawer,
+				'app-footer': AppFooter
+			},
+			data: {
+				disabled: true,
+				kunde: {
+					id: '',
+					vorname: '',
+					nachname: '',
+					strasse: '',
+					plz: '',
+					ort: '',
+					zahlungsart: null,
+					iban: '',
+					kreditkartenNr: '',
+					email: ''
+				},
+				message: ''
+			},
+			methods: {
+				validierung: function (e) {
+					let isValid = true
+					for (const key in this.isInvalid) {
+						if (!this.kunde[key]) {
+							this.isInvalid[key] = true
+							isValid = false
+						}
+					}
+					if (isValid) {
+						this.bestellen()
+					}
+				},
+				toggle: function (value) {
+					this.disabled = value
+				},
+				speichern: function() {
+					fetch('/app/speichern', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify(this.kunde)
+					})
+							.then(res => res.json())
+							.then(kundenId => {
+								this.disabled = true
+								const msgKey = (kundenId!=-1) ? 'customer.success' : 'customer.failure'
+								this.message = i18n.t(msgKey)
+							})
+				}
+
+			},
+			created: function () {
+				let kundenId = localStorage.getItem('kundenId')
+				if (kundenId) {
+					fetch('/app/kunde/' + kundenId)
+							.then(res => res.json())
+							.then(kunde => {
+								this.kunde = kunde
+							})
+				}
+			}
+		})
+	})
+	</script>
+</head>
+<body>
+
+<div id="app" class="mdl-layout mdl-js-layout mdl-layout--fixed-header has-drawer is-upgraded">
+	<app-header active="order" title="order.title"></app-header>
+	<drawer></drawer>
+
+	<main class="mdl-layout__content">
+		<div class="portfolio-max-width">
+
+
+
+			<div id="buy-button">
+				<button type="button" v-if="disabled"
+						class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+						 @click="toggle(false)">
+					{{$t('button.edit')}}
+					<span class="mdl-button__ripple-container">
+					<span class="mdl-ripple"></span>
+				</span>
+				</button>
+
+				<button type="button" v-if="!disabled"
+						class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+						@click="toggle(true)">
+					{{$t('button.abort')}}
+					<span class="mdl-button__ripple-container">
+					<span class="mdl-ripple"></span>
+				</span>
+				</button>
+
+				<button type="button" v-if="!disabled"
+						class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+						@click="speichern">
+					{{$t('button.customer.save')}}
+					<span class="mdl-button__ripple-container">
+					<span class="mdl-ripple"></span>
+				</span>
+				</button>
+			</div>
+			
+			
+			
+
+				<form id="adresse" method="post" autocomplete="on" @submit="validierung">
+
+					<div class="center mdl-cell mdl-cell--6-col">
+						<h4 v-show="message" v-html="message" ></h4>
+						<div class="mdl-card mdl-shadow--4dp">
+
+							<div class="mdl-card__title">
+								<H4>
+									<div class="mdl-card__title-text" v-t="'title.shipping.address'"></div>
+								</H4>
+							</div>
+
+							<div class="mdl-card__supporting-text">
+								<input type="hidden" id="id" v-model="kunde.id">
+								<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label has-placeholder">
+									<input class="mdl-textfield__input" v-model="kunde.vorname" placeholder=""
+										   :disabled="disabled"></input>
+									<label class="mdl-textfield__label" v-t="'label.shipping.prename'"></label>
+								</div>
+
+								<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label has-placeholder">
+									<input class="mdl-textfield__input" v-model="kunde.nachname" placeholder=""
+										   :disabled="disabled"></input>
+									<label class="mdl-textfield__label" v-t="'label.shipping.name'"></label>
+								</div>
+
+								<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label has-placeholder"
+									 style="width:604px">
+									<input class="mdl-textfield__input" v-model="kunde.strasse" placeholder=""
+										   :disabled="disabled"></input>
+									<label class="mdl-textfield__label" v-t="'label.shipping.address'"></label>
+								</div>
+								<br>
+
+								<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label has-placeholder">
+									<input class="mdl-textfield__input" v-model="kunde.plz" placeholder=""
+										   :disabled="disabled"></input>
+									<label class="mdl-textfield__label" v-t="'label.shipping.zip'"></label>
+								</div>
+								<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label has-placeholder">
+									<input class="mdl-textfield__input" v-model="kunde.ort" placeholder=""
+										   :disabled="disabled"></input>
+									<label class="mdl-textfield__label" v-t="'label.shipping.city'"></label>
+								</div>
+							</div>
+
+						</div>
+
+						<div id="payment" class="center mdl-cell mdl-cell--6-col mdl-card mdl-shadow--4dp">
+							<div class="mdl-card__title">
+								<div class="mdl-card__title-text" v-t="'title.shipping.payment'"></div>
+							</div>
+							<div class="mdl-textfield" style="margin-top:-2.5em; padding-left:16px">
+								<span class="mdl-textfield__error" v-t="'validation.zahlungsart.zahlungsart'"></span>
+							</div>
+
+							<div class="mdl-card__supporting-text" style="margin-top:0; padding-top:0">
+								<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="list-option-1">
+									<input type="radio" id="list-option-1" class="mdl-radio__button" name="options"
+										   v-model="kunde.zahlungsart" value="0"/>
+									<span class="mdl-radio__label" v-t="'enum.payment.1'"></span>
+								</label>
+								<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-dirty">
+									<input class="mdl-textfield__input" type="text" id="iban" v-model="kunde.iban">
+									<label class="mdl-textfield__label" for="iban" v-t="'label.payment.iban'"></label>
+									<span class="mdl-textfield__error" v-t="'validation.zahlungsart.iban'"></span>
+								</div>
+
+								<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="list-option-2">
+									<input type="radio" id="list-option-2" class="mdl-radio__button" name="options"
+										   v-model="kunde.zahlungsart" value="1">
+									<span class="mdl-radio__label" v-t="'enum.payment.2'"></span>
+								</label>
+								<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-dirty">
+									<input class="mdl-textfield__input" type="text" id="kreditkarte"
+										   v-model="kunde.kreditkartenNr">
+									<label class="mdl-textfield__label" for="kreditkarte"
+										   v-t="'label.payment.card.nr'"></label>
+									<span class="mdl-textfield__error" v-t="'validation.zahlungsart.karte'"></span>
+								</div>
+
+								<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="list-option-3">
+									<input type="radio" id="list-option-3" class="mdl-radio__button" name="options"
+										   v-model="kunde.zahlungsart" value="2">
+									<span class="mdl-radio__label" v-t="'enum.payment.3'"></span>
+								</label>
+								<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-dirty">
+									<input class="mdl-textfield__input" type="text" id="email" v-model="kunde.email">
+									<label class="mdl-textfield__label" for="email" v-t="'label.payment.email'"></label>
+									<span class="mdl-textfield__error" v-t="'validation.zahlungsart.email'"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+
+		</div>
+		<app-footer></app-footer>
+	</main>
+</div>
+<script src="/js/material.min.js"></script>
+</body>
+</html>
