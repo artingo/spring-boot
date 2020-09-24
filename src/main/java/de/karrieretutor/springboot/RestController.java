@@ -2,9 +2,9 @@ package de.karrieretutor.springboot;
 
 import de.karrieretutor.springboot.domain.Bestellung;
 import de.karrieretutor.springboot.domain.Kunde;
+import de.karrieretutor.springboot.domain.KundenRepository;
 import de.karrieretutor.springboot.domain.Produkt;
 import de.karrieretutor.springboot.service.BestellService;
-import de.karrieretutor.springboot.service.KundenService;
 import de.karrieretutor.springboot.service.ProduktService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,14 +33,13 @@ public class RestController {
     Logger LOG = LoggerFactory.getLogger(RestController.class);
 
     @Autowired
-    BestellService bestellService;
-
-    @Autowired
     ProduktService produktService;
 
     @Autowired
-    KundenService kundenService;
+    KundenRepository kundenRepository;
 
+    @Autowired
+    BestellService bestellService;
 
     @GetMapping("/produkte")
     public List<Produkt> ladeProdukte() {
@@ -64,19 +63,22 @@ public class RestController {
 
     @PostMapping("/bestellen")
     public Long bestellen(@RequestBody Bestellung bestellung) {
-        kundenService.speichern(bestellung.getKunde());
+        Kunde kunde = bestellung.getKunde();
+        kundenRepository.save(kunde);
         bestellService.speichere(bestellung, true);
-        return bestellung.getKunde().getId();
-    }
-
-    @PostMapping("/speichern")
-    public Long speichern(@RequestBody Kunde kunde) {
-        return kundenService.speichern(kunde);
+        return kunde.getId();
     }
 
     @GetMapping("/kunde/{id}")
     public Kunde kundeLaden(@PathVariable Long id) {
-        return kundenService.lade(id);
+        Kunde kunde = new Kunde();
+        if (id != null) {
+            Optional<Kunde> kundeDB = kundenRepository.findById(id);
+            if (kundeDB.isPresent()) {
+                kunde = kundeDB.get();
+            }
+        }
+        return kunde;
     }
 
     @GetMapping("/bestellung/{id}")

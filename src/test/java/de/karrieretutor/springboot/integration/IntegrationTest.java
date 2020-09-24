@@ -24,7 +24,7 @@ class IntegrationTest {
                 .param("id", "1"))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("index.html"))
-                .andExpect(flash().attribute("message", "Produkt \"Test\" zum Warenkorb hinzugefügt."));
+                .andExpect(flash().attribute("message", "Produkt \"Java-Kurs\" zum Warenkorb hinzugefügt."));
     }
 
     @Test
@@ -44,6 +44,6 @@ class IntegrationTest {
                 .param("id", "1"))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/warenkorb.html"))
-                .andExpect(flash().attribute("message", "Produkt \"Test\" vom Warenkorb entfernt."));
+                .andExpect(flash().attribute("message", "Produkt \"Java-Kurs\" vom Warenkorb entfernt."));
     }
 }
