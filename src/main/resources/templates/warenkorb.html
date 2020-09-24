@@ -26,7 +26,7 @@
             <h2 th:if="${warenkorb.produkte.isEmpty()}" th:text="#{cart.no.products}"></h2>
             <h4 th:if="${message}" th:text="${message}"></h4>
             <div class="mdl-grid">
-                <div th:each="produkt : ${warenkorb.produkte}"
+                <div th:each="p : ${warenkorb.produkte}" th:with="produkt=${p.produkt}"
                      class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--12-col-phone
                       mdl-card mdl-shadow--4dp portfolio-card">
                     <div class="mdl-card__media">
@@ -45,6 +45,8 @@
                         <span th:text="#{${produkt.unterkategorie.messageKey}}"></span><br/>
                         <label th:text="#{label.price.short}"></label>
                         <span><span th:text="${produkt.preisFormatiert}"></span> &euro;</span>
+                        <label th:text="#{label.number}"></label>
+                        <span th:text="${p.anzahl}"></span>
                     </div>
                     <div class="mdl-card__actions mdl-card--border">
                         <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"

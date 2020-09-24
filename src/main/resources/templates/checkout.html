@@ -25,16 +25,18 @@
 						<th class="mdl-data-table__cell--non-numeric" width="20%" th:text="#{table.image}"></th>
 						<th class="mdl-data-table__cell--non-numeric" th:text="#{table.description}"></th>
 						<th width="20%" th:text="#{table.price}"></th>
+						<th width="20%" th:text="#{label.number}"></th>
 					</tr>
 					</thead>
 					<tbody>
-					<tr th:each="produkt:${warenkorb.produkte}">
+					<tr th:each="p:${warenkorb.produkte}" th:with="produkt=${p.produkt}">
 						<td class="mdl-data-table__cell--non-numeric">
 							<img th:if="${produkt.datei}" th:src="@{/fotos/}+${produkt.id}"
 							     th:alt="${produkt.dateiname}" height="30" border="0"/>
 						</td>
 						<td th:text="${produkt.name}" class="mdl-data-table__cell--non-numeric"></td>
 						<td><span th:text="${produkt.preisFormatiert}"/> &euro;</td>
+						<td th:text="${p.anzahl}"></td>
 					</tr>
 					</tbody>
 					<tfoot>
@@ -44,6 +46,7 @@
 							<span th:text="#{label.total.number}"/>
 							<span th:text="${warenkorb.produkte.size()}"/>
 						</td>
+						<td></td>
 						<td><span th:text="#{label.total.price}"/>
 							<span th:text="${warenkorb.gesamtpreis}"/> &euro;
 						</td>

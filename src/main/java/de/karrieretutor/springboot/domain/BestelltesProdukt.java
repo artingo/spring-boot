@@ -47,6 +47,15 @@ public class BestelltesProdukt {
         this.anzahl = anzahl;
     }
 
+    public void hinzufuegen() {
+        this.anzahl++;
+    }
+
+    public void entfernen() {
+        if (this.anzahl >= 0)
+            this.anzahl--;
+    }
+
     @Override
     public String toString() {
         return "BestelltesProdukt{" +
