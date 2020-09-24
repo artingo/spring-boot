@@ -7,19 +7,19 @@
 	<div class="mdl-layout__header-row portfolio-navigation-row mdl-layout--large-screen-only">
 
 		<nav class="mdl-navigation mdl-typography--body-1-force-preferred-font" sec:authorize="!isAuthenticated()">
-			<a href="/app/index.html" class="mdl-navigation__link"
+			<a href="/index.html" class="mdl-navigation__link"
 			   th:classappend="${titel=='Index'}?is-active" th:text="#{nav.portfolio}"></a>
-			<a href="/app/cart.html" class="mdl-navigation__link"
+			<a href="/warenkorb.html" class="mdl-navigation__link"
 			   th:classappend="${titel=='Warenkorb'}?is-active">
 	            <span th:text="#{nav.cart}" class="mdl-badge"
-	                  th:data-badge="${warenkorb.produkte.size()}"/>
+	                  th:data-badge="${warenkorb.gesamtzahl}"/>
 			</a>
-			<a href="/app/checkout.html" th:if="${titel=='Checkout' || !warenkorb.produkte.isEmpty()}"
+			<a href="/checkout.html" th:if="${titel=='Checkout' || !warenkorb.produkte.isEmpty()}"
 			   class="mdl-navigation__link" th:classappend="${titel=='Checkout'}?is-active">
 				<span th:text="#{button.checkout}"></span>
 				<i class="material-icons">exit_to_app</i>
 			</a>
-			<a href="/app/about.html" class="mdl-navigation__link"
+			<a href="/about.html" class="mdl-navigation__link"
 			   th:classappend="${titel=='About'}?is-active" th:text="#{nav.about}"></a>
 			<span>
 	        <span th:text="#{lang.change}"></span><br/>
@@ -47,9 +47,9 @@
 <div xmlns:th="http://www.thymeleaf.org"
      class="mdl-layout__drawer mdl-layout--small-screen-only">
 	<nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
-		<a class="mdl-navigation__link" href="/app/index.html" th:text="#{nav.portfolio}"></a>
-		<a class="mdl-navigation__link" href="/app/cart.html" th:text="#{nav.cart}"></a>
-		<a class="mdl-navigation__link" href="/app/about.html" th:text="#{nav.about}"></a>
+		<a class="mdl-navigation__link" href="/index.html" th:text="#{nav.portfolio}"></a>
+		<a class="mdl-navigation__link" href="/warenkorb.html" th:text="#{nav.cart}"></a>
+		<a class="mdl-navigation__link" href="/about.html" th:text="#{nav.about}"></a>
 		<a class="mdl-navigation__link" href="/login" th:text="#{nav.login}"></a>
 	</nav>
 </div>
