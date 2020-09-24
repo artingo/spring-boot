@@ -104,7 +104,7 @@ public class SimpleController {
         if (id != null) {
             Produkt gefundenesProdukt = null;
             for (Produkt p : warenkorb.getProdukte()) {
-                if (id.equals(p.getId())) {
+                if (p.getId().equals(id)) {
                     gefundenesProdukt = p;
                     break;
                 }
@@ -113,7 +113,7 @@ public class SimpleController {
                 warenkorb.getProdukte().remove(gefundenesProdukt);
                 message = messageSource.getMessage("cart.removed", new Object[]{gefundenesProdukt.getName()}, locale);
             } else {
-                message = messageSource.getMessage("cart.not.found", new String[]{String.valueOf(id)}, locale);
+                message = messageSource.getMessage("cart.not.found", new Object[]{id}, locale);
             }
         }
         redirect.addFlashAttribute("message", message);
