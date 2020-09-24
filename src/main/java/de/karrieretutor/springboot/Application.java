@@ -27,6 +27,7 @@ public class Application implements WebMvcConfigurer {
         // TODO: Produkte als Bean
     }
 
+
     @Bean
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource
