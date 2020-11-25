@@ -5,7 +5,7 @@ public class Produkt {
     public String herkunft;
     public Kategorie kategorie;
     public Unterkategorie unterkategorie;
-    Double preis;
+    public Double preis;
     String foto;
 
     public Produkt(String name, String herkunft, Kategorie kategorie, Unterkategorie unterkategorie, Double preis) {
