@@ -1,19 +1,49 @@
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Du hast das Internet kaputt gemacht!</title>
-    <link rel="stylesheet" href="material.grey-pink.min.css"/>
+	<title>Du hast das Internet kaputt gemacht!</title>
+	<link rel="stylesheet" href="material.grey-pink.min.css"/>
 </head>
-<body style="background: url('404-error-page.jpg') no-repeat 50% 0%">
+<body style="background: url('404-error-page.jpg') no-repeat 50% -40%">
 <h1 align="center">Du hast das Internet kaputt gemacht!</h1>
-<p align="center" style="width:100%">
-    <a href="index.html" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
-       data-upgraded=",MaterialButton,MaterialRipple">
-        Zurück zur Startseite!
-        <span class="mdl-button__ripple-container">
-        <span class="mdl-ripple"
-              style="width: 231.899px; height: 231.899px; transform: translate(-50%, -50%) translate(58px, 22px);"></span>
-    </span>
-    </a>
+<p align="center" style="width:100%; position:relative; top:100px">
+	<a href="index.html" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
+	   data-upgraded=",MaterialButton,MaterialRipple">
+		Zurück zur Startseite!
+		<span class="mdl-button__ripple-container">
+            <span class="mdl-ripple"
+                  style="width: 231.899px; height: 231.899px; transform: translate(-50%, -50%) translate(58px, 22px);"></span>
+        </span>
+	</a>
+<table align="center">
+	<tr>
+		<td>Date</td>
+		<td th:text="${timestamp}"/>
+	</tr>
+	<tr>
+		<td>Path</td>
+		<td th:text="${path}"/>
+	</tr>
+	<tr>
+		<td>Error</td>
+		<td th:text="${error}"/>
+	</tr>
+	<tr>
+		<td>Status</td>
+		<td th:text="${status}"/>
+	</tr>
+	<tr>
+		<td>Message</td>
+		<td th:text="${message}"/>
+	</tr>
+	<tr>
+		<td>Exception</td>
+		<td th:text="${exception}"/>
+	</tr>
+	<tr valign="top">
+		<td>Trace</td>
+		<td><pre th:text="${trace}" style="font-size:12pt"/></td>
+	</tr>
+</table>
 </p>
 </body>
 </html>

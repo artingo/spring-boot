@@ -1,26 +1,28 @@
 package de.karrieretutor.springboot.model;
 
-public class Wein {
+public class Produkt {
     public String name;
     public String herkunft;
     public Kategorie kategorie;
-    public Rebsorte rebsorte;
+    public Unterkategorie unterkategorie;
+    Double preis;
     String foto;
 
-    public Wein(String name, String herkunft, Kategorie kategorie, Rebsorte rebsorte) {
+    public Produkt(String name, String herkunft, Kategorie kategorie, Unterkategorie unterkategorie, Double preis) {
         this.name = name;
         this.herkunft = herkunft;
         this.kategorie = kategorie;
-        this.rebsorte = rebsorte;
+        this.unterkategorie = unterkategorie;
+        this.preis = preis;
     }
 
     public String getFoto() {
-        switch(this.rebsorte) {
-            case RIESLING:
+        switch(this.unterkategorie) {
+            case SUBKAT1:
                 return "images/example-work01.jpg";
-            case ZINFANDEL:
+            case SUBKAT2:
                 return "images/example-work07.jpg";
-            case SILVANER:
+            case SUBKAT3:
                 return "images/example-work02.jpg";
         }
         return "images/example-work03.jpg";

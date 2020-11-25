@@ -1,6 +1,6 @@
 package de.karrieretutor.springboot;
 
-import de.karrieretutor.springboot.model.Wein;
+import de.karrieretutor.springboot.model.Produkt;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.karrieretutor.springboot.model.Kategorie.ROTWEIN;
-import static de.karrieretutor.springboot.model.Kategorie.WEISSWEIN;
-import static de.karrieretutor.springboot.model.Rebsorte.*;
+import static de.karrieretutor.springboot.model.Kategorie.*;
+import static de.karrieretutor.springboot.model.Unterkategorie.*;
 
 @Controller
 public class SimpleController {
@@ -22,25 +21,23 @@ public class SimpleController {
 
     @GetMapping("/")
     public String homePage(Model model) {
-        model.addAttribute("appName", appName);
-        model.addAttribute("titel", "Freddie Walker");
-        return "index";
+        return "redirect:/index.html";
     }
 
     @GetMapping("/{name}.html")
     public String htmlMapping(@PathVariable(name = "name") String name, Model model) {
         model.addAttribute("titel", StringUtils.capitalize(name));
-        List<Wein> weine = createWeine();
-        model.addAttribute("weine", weine);
-        model.addAttribute("preis", 9.90);
+        List<Produkt> produkte = createProdukte();
+        model.addAttribute("produkte", produkte);
+        model.addAttribute("appName", appName);
         return name;
     }
 
-    private List<Wein> createWeine() {
-        List<Wein> weine = new ArrayList<>();
-        weine.add(new Wein("Kloster Eberbach", "Rheingau", WEISSWEIN, RIESLING));
-        weine.add(new Wein("Ernest & Julio Gallo", "Kalifornien", ROTWEIN, ZINFANDEL));
-        weine.add(new Wein("Mia", "Deutschland", WEISSWEIN, SILVANER));
-        return weine;
+    private List<Produkt> createProdukte() {
+        List<Produkt> produkte = new ArrayList<>();
+        produkte.add(new Produkt("Kloster Eberbach", "Rheingau", KAT1, SUBKAT1, 7.99));
+        produkte.add(new Produkt("Ernest & Julio Gallo", "Kalifornien", KAT2, SUBKAT2, 4.99));
+        produkte.add(new Produkt("Rioja", "Deutschland", KAT3, SUBKAT3, 6.99));
+        return produkte;
     }
 }
