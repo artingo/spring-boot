@@ -17,7 +17,7 @@ public class Produkt {
     }
 
     public String getFoto() {
-        switch(this.unterkategorie) {
+        switch (this.unterkategorie) {
             case SUBKAT1:
                 return "images/example-work01.jpg";
             case SUBKAT2:
@@ -26,6 +26,10 @@ public class Produkt {
                 return "images/example-work02.jpg";
         }
         return "images/example-work03.jpg";
+    }
+
+    public String getPreisFormatiert() {
+        return String.format("%.2f", this.preis);
     }
 }
 

@@ -108,14 +108,22 @@
   background: rgba(0, 0, 0, 0.2);
 }
 
+.mdl-card__media {
+  overflow:hidden;
+  height: 200px;
+  background-color: inherit;
+}
 img.article-image {
   width: 100%;
   height: auto;
 }
 
 .portfolio-max-width {
-  max-width: 900px;
+  max-width: 1280px;
   margin: auto;
+}
+.portfolio-max-width .mdl-grid {
+  margin: 5px auto;
 }
 
 .portfolio-copy {
@@ -168,3 +176,38 @@ footer {
   background-size: cover;
 }
 
+.mdl-textfield__label.select {
+  top: 0px;
+}
+
+.mdl-card__supporting-text > label {
+  display: inline-block;
+  width: 8em;
+  font-weight: 700;
+}
+
+.mdl-data-table th {
+  background-color: #EEEEEE;
+  font-size: larger;
+}
+
+.mdl-data-table th,
+.mdl-data-table td {
+  text-align: left;
+}
+
+.centered {
+  text-align: center !important;
+}
+.right {
+  text-align: right !important;
+}
+
+.mdl-data-table tfoot {
+  font-size: larger;
+}
+
+.center {
+  margin-left: auto;
+  margin-right: auto;
+}

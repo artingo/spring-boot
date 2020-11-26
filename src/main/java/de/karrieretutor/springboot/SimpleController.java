@@ -26,7 +26,7 @@ public class SimpleController {
 
     @GetMapping("/{name}.html")
     public String htmlMapping(@PathVariable(name = "name") String name, Model model) {
-        model.addAttribute("titel", StringUtils.capitalize(name));
+        model.addAttribute("titel", name.toUpperCase());
         List<Produkt> produkte = createProdukte();
         model.addAttribute("produkte", produkte);
         model.addAttribute("appName", appName);
@@ -35,9 +35,10 @@ public class SimpleController {
 
     private List<Produkt> createProdukte() {
         List<Produkt> produkte = new ArrayList<>();
-        produkte.add(new Produkt("Kloster Eberbach", "Rheingau", KAT1, SUBKAT1, 7.99));
+        produkte.add(new Produkt("Kloster Eberbach", "Rheingau", KAT1, SUBKAT1, 7.992342342));
         produkte.add(new Produkt("Ernest & Julio Gallo", "Kalifornien", KAT2, SUBKAT2, 4.99));
         produkte.add(new Produkt("Rioja", "Deutschland", KAT3, SUBKAT3, 6.99));
+        produkte.add(new Produkt("Rotkäppchen", "Sachsen", KAT4, SUBKAT4, 3.99));
         return produkte;
     }
 }

@@ -1,74 +1,96 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="A portfolio template that uses Material Design Lite.">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <title th:text="${titel}"></title>
-    <link rel="stylesheet" href="fonts.css">
-    <link rel="stylesheet" href="material.grey-pink.min.css" />
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="icons.css">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="description" content="A portfolio template that uses Material Design Lite.">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<title th:text="${titel}"></title>
+	<link rel="stylesheet" href="fonts.css">
+	<link rel="stylesheet" href="material.grey-pink.min.css"/>
+	<link rel="stylesheet" href="styles.css"/>
+	<link rel="stylesheet" href="icons.css">
 </head>
 <body>
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-    <header class="mdl-layout__header mdl-layout__header--waterfall portfolio-header">
-        <div class="mdl-layout__header-row portfolio-logo-row">
-                <span class="mdl-layout__title">
-                    <div class="portfolio-logo"></div>
-                    <span class="mdl-layout__title" th:text="${titel}">Startseite</span>
-                </span>
-        </div>
-        <div class="mdl-layout__header-row portfolio-navigation-row mdl-layout--large-screen-only">
-            <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
-                <a class="mdl-navigation__link is-active" href="index.html">Portfolio</a>
-                <a class="mdl-navigation__link" href="blog.html">Blog</a>
-                <a class="mdl-navigation__link" href="about.html">About</a>
-                <a class="mdl-navigation__link" href="contact.html">Contact</a>
-            </nav>
-        </div>
-    </header>
-    <div class="mdl-layout__drawer mdl-layout--small-screen-only">
-        <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
-            <a class="mdl-navigation__link is-active" href="index.html">Portfolio</a>
-            <a class="mdl-navigation__link" href="blog.html">Blog</a>
-            <a class="mdl-navigation__link" href="about.html">About</a>
-            <a class="mdl-navigation__link" href="contact.html">Contact</a>
-        </nav>
-    </div>
-    <main class="mdl-layout__content">
-        <div class="mdl-grid portfolio-max-width">
-            <div th:each="produkt : ${produkte}" class="mdl-cell mdl-card mdl-shadow--4dp portfolio-card">
-                <div class="mdl-card__media">
-                    <img class="article-image" th:src="${produkt.foto}" border="0" alt=""/>
-                </div>
-                <div class="mdl-card__title">
-                    <h2 class="mdl-card__title-text" th:text="${produkt.name}"></h2>
-                </div>
-                <div class="mdl-card__supporting-text">
-                    Herkunft: <b th:text="${produkt.herkunft}"></b><br/>
-                    Kategorie: <b th:text="${produkt.kategorie.displayValue}"></b><br/>
-                    Rebsorte: <b th:text="${produkt.unterkategorie.displayValue}"></b><br/>
-                    Preis: <b th:text="${produkt.preis}"></b>
-                </div>
-                <div class="mdl-card__actions mdl-card--border">
-                    <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent" href="portfolio.html">Read more</a>
-                </div>
-            </div>
-        </div>
-        <footer class="mdl-mini-footer">
-            <div class="mdl-mini-footer__left-section">
-                <div class="mdl-logo" th:text="${appName}"></div>
-            </div>
-            <div class="mdl-mini-footer__right-section">
-                <ul class="mdl-mini-footer__link-list">
-                    <li><a href="#">Help</a></li>
-                    <li><a href="#">Privacy & Terms</a></li>
-                </ul>
-            </div>
-        </footer>
-    </main>
+	<header class="mdl-layout__header mdl-layout__header--waterfall portfolio-header">
+		<div class="mdl-layout__header-row portfolio-logo-row">
+      <span class="mdl-layout__title">
+        <div class="portfolio-logo"></div>
+        <span class="mdl-layout__title" th:text="${titel}">Startseite</span>
+      </span>
+		</div>
+		<div class="mdl-layout__header-row portfolio-navigation-row mdl-layout--large-screen-only">
+			<nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
+				<a class="mdl-navigation__link is-active" href="index.html">Portfolio</a>
+				<a class="mdl-navigation__link" href="blog.html">Blog</a>
+				<a class="mdl-navigation__link" href="about.html">About</a>
+				<a class="mdl-navigation__link" href="contact.html">Contact</a>
+				<span>
+	        <span th:text="#{lang.change}"></span><br/>
+	        <select id="locales" onchange="location.search='?lang='+this.value">
+            <option value="" th:text="#{lang.select}"></option>
+            <option value="en" th:text="#{lang.en}" th:selected="${#strings.equals(#locale, 'en')}"></option>
+            <option value="de" th:text="#{lang.de}" th:selected="${#strings.equals(#locale, 'de')}"></option>
+	        </select>
+	    </span>
+			</nav>
+		</div>
+	</header>
+	<div class="mdl-layout__drawer mdl-layout--small-screen-only">
+		<nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
+			<a class="mdl-navigation__link is-active" href="index.html">Portfolio</a>
+			<a class="mdl-navigation__link" href="blog.html">Blog</a>
+			<a class="mdl-navigation__link" href="about.html">About</a>
+			<a class="mdl-navigation__link" href="contact.html">Contact</a>
+		</nav>
+	</div>
+	<main class="mdl-layout__content">
+		<div class="portfolio-max-width">
+			<h2 th:if="${produkte==null||produkte.isEmpty()}" th:text="#{no.products}"></h2>
+			<h4 th:if="${message!=null}" th:text="${message}"></h4>
+
+			<div class="mdl-grid">
+				<div th:each="produkt : ${produkte}"
+				     class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--12-col-phone
+                    mdl-card mdl-shadow--4dp portfolio-card">
+					<div class="mdl-card__media">
+						<img class="article-image" th:src="${produkt.foto}" border="0" alt=""/>
+					</div>
+					<div class="mdl-card__title">
+						<h2 class="mdl-card__title-text" th:text="${produkt.name}"></h2>
+					</div>
+					<div class="mdl-card__supporting-text">
+						<label th:text="#{label.origin.short}"></label>
+						<span th:text="${produkt.herkunft}"></span><br/>
+						<label th:text="#{label.category.short}"></label>
+						<span th:text="#{${produkt.kategorie.messageKey}}"></span><br/>
+						<label th:text="#{label.subcategory.short}"></label>
+						<span th:text="#{${produkt.unterkategorie.messageKey}}"></span><br/>
+						<label th:text="#{label.price.short}"></label>
+						<span><span th:text="${produkt.preisFormatiert}"></span> &euro;</span>
+					</div>
+					<div class="mdl-card__actions mdl-card--border">
+						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
+						   href="#">
+							<span th:text="#{button.buy}"></span>
+							<i class="material-icons">add_shopping_cart</i></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<footer class="mdl-mini-footer">
+			<div class="mdl-mini-footer__left-section">
+				<div class="mdl-logo" th:text="${appName}"></div>
+			</div>
+			<div class="mdl-mini-footer__right-section">
+				<ul class="mdl-mini-footer__link-list">
+					<li><a href="#">Help</a></li>
+					<li><a href="#">Privacy & Terms</a></li>
+				</ul>
+			</div>
+		</footer>
+	</main>
 </div>
 <script src="material.min.js"></script>
 </body>
