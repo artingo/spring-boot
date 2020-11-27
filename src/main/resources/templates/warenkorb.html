@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,6 +10,19 @@
 	<link rel="stylesheet" href="material.grey-pink.min.css"/>
 	<link rel="stylesheet" href="styles.css"/>
 	<link rel="stylesheet" href="icons.css">
+	<script type="text/javascript" src="dialog-polyfill.js"></script>
+	<script type="text/javascript" language="JavaScript">
+		window.onload = function () {
+			var dialog = document.querySelector('dialog');
+			if (!dialog.showModal) {
+				dialogPolyfill.registerDialog(dialog);
+			}
+		}
+		function loeschenBestaetigen(url) {
+			document.querySelector('#loeschenLink').href = url;
+			document.querySelector('dialog').showModal();
+		}
+	</script>
 </head>
 <body>
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -22,8 +35,8 @@
 		</div>
 		<div class="mdl-layout__header-row portfolio-navigation-row mdl-layout--large-screen-only">
 			<nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
-				<a class="mdl-navigation__link is-active" href="index.html" th:text="#{nav.portfolio}"></a>
-				<a class="mdl-navigation__link" href="warenkorb.html" th:text="#{nav.cart}"></a>
+				<a class="mdl-navigation__link" href="index.html" th:text="#{nav.portfolio}"></a>
+				<a class="mdl-navigation__link is-active" href="warenkorb.html" th:text="#{nav.cart}"></a>
 				<a class="mdl-navigation__link" href="about.html">About</a>
 				<a class="mdl-navigation__link" href="contact.html">Contact</a>
 				<span>
@@ -47,16 +60,14 @@
 	</div>
 
 	<main class="mdl-layout__content">
-		<div class="portfolio-max-width">
-			<h2 th:if="${produkte==null||produkte.isEmpty()}" th:text="#{no.products}"></h2>
-			<h4 th:if="${message!=null}" th:text="${message}"></h4>
-
+		<div class=" portfolio-max-width">
+			<h2 th:if="${warenkorb.produkte.isEmpty()}" th:text="#{cart.no.products}"></h2>
+			<h4 th:if="${message}" th:text="${message}"></h4>
 			<div class="mdl-grid">
-				<div th:each="produkt : ${produkte}"
-				     class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--12-col-phone
-                    mdl-card mdl-shadow--4dp portfolio-card">
+				<div th:each="produkt : ${warenkorb.produkte}"
+					class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--12-col-phone mdl-card mdl-shadow--4dp portfolio-card">
 					<div class="mdl-card__media">
-						<img class="article-image" th:src="${produkt.foto}" border="0" alt=""/>
+						<img class="article-image" th:src="${produkt.foto}" border="0"/>
 					</div>
 					<div class="mdl-card__title">
 						<h2 class="mdl-card__title-text" th:text="${produkt.name}"></h2>
@@ -73,9 +84,11 @@
 					</div>
 					<div class="mdl-card__actions mdl-card--border">
 						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
-							th:href="@{/kaufen(id=${produkt.id})}">
-							<span th:text="#{button.buy}"></span>
-							<i class="material-icons">add_shopping_cart</i></a>
+						   th:href="@{/entfernen(id=${produkt.id})}"
+						   onclick="loeschenBestaetigen(this.href); return false">
+							<span th:text="#{button.remove}"></span>
+							<i class="material-icons">remove_shopping_cart</i>
+						</a>
 					</div>
 				</div>
 			</div>
@@ -91,6 +104,19 @@
 				</ul>
 			</div>
 		</footer>
+		<dialog class="mdl-dialog" style="width:400px; top: 100px">
+			<h4 class="mdl-dialog__title" th:text="#{title.dialog}"/>
+			<div class="mdl-dialog__content">
+				<p th:text="#{label.dialog}"/>
+			</div>
+			<div class="mdl-dialog__actions">
+				<a href="#" id="loeschenLink">
+					<button type="button" class="mdl-button" th:text="#{button.yes}"/>
+				</a>
+				<button type="button" class="mdl-button close" th:text="#{button.no}"
+				        onclick="document.querySelector('dialog').close()"/>
+			</div>
+		</dialog>
 	</main>
 </div>
 <script src="material.min.js"></script>

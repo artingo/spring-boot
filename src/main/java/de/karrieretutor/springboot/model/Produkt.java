@@ -1,6 +1,14 @@
 package de.karrieretutor.springboot.model;
 
+import org.springframework.context.i18n.LocaleContextHolder;
+
+import java.text.NumberFormat;
+import java.util.Locale;
+
 public class Produkt {
+    private static Long idCounter = 1L;
+    public Long id;
+
     public String name;
     public String herkunft;
     public Kategorie kategorie;
@@ -14,6 +22,8 @@ public class Produkt {
         this.kategorie = kategorie;
         this.unterkategorie = unterkategorie;
         this.preis = preis;
+        this.id = idCounter;
+        idCounter++;
     }
 
     public String getFoto() {
@@ -29,7 +39,8 @@ public class Produkt {
     }
 
     public String getPreisFormatiert() {
-        return String.format("%.2f", this.preis);
+        Locale currentLocale = LocaleContextHolder.getLocale();
+        return NumberFormat.getNumberInstance(currentLocale).format(this.preis);
     }
 }
 
