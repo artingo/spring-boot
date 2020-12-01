@@ -16,6 +16,8 @@ public class Produkt {
     public Double preis;
     String foto;
 
+    public Produkt() {}
+
     public Produkt(String name, String herkunft, Kategorie kategorie, Unterkategorie unterkategorie, Double preis) {
         this.name = name;
         this.herkunft = herkunft;
@@ -41,6 +43,19 @@ public class Produkt {
     public String getPreisFormatiert() {
         Locale currentLocale = LocaleContextHolder.getLocale();
         return NumberFormat.getNumberInstance(currentLocale).format(this.preis);
+    }
+
+    @Override
+    public String toString() {
+        return "Produkt{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", herkunft='" + herkunft + '\'' +
+                ", kategorie=" + kategorie +
+                ", unterkategorie=" + unterkategorie +
+                ", preis=" + preis +
+                ", foto='" + foto + '\'' +
+                '}';
     }
 }
 

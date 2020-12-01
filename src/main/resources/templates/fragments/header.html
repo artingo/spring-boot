@@ -1,0 +1,42 @@
+<header xmlns:th="http://www.thymeleaf.org"
+        th:fragment="titel(titel)"
+        class="mdl-layout__header mdl-layout__header--waterfall portfolio-header">
+	<div class="mdl-layout__header-row portfolio-logo-row">
+		<h1 th:text="#{title.shop}"></h1>
+	</div>
+	<div class="mdl-layout__header-row portfolio-navigation-row mdl-layout--large-screen-only">
+
+		<nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
+			<a href="/index.html" class="mdl-navigation__link"
+			   th:classappend="${titel=='Index'}?is-active" th:text="#{nav.portfolio}"></a>
+			<a href="/warenkorb.html" class="mdl-navigation__link"
+			   th:classappend="${titel=='Warenkorb'}?is-active">
+          <span th:text="#{nav.cart}"/>
+			</a>
+			<a href="/admin/bearbeiten.html" class="mdl-navigation__link"
+			   th:classappend="${titel=='Bearbeiten'}?is-active" th:text="#{nav.product}"></a>
+			<a href="/about.html" class="mdl-navigation__link"
+			   th:classappend="${titel=='About'}?is-active" th:text="#{nav.about}"></a>
+			<span>
+	        <span th:text="#{lang.change}"></span><br/>
+	        <select id="locales" onchange="location.search='?lang='+this.value">
+	            <option value="" th:text="#{lang.select}"></option>
+	            <option value="en" th:text="#{lang.en}"
+                th:selected="${#strings.equals(#locale, 'en')}"></option>
+	            <option value="de" th:text="#{lang.de}"
+                th:selected="${#strings.equals(#locale, 'de')}"></option>
+	        </select>
+	    </span>
+		</nav>
+	</div>
+</header>
+<div xmlns:th="http://www.thymeleaf.org"
+     class="mdl-layout__drawer mdl-layout--small-screen-only">
+	<nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
+		<a class="mdl-navigation__link" href="/index.html" th:text="#{nav.portfolio}"></a>
+		<a class="mdl-navigation__link" href="/warenkorb.html" th:text="#{nav.cart}"></a>
+		<a class="mdl-navigation__link" href="/admin/bearbeiten.html" th:text="#{nav.cart}"></a>
+		<a class="mdl-navigation__link" href="/about.html" th:text="#{nav.about}"></a>
+		<a class="mdl-navigation__link" href="/login" th:text="#{nav.login}"></a>
+	</nav>
+</div>

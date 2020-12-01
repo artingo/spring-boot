@@ -3,8 +3,8 @@ package de.karrieretutor.springboot;
 import de.karrieretutor.springboot.model.Produkt;
 import de.karrieretutor.springboot.model.Warenkorb;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -21,8 +22,6 @@ import static de.karrieretutor.springboot.model.Unterkategorie.*;
 
 @Controller
 public class SimpleController {
-    @Value("${spring.application.name}")
-    String appName;
     Warenkorb warenkorb = new Warenkorb();
     List<Produkt> produkte = createProdukte();
 
@@ -35,11 +34,10 @@ public class SimpleController {
     }
 
     @GetMapping("/{name}.html")
-    public String htmlMapping(@PathVariable(name = "name") String name, Model model) {
-        model.addAttribute("titel", name.toUpperCase());
+    public String htmlMapping(@PathVariable(name = "name") String name, Model model, HttpSession session) {
+        session.setAttribute("Produkte", produkte);
         model.addAttribute("produkte", produkte);
         model.addAttribute("warenkorb", warenkorb);
-        model.addAttribute("appName", appName);
         return name;
     }
 
