@@ -19,7 +19,8 @@
 </head>
 <body>
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-	<div th:replace="fragments/header::titel(titel='Warenkorb')"></div>
+	<div th:replace="fragments/header::large(titel='Warenkorb')"/>
+	<div th:replace="fragments/header::small"/>
 	<main class="mdl-layout__content">
 		<div class=" portfolio-max-width">
 			<h2 th:if="${warenkorb.produkte.isEmpty()}" th:text="#{cart.no.products}"></h2>

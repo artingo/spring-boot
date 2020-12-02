@@ -2,23 +2,37 @@ package de.karrieretutor.springboot.model;
 
 import org.springframework.context.i18n.LocaleContextHolder;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.text.NumberFormat;
 import java.util.Locale;
 
 public class Produkt {
     private static Long idCounter = 1L;
-    public Long id;
+    private Long id;
 
-    public String name;
-    public String herkunft;
-    public Kategorie kategorie;
-    public Unterkategorie unterkategorie;
-    public Double preis;
+    @NotBlank(message = "{validation.produkt.name}")
+    private String name;
+
+    @NotBlank(message = "{validation.produkt.herkunft}")
+    private String herkunft;
+
+    @NotNull(message = "{validation.produkt.kategorie}")
+    private Kategorie kategorie;
+
+    @NotNull(message = "{validation.produkt.unterkategorie}")
+    private Unterkategorie unterkategorie;
+
+    @NotNull
+    @Min(value = 1, message = "{validation.produkt.preis}")
+    private Double preis;
     String foto;
 
     public Produkt() {}
 
     public Produkt(String name, String herkunft, Kategorie kategorie, Unterkategorie unterkategorie, Double preis) {
+        super();
         this.name = name;
         this.herkunft = herkunft;
         this.kategorie = kategorie;
@@ -26,6 +40,49 @@ public class Produkt {
         this.preis = preis;
         this.id = idCounter;
         idCounter++;
+    }
+
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getHerkunft() {
+        return herkunft;
+    }
+    public void setHerkunft(String herkunft) {
+        this.herkunft = herkunft;
+    }
+
+    public Kategorie getKategorie() {
+        return kategorie;
+    }
+    public void setKategorie(Kategorie kategorie) {
+        this.kategorie = kategorie;
+    }
+
+    public Unterkategorie getUnterkategorie() {
+        return unterkategorie;
+    }
+    public void setUnterkategorie(Unterkategorie unterkategorie) {
+        this.unterkategorie = unterkategorie;
+    }
+
+    public Double getPreis() {
+        return preis;
+    }
+
+    public void setPreis(Double preis) {
+        this.preis = preis;
     }
 
     public String getFoto() {

@@ -7,7 +7,8 @@
 
 <body>
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-	<header th:replace="fragments/header::titel(titel='About')"></header>
+	<div th:replace="fragments/header::large(titel='About')"/>
+	<div th:replace="fragments/header::small"/>
 	<main class="mdl-layout__content">
 		<div class="mdl-grid portfolio-max-width">
 

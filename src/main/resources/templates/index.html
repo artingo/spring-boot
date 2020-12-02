@@ -3,10 +3,30 @@
 <head>
 	<title th:text="#{nav.portfolio}"></title>
 	<link th:replace="fragments/styles"/>
+	<style type="text/css">
+		.mdl-button {
+			display: table-cell;
+		}
+	</style>
+	<script type="text/javascript" src="/js/dialog-polyfill.js"></script>
+	<script type="text/javascript" language="JavaScript">
+		window.onload = function () {
+			var dialog = document.querySelector('dialog');
+			if (!dialog.showModal) {
+				dialogPolyfill.registerDialog(dialog);
+			}
+		}
+
+		function loeschenBestaetigen(url) {
+			document.querySelector('#loeschenLink').href = url;
+			document.querySelector('dialog').showModal();
+		}
+	</script>
 </head>
 <body>
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-	<div th:replace="fragments/header::titel(titel='Index')"></div>
+	<div th:replace="fragments/header::large(titel='Index')"/>
+	<div th:replace="fragments/header::small"/>
 	<main class="mdl-layout__content">
 		<div class="portfolio-max-width">
 			<h2 th:if="${produkte==null||produkte.isEmpty()}" th:text="#{no.products}"></h2>
@@ -33,14 +53,36 @@
 						<span><span th:text="${produkt.preisFormatiert}"></span> &euro;</span>
 					</div>
 					<div class="mdl-card__actions mdl-card--border">
-						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
-							th:href="@{/kaufen(id=${produkt.id})}">
-							<span th:text="#{button.buy}"></span>
+						<a class="mdl-button mdl-button--accent"
+							th:href="@{/kaufen(id=${produkt.id})}"
+							th:title="#{button.buy}">
 							<i class="material-icons">add_shopping_cart</i></a>
+						<a class="mdl-button mdl-button--accent"
+						   th:href="@{/admin/bearbeiten.html(id=${produkt.id})}"
+						   th:title="#{button.edit}">
+							<i class="material-icons">edit</i></a>
+						<a class="mdl-button mdl-button--accent"
+						   th:href="@{/admin/loeschen(id=${produkt.id})}"
+						   th:title="#{button.delete}"
+						   onclick="loeschenBestaetigen(this.href); return false">
+							<i class="material-icons">delete</i></a>
 					</div>
 				</div>
 			</div>
 		</div>
+		<dialog class="mdl-dialog" style="width:400px; top: 100px">
+			<h4 class="mdl-dialog__title" th:text="#{title.dialog}"/>
+			<div class="mdl-dialog__content">
+				<p th:text="#{label.dialog}"/>
+			</div>
+			<div class="mdl-dialog__actions">
+				<a href="#" id="loeschenLink">
+					<button type="button" class="mdl-button" th:text="#{button.yes}"/>
+				</a>
+				<button type="button" class="mdl-button close" th:text="#{button.no}"
+				        onclick="document.querySelector('dialog').close()"/>
+			</div>
+		</dialog>
 		<footer th:replace="fragments/footer"/>
 	</main>
 </div>

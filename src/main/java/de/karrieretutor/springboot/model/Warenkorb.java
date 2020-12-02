@@ -16,7 +16,7 @@ public class Warenkorb {
     public String getGesamtpreis() {
         double gesamtpreis = 0;
         for (Produkt produkt : produkte) {
-            gesamtpreis += produkt.preis;
+            gesamtpreis += produkt.getPreis();
         }
         return String.format("%.2f", gesamtpreis);
     }
@@ -26,15 +26,7 @@ public class Warenkorb {
     }
 
     private Produkt findProduktById(Long produktId) {
-        return produkte.stream().filter(produkt -> produkt.id == produktId).findFirst().orElse(null);
-/*
-        for (Produkt aktuellesProdukt : produkte) {
-            if (aktuellesProdukt.id == produktId) {
-                return aktuellesProdukt;
-            }
-        }
-        return null;
-*/
+        return produkte.stream().filter(produkt -> produkt.getId() == produktId).findFirst().orElse(null);
     }
 
     public void produktHinzufuegen(Produkt produkt) {
