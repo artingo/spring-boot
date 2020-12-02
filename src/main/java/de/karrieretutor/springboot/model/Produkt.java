@@ -29,17 +29,18 @@ public class Produkt {
     private Double preis;
     String foto;
 
-    public Produkt() {}
+    public Produkt() {
+        this.id = idCounter;
+        idCounter++;
+    }
 
     public Produkt(String name, String herkunft, Kategorie kategorie, Unterkategorie unterkategorie, Double preis) {
-        super();
+        this();
         this.name = name;
         this.herkunft = herkunft;
         this.kategorie = kategorie;
         this.unterkategorie = unterkategorie;
         this.preis = preis;
-        this.id = idCounter;
-        idCounter++;
     }
 
     public Long getId() {

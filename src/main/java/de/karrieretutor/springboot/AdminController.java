@@ -79,10 +79,10 @@ public class AdminController {
     }
 
     private void saveProdukt(Produkt neuesProdukt) {
-        if (neuesProdukt.getId() == null) {
+        Produkt vorhandenesProdukt = findById(neuesProdukt.getId());
+        if (vorhandenesProdukt == null) {
             sc.produkte.add(neuesProdukt);
         } else {
-            Produkt vorhandenesProdukt = findById(neuesProdukt.getId());
             int index = sc.produkte.indexOf(vorhandenesProdukt);
             sc.produkte.set(index, neuesProdukt);
         }
