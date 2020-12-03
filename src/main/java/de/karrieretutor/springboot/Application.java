@@ -1,5 +1,8 @@
 package de.karrieretutor.springboot;
 
+import de.karrieretutor.springboot.service.ProduktService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.MessageSource;
@@ -17,10 +20,11 @@ import java.util.TimeZone;
 
 @SpringBootApplication
 public class Application implements WebMvcConfigurer {
+	private static final Logger LOG = LoggerFactory.getLogger(Application.class);
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
-		System.out.println("http://localhost:8080");
+		LOG.info("http://localhost:8080");
 	}
 
 	@Bean

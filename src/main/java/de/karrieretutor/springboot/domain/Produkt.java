@@ -1,15 +1,20 @@
-package de.karrieretutor.springboot.model;
+package de.karrieretutor.springboot.domain;
 
+import de.karrieretutor.springboot.enums.Kategorie;
+import de.karrieretutor.springboot.enums.Unterkategorie;
 import org.springframework.context.i18n.LocaleContextHolder;
 
+import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+@Entity
 public class Produkt {
-    private static Long idCounter = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO  )
     private Long id;
 
     @NotBlank(message = "{validation.produkt.name}")
@@ -27,15 +32,13 @@ public class Produkt {
     @NotNull
     @Min(value = 1, message = "{validation.produkt.preis}")
     private Double preis;
+
+    @Transient
     String foto;
 
-    public Produkt() {
-        this.id = idCounter;
-        idCounter++;
-    }
+    public Produkt() {}
 
     public Produkt(String name, String herkunft, Kategorie kategorie, Unterkategorie unterkategorie, Double preis) {
-        this();
         this.name = name;
         this.herkunft = herkunft;
         this.kategorie = kategorie;
@@ -81,7 +84,6 @@ public class Produkt {
     public Double getPreis() {
         return preis;
     }
-
     public void setPreis(Double preis) {
         this.preis = preis;
     }

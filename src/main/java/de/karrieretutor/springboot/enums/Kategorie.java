@@ -1,4 +1,4 @@
-package de.karrieretutor.springboot.model;
+package de.karrieretutor.springboot.enums;
 
 public enum Kategorie {
     KAT1("enum.category.1"),

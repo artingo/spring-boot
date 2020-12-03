@@ -1,4 +1,4 @@
-package de.karrieretutor.springboot.model;
+package de.karrieretutor.springboot.enums;
 
 public enum Unterkategorie {
     SUBKAT1("enum.subcategory.1"),

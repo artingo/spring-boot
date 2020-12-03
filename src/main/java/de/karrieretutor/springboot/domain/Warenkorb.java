@@ -1,4 +1,4 @@
-package de.karrieretutor.springboot.model;
+package de.karrieretutor.springboot.domain;
 
 import java.util.ArrayList;
 import java.util.List;
