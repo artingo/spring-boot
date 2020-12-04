@@ -5,6 +5,10 @@ import de.karrieretutor.springboot.domain.Warenkorb;
 import de.karrieretutor.springboot.service.ProduktService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +16,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -45,6 +54,22 @@ public class SimpleController {
     public String htmlMapping(@PathVariable(name = "name") String name, Model model) {
         model.addAttribute("warenkorb", this.warenkorb);
         return name;
+    }
+
+    @GetMapping("/fotos/{id}")
+    public ResponseEntity<Resource> fotos(@PathVariable Long id) throws IOException, URISyntaxException {
+        byte[] bytes;
+        Produkt produkt = produktService.getProdukt(id);
+        if (produkt == null || produkt.getDatei() == null || produkt.getDatei().length==0) {
+            // wenn kein Bild hochgeladen wurde, dann lade das Standard-Bild
+            URL imageURL = this.getClass().getClassLoader().getResource("./static/images/no-image.png");
+            bytes = Files.readAllBytes(Paths.get(imageURL.toURI()));
+        } else {
+            bytes = produkt.getDatei();
+        }
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(new ByteArrayResource(bytes));
     }
 
     @GetMapping("/kaufen")

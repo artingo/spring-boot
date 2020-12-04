@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Locale;
 
 @Controller
@@ -39,14 +41,17 @@ public class AdminController {
     }
 
     @PostMapping("speichern")
-    public String speichern(@Valid Produkt produkt,
+    public String speichern(@RequestParam MultipartFile file,
+                            @Valid Produkt produkt,
                             BindingResult fields,
                             Model model,
                             RedirectAttributes redirect,
-                            Locale locale) {
+                            Locale locale) throws IOException {
         if (fields.hasErrors()) {
             return "admin/bearbeiten";
         }
+        produkt.setDateiname(file.getOriginalFilename());
+        produkt.setDatei(file.getBytes());
         produktService.updateProdukt(produkt);
         String message = messageSource.getMessage("product.saved", new Object[]{produkt.getName()}, locale);
         redirect.addFlashAttribute("message", message);

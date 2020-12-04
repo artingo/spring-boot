@@ -3,6 +3,12 @@
 <head>
 	<title th:text="#{nav.product}"></title>
 	<link th:replace="fragments/styles"/>
+	<script type="text/javascript">
+	function showPreview(input) {
+		document.getElementById('dateiname').textContent = input.files[0].name;
+		document.getElementById('preview').src = URL.createObjectURL(input.files[0]);
+	}
+	</script>
 </head>
 <body>
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -60,6 +66,22 @@
 							</select>
 							<label class="mdl-textfield__label select" th:text="#{label.subcategory}"></label>
 							<span class="mdl-textfield__error" th:errors="*{unterkategorie}"></span>
+						</div>
+
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label is-dirty is-upgraded">
+							<label class="mdl-textfield__label select" th:text="#{label.file}"></label>
+							<label for="file">
+								<input type="file" name="file" id="file" class="hidden" accept="image/*"
+								       onchange="showPreview(this)"/>
+								<span id="dateiname" th:text="${produkt.dateiname}"/>
+								<span class="mdl-button mdl-js-button mdl-js-ripple-effect" style="top:12px" th:title="#{button.upload}">
+                    <i class="material-icons">cloud_upload</i>
+                </span>
+							</label>
+							<img th:if="${produkt.datei}" th:src="@{/fotos/}+${produkt.id}"
+							     id="preview" class="mdl-shadow--4dp" height="100" align="right"/>
+							<img th:unless="${produkt.datei}" src="/images/no-image.png"
+							     id="preview" class="mdl-shadow--4dp" height="100" align="right"/>
 						</div>
 
 						<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
