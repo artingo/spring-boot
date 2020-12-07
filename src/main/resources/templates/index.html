@@ -1,5 +1,6 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 	<title th:text="#{nav.portfolio}"></title>
 	<link th:replace="fragments/styles"/>
@@ -37,8 +38,7 @@
 				     class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--12-col-phone
                     mdl-card mdl-shadow--4dp portfolio-card">
 					<div class="mdl-card__media">
-						<img th:if="${produkt.datei}" th:src="@{/fotos/}+${produkt.id}" th:alt="${produkt.dateiname}" height="100%" border="0"/>
-						<img th:unless="${produkt.datei}" src="/images/no-image.png" height="100%" border="0"/>
+						<img th:src="${'/fotos/'+produkt.id}" th:alt="${produkt.dateiname}" class="article-image" border="0"/>
 					</div>
 					<div class="mdl-card__title">
 						<h2 class="mdl-card__title-text" th:text="${produkt.name}"></h2>
@@ -54,19 +54,21 @@
 						<span><span th:text="${produkt.preisFormatiert}"></span> &euro;</span>
 					</div>
 					<div class="mdl-card__actions mdl-card--border">
-						<a class="mdl-button mdl-button--accent"
-							th:href="@{/kaufen(id=${produkt.id})}"
-							th:title="#{button.buy}">
+						<a sec:authorize="!isAuthenticated()"
+							class="mdl-button mdl-button--accent"
+							th:href="@{/kaufen(id=${produkt.id})}">
+							<span th:text="#{button.buy}"/>
 							<i class="material-icons">add_shopping_cart</i></a>
-						<a class="mdl-button mdl-button--accent"
-						   th:href="@{/admin/bearbeiten.html(id=${produkt.id})}"
-						   th:title="#{button.edit}">
-							<i class="material-icons">edit</i></a>
-						<a class="mdl-button mdl-button--accent"
-						   th:href="@{/admin/loeschen(id=${produkt.id})}"
-						   th:title="#{button.delete}"
-						   onclick="loeschenBestaetigen(this.href); return false">
-							<i class="material-icons">delete</i></a>
+
+						<span sec:authorize="isAuthenticated()">
+							<a class="mdl-button mdl-button--accent" th:href="@{/admin/bearbeiten.html(id=${produkt.id})}">
+								<span th:text="#{button.edit}"/>
+								<i class="material-icons">edit</i></a>
+							<a class="mdl-button mdl-button--accent" th:href="@{/admin/loeschen(id=${produkt.id})}"
+							   onclick="loeschenBestaetigen(this.href); return false">
+								<span th:text="#{button.delete}"/>
+								<i class="material-icons">delete</i></a>
+						</span>
 					</div>
 				</div>
 			</div>

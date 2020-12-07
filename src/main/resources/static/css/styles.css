@@ -116,8 +116,7 @@
   background-color: inherit;
 }
 img.article-image {
-  width: 100%;
-  height: auto;
+  height: 100%;
 }
 
 .portfolio-max-width {

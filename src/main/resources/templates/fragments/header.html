@@ -1,18 +1,19 @@
-<header xmlns:th="http://www.thymeleaf.org" th:fragment="large(titel)"
+<header th:fragment="large(titel)"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
   class="mdl-layout__header mdl-layout__header--waterfall portfolio-header">
 	<div class="mdl-layout__header-row portfolio-logo-row">
 		<h1 th:text="#{title.shop}"></h1>
 	</div>
 	<div class="mdl-layout__header-row portfolio-navigation-row mdl-layout--large-screen-only">
-		<nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
+		<nav sec:authorize="!isAuthenticated()"
+			class="mdl-navigation mdl-typography--body-1-force-preferred-font">
 			<a href="/index.html" class="mdl-navigation__link"
 			   th:classappend="${titel=='Index'}?is-active" th:text="#{nav.portfolio}"></a>
 			<a href="/warenkorb.html" class="mdl-navigation__link"
 			   th:classappend="${titel=='Warenkorb'}?is-active">
           <span th:text="#{nav.cart}"/>
 			</a>
-			<a href="/admin/bearbeiten.html" class="mdl-navigation__link"
-			   th:classappend="${titel=='Bearbeiten'}?is-active" th:text="#{nav.product}"></a>
 			<a href="/about.html" class="mdl-navigation__link"
 			   th:classappend="${titel=='About'}?is-active" th:text="#{nav.about}"></a>
 			<span>
@@ -25,6 +26,17 @@
                 th:selected="${#strings.equals(#locale, 'de')}"></option>
 	        </select>
 	    </span>
+			<a href="/login" class="mdl-navigation__link" th:text="#{nav.login}"></a>
+		</nav>
+
+		<nav sec:authorize="isAuthenticated()"
+			class="mdl-navigation mdl-typography--body-1-force-preferred-font">
+			<a href="/index.html" class="mdl-navigation__link"
+			   th:classappend="${titel=='Index'}?is-active" th:text="#{nav.portfolio}"></a>
+			<a href="/admin/bearbeiten.html" class="mdl-navigation__link"
+			   th:classappend="${titel=='Bearbeiten'}?is-active" th:text="#{nav.product}"></a>
+			<a href="/logout" class="mdl-navigation__link" th:text="#{nav.logout}"></a>
+			<span>User: <span sec:authentication="name"></span></span>
 		</nav>
 	</div>
 </header>

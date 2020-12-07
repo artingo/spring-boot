@@ -29,7 +29,7 @@
 				<div th:each="produkt : ${warenkorb.produkte}"
 					class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--12-col-phone mdl-card mdl-shadow--4dp portfolio-card">
 					<div class="mdl-card__media">
-						<img class="article-image" th:src="${produkt.foto}" border="0"/>
+						<img th:src="${'/fotos/'+produkt.id}" th:alt="${produkt.dateiname}" class="article-image" border="0"/>
 					</div>
 					<div class="mdl-card__title">
 						<h2 class="mdl-card__title-text" th:text="${produkt.name}"></h2>

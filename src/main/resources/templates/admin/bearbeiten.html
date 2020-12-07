@@ -78,10 +78,8 @@
                     <i class="material-icons">cloud_upload</i>
                 </span>
 							</label>
-							<img th:if="${produkt.datei}" th:src="@{/fotos/}+${produkt.id}"
-							     id="preview" class="mdl-shadow--4dp" height="100" align="right"/>
-							<img th:unless="${produkt.datei}" src="/images/no-image.png"
-							     id="preview" class="mdl-shadow--4dp" height="100" align="right"/>
+							<img th:with="imgSrc=${produkt.datei!=null? '/fotos/'+produkt.id : '/images/no-image.png'}"
+								th:src="${imgSrc}" id="preview" class="mdl-shadow--4dp" height="100" align="right"/>
 						</div>
 
 						<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"

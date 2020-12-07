@@ -27,6 +27,11 @@ public class AdminController {
     @Autowired
     MessageSource messageSource;
 
+    @GetMapping("/*")
+    public String homePage(Model model) {
+        return "redirect:/index.html";
+    }
+
     @GetMapping("bearbeiten.html")
     public String bearbeiten(@RequestParam(required = false) Long id,
                              Model model) {
