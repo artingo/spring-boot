@@ -31,7 +31,7 @@
 }
 
 .portfolio-logo {
-  background: url(images/logo.png) 50% no-repeat;
+  background: url(../images/logo.png) 50% no-repeat;
   background-size: cover;
   height: 150px;
   width: 150px;
@@ -89,15 +89,15 @@
 }
 
 .portfolio-blog-card-full-bg {
-  background: url(images/example-blog03.jpg) center / cover;
+  background: url(../images/example-blog03.jpg) center / cover;
 }
 
 .portfolio-blog-card-event-bg {
-  background: url(images/example-blog05.jpg) center / cover;
+  background: url(../images/example-blog05.jpg) center / cover;
 }
 
 .portfolio-blog-card-strip-bg {
-  background: url(images/example-blog06.jpg) center / cover;
+  background: url(../images/example-blog06.jpg) center / cover;
 }
 
 .portfolio-blog-card-compact .mdl-card__title {
@@ -211,6 +211,20 @@ footer {
 .center {
   margin-left: auto;
   margin-right: auto;
+}
+.mdl-card__checkout {
+  overflow: hidden;
+  width: 100%;
+  margin: 8px;
+}
+#buy-button {
+  position: absolute;
+  right: 15%;
+  z-index:99;
+  font-size:larger;
+}
+.twoFields {
+  width: 604px;
 }
 
 /* Inhalt von icons.css ---------------------------------------------------- */

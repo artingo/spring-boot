@@ -14,6 +14,11 @@
 			   th:classappend="${titel=='Warenkorb'}?is-active">
           <span th:text="#{nav.cart}"/>
 			</a>
+			<a href="/checkout" th:if="${!warenkorb.produkte.isEmpty()}" class="mdl-navigation__link"
+			   th:classappend="${titel=='Checkout'}?is-active">
+				<span th:text="#{button.checkout}"></span>
+				<i class="material-icons">exit_to_app</i>
+			</a>
 			<a href="/about.html" class="mdl-navigation__link"
 			   th:classappend="${titel=='About'}?is-active" th:text="#{nav.about}"></a>
 			<span>
