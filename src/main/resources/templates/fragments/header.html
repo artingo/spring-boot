@@ -10,7 +10,7 @@
 			class="mdl-navigation mdl-typography--body-1-force-preferred-font">
 			<a href="/index.html" class="mdl-navigation__link"
 			   th:classappend="${titel=='Index'}?is-active" th:text="#{nav.portfolio}"></a>
-			<a href="/warenkorb.html" class="mdl-navigation__link"
+			<a href="/cart.html" class="mdl-navigation__link"
 			   th:classappend="${titel=='Warenkorb'}?is-active">
           <span th:text="#{nav.cart}"/>
 			</a>
@@ -51,7 +51,7 @@
 	class="mdl-layout__drawer mdl-layout--small-screen-only">
 	<nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
 		<a class="mdl-navigation__link" href="/index.html" th:text="#{nav.portfolio}"></a>
-		<a class="mdl-navigation__link" href="/warenkorb.html" th:text="#{nav.cart}"></a>
+		<a class="mdl-navigation__link" href="/cart.html" th:text="#{nav.cart}"></a>
 <!--		<a class="mdl-navigation__link" href="/orders.html" th:text="#{nav.orders}"></a>-->
 		<a class="mdl-navigation__link" href="/about.html" th:text="#{nav.about}"></a>
 	</nav>

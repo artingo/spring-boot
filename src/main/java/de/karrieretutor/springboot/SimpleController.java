@@ -94,6 +94,6 @@ public class SimpleController {
         }
         redirect.addFlashAttribute("message", message);
         model.addAttribute("warenkorb", warenkorb);
-        return "redirect:/warenkorb.html";
+        return "redirect:/cart.html";
     }
 }
