@@ -7,7 +7,11 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+
+import static javax.persistence.CascadeType.ALL;
 
 
 @Entity
@@ -42,6 +46,9 @@ public class Kunde {
     private String email;
 
     private String sprache = Locale.GERMAN.getLanguage();
+
+    @OneToMany(mappedBy = "kunde", cascade = ALL)
+    private List<Bestellung> bestellungen = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -122,6 +129,14 @@ public class Kunde {
     public void setSprache(String sprache) {
         this.sprache = sprache;
     }
+
+    public List<Bestellung> getBestellungen() {
+        return bestellungen;
+    }
+    public void setBestellungen(List<Bestellung> bestellungen) {
+        this.bestellungen = bestellungen;
+    }
+
 
     // TODO: implementieren
     @Transient

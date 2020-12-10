@@ -4,40 +4,74 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Warenkorb {
-    private List<Produkt> produkte = new ArrayList<>();
+    private List<BestelltesProdukt> produkte = new ArrayList<>();
+    private Long userId;
 
-    public List<Produkt> getProdukte() {
+    public Warenkorb() {}
+
+    public Warenkorb(Long userId) {
+        this.userId = userId;
+    }
+
+    public List<BestelltesProdukt> getProdukte() {
         return produkte;
     }
-    public void setProdukte(List<Produkt> produkte) {
+    public void setProdukte(List<BestelltesProdukt> produkte) {
         this.produkte = produkte;
     }
 
     public String getGesamtpreis() {
         double gesamtpreis = 0;
-        for (Produkt produkt : produkte) {
-            gesamtpreis += produkt.getPreis();
+        for(BestelltesProdukt p : produkte) {
+            Produkt produkt = p.getProdukt();
+            gesamtpreis += produkt.getPreis() * p.getAnzahl();
         }
         return String.format("%.2f", gesamtpreis);
     }
 
     public int getGesamtzahl() {
-        return produkte.size();
+        int gesamtzahl = 0;
+        for(BestelltesProdukt p : produkte) {
+            gesamtzahl += p.getAnzahl();
+        }
+        return gesamtzahl;
     }
 
-    private Produkt findProduktById(Long produktId) {
-        return produkte.stream().filter(produkt -> produkt.getId() == produktId).findFirst().orElse(null);
+    public Long getUserId() {
+        return userId;
+    }
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    private BestelltesProdukt findProduktById(Long produktId) {
+        for (int i = 0; i < produkte.size(); i++) {
+            BestelltesProdukt aktuellesProdukt = produkte.get(i);
+            if (aktuellesProdukt.getProdukt().getId() == produktId) {
+                return aktuellesProdukt;
+            }
+        }
+        return null;
     }
 
     public void produktHinzufuegen(Produkt produkt) {
-        produkte.add(produkt);
+        BestelltesProdukt warenkorbProdukt = findProduktById(produkt.getId());
+        if (warenkorbProdukt == null) {
+            warenkorbProdukt = new BestelltesProdukt();
+            warenkorbProdukt.setProdukt(produkt);
+            produkte.add(warenkorbProdukt);
+        }
+        warenkorbProdukt.hinzufuegen();
     }
 
     public Produkt produktEntfernen(Long produktId) {
-        Produkt warenkorbProdukt = findProduktById(produktId);
+        BestelltesProdukt warenkorbProdukt = findProduktById(produktId);
         if (warenkorbProdukt != null) {
-            produkte.remove(warenkorbProdukt);
-            return warenkorbProdukt;
+            warenkorbProdukt.entfernen();
+            if (warenkorbProdukt.getAnzahl() == 0) {
+                produkte.remove(warenkorbProdukt);
+            }
+            return warenkorbProdukt.getProdukt();
         }
         return null;
     }

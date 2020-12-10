@@ -19,6 +19,8 @@
 				<span th:text="#{button.checkout}"></span>
 				<i class="material-icons">exit_to_app</i>
 			</a>
+<!--			<a href="/orders.html" class="mdl-navigation__link"-->
+<!--			   th:classappend="${titel=='Orders'}?is-active" th:text="#{nav.orders}"></a>-->
 			<a href="/about.html" class="mdl-navigation__link"
 			   th:classappend="${titel=='About'}?is-active" th:text="#{nav.about}"></a>
 			<span>
@@ -50,7 +52,7 @@
 	<nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
 		<a class="mdl-navigation__link" href="/index.html" th:text="#{nav.portfolio}"></a>
 		<a class="mdl-navigation__link" href="/warenkorb.html" th:text="#{nav.cart}"></a>
-		<a class="mdl-navigation__link" href="/admin/bearbeiten.html" th:text="#{nav.product}"></a>
+<!--		<a class="mdl-navigation__link" href="/orders.html" th:text="#{nav.orders}"></a>-->
 		<a class="mdl-navigation__link" href="/about.html" th:text="#{nav.about}"></a>
 	</nav>
 </div>

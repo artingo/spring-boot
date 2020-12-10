@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title th:text="#{nav.cart}"></title>
+	<link th:replace="fragments/styles"/>
+</head>
+<body>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+	<div th:replace="fragments/header::large(titel='Orders')"/>
+	<div th:replace="fragments/header::small"/>
+	<main class="mdl-layout__content">
+		<div class="mdl-cell--6-col-desktop mdl-cell--8-col-tablet mdl-cell--12-col-phone center">
+			<h4 th:if="${message}" th:text="${message}"></h4>
+
+			<div th:if="${bestellungen==null || !bestellungen.isEmpty()}" class="mdl-card__checkout mdl-shadow--4dp">
+				<div class="mdl-card__title">
+					<span class="mdl-card__title-text" th:text="#{orders.title}"></span>
+				</div>
+				<table class="mdl-card__actions mdl-data-table mdl-js-data-table" width="100%">
+				<thead>
+				<tr>
+					<th th:text="#{label.order.nr}"></th>
+					<th th:text="#{label.order.date}"></th>
+					<th th:text="#{label.order.items}"></th>
+					<th th:text="#{label.order.total}" class="right"></th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr th:each="bestellung:${bestellungen}">
+					<td class="centered" th:text="${bestellung.id}"></td>
+					<td><a th:href="${'/bestellung/'+bestellung.id}"
+					       th:text="${#temporals.format(bestellung.datum, 'dd.MM.yyyy HH:mm')}"></a></td>
+					<td class="centered" th:text="${bestellung.gesamtzahl}"></td>
+					<td class="right"><span th:text="${bestellung.gesamtpreis}"/> €</td>
+				</tr>
+				</tbody>
+				<tfoot>
+				<tr>
+					<td colspan="4" class="right">
+						<span th:text="#{orders.total}"/>
+						<span th:text="${bestellungen.size()}"/>
+					</td>
+				</tr>
+				</tfoot>
+				</table>
+			</div>
+		</div>
+		<footer th:replace="fragments/footer"/>
+	</main>
+</div>
+</body>
+</html>

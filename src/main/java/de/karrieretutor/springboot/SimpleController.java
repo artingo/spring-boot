@@ -1,6 +1,5 @@
 package de.karrieretutor.springboot;
 
-import de.karrieretutor.springboot.domain.Kunde;
 import de.karrieretutor.springboot.domain.Produkt;
 import de.karrieretutor.springboot.domain.Warenkorb;
 import de.karrieretutor.springboot.service.KundenService;
@@ -13,15 +12,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.thymeleaf.util.StringUtils;
 
-import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -35,11 +30,10 @@ public class SimpleController {
     ProduktService produktService;
     @Autowired
     KundenService kundenService;
-
     @Autowired
     MessageSource messageSource;
 
-    Warenkorb warenkorb = new Warenkorb();
+    public Warenkorb warenkorb = new Warenkorb();
 
     @GetMapping("/")
     public String homePage(Model model) {
@@ -93,7 +87,7 @@ public class SimpleController {
 
     @GetMapping("/entfernen")
     public String entfernen(@RequestParam Long id, Model model, RedirectAttributes redirect, Locale locale) {
-        String message = messageSource .getMessage("cart.not.found", new Long[]{id}, locale);
+        String message = messageSource.getMessage("cart.not.found", new Long[]{id}, locale);
         Produkt entferntesProdukt = warenkorb.produktEntfernen(id);
         if (entferntesProdukt != null) {
             message = messageSource.getMessage("cart.removed", new String[]{entferntesProdukt.getName()}, locale);
@@ -102,52 +96,4 @@ public class SimpleController {
         model.addAttribute("warenkorb", warenkorb);
         return "redirect:/warenkorb.html";
     }
-
-    @GetMapping("/checkout")
-    public String zurKasse(@RequestParam(required = false) Long id,
-                             Model model,
-                             RedirectAttributes redirect,
-                             Locale locale) {
-        Kunde kunde = kundenService.lade(id);
-        model.addAttribute("kunde", kunde);
-        model.addAttribute("warenkorb", this.warenkorb);
-        return "checkout";
-    }
-
-    @PostMapping("/ship")
-    public String verschicken(@Valid Kunde kunde,
-                            BindingResult result,
-                            Model model,
-                            RedirectAttributes redirect,
-                            Locale locale) {
-        model.addAttribute("warenkorb", this.warenkorb);
-        if (result.hasErrors()) {
-            return "checkout";
-        }
-        // TODO: kunde.validiereZahlungsart(result) implementieren
-        switch (kunde.getZahlungsart()) {
-            case EINZUG:
-                if (StringUtils.isEmptyOrWhitespace(kunde.getIban())) {
-                    result.rejectValue("iban", "validation.zahlungsart.iban");
-                    return "checkout";
-                }
-                break;
-            case KREDITKARTE:
-                if (StringUtils.isEmptyOrWhitespace(kunde.getKreditkartenNr())) {
-                    result.rejectValue("kreditkartenNr", "validation.zahlungsart.karte");
-                    return "checkout";
-                }
-        }
-
-        String message = messageSource.getMessage("order.failure", null, locale);
-        Kunde neuerKunde = kundenService.speichern(kunde);
-        if (neuerKunde != null) {
-            message = messageSource.getMessage("order.success", null, locale);
-        }
-        redirect.addFlashAttribute("message", message);
-        return "redirect:/index.html";
-    }
-
-
-
 }

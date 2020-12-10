@@ -17,6 +17,11 @@
   text-align: center;
   font-weight: 300;
 }
+.mdl-card__title-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 .is-compact .mdl-layout__title span {
   display: none;
