@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title th:text="${titel}"></title>
+	<link th:replace="fragments/styles"/>
+</head>
+<body>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+	<div th:replace="fragments/header::large(titel='Login')"/>
+	<div th:replace="fragments/header::small"/>
+	<main class="mdl-layout__content">
+		<div class="mdl-cell mdl-cell--4-col center">
+			<h4 th:if="${message}" th:text="${message}"></h4>
+
+			<form th:action="${login.registerMode?'/kunde/registrieren':'/kunde/login'}"
+	      th:object="${login}" method="post" autocomplete="on">
+				<div class="mdl-card__checkout mdl-shadow--4dp">
+					<div class="mdl-card__title">
+						<span class="mdl-card__title-text" th:text="#{${login.registerMode?'label.register':'nav.login'}}"/>
+					</div>
+					<div class="mdl-card__supporting-text">
+						<input type="hidden" th:field="*{registerMode}"/>
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label twoFields"
+					     th:classappend="${#fields.hasErrors('email')}?is-invalid">
+							<input class="mdl-textfield__input" th:field="*{email}"/>
+							<label class="mdl-textfield__label" for="email" th:text="#{label.payment.email}"/>
+							<span class="mdl-textfield__error" th:errors="*{email}"/>
+						</div>
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label twoFields"
+					     th:classappend="${#fields.hasErrors('password')}?is-invalid">
+							<input th:type="${login.registerMode?'text':'password'}" class="mdl-textfield__input" th:field="*{password}"/>
+							<label class="mdl-textfield__label" for="password" th:text="#{label.password}"/>
+							<span class="mdl-textfield__error" th:errors="*{password}"/>
+						</div>
+						<div th:if="${login.registerMode}"
+					     class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label twoFields"
+					     th:classappend="${#fields.hasErrors('passwordRepeat')}?is-invalid">
+							<input class="mdl-textfield__input" th:field="*{passwordRepeat}"/>
+							<label class="mdl-textfield__label" for="passwordRepeat" th:text="#{label.password.repeat}"/>
+							<span class="mdl-textfield__error" th:errors="*{passwordRepeat}"/>
+						</div><br/>&nbsp;
+
+						<div th:if="${login.registerMode}">
+							<button type="submit" th:text="#{label.register}" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"/>
+						</div>
+						<div th:if="${!login.registerMode}" >
+							<button type="submit" th:text="#{nav.login}" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"/>
+							&nbsp;
+							<!-- TODO: Registrier-Status im localStorage merken -->
+							<a th:href="@{/kunde/registrieren}">
+								<button type="button" th:text="#{label.register}" class="mdl-button mdl-js-button mdl-button--raised"/>
+							</a>
+						</div>
+					</div>
+
+				</div>
+			</form>
+		</div>
+
+		<footer th:replace="fragments/footer"/>
+	</main>
+</div>
+</body>
+</html>

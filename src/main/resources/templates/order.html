@@ -6,13 +6,13 @@
 </head>
 <body>
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-	<div th:replace="fragments/header::large(titel='Warenkorb')"/>
+	<div th:replace="fragments/header::large(titel='Orders')"/>
 	<div th:replace="fragments/header::small"/>
 	<main class="mdl-layout__content">
 		<div class="mdl-cell--6-col-desktop mdl-cell--12-col-phone center">
 			<h4 th:if="${message}" th:text="${message}"></h4>
 
-			<div th:if="${!bestellung.produkte.isEmpty()}" class="mdl-card__checkout mdl-shadow--4dp">
+			<div class="mdl-card__checkout mdl-shadow--4dp">
 				<div class="mdl-card__title">
 					<span class="mdl-card__title-text" th:text="#{order.title}"></span>
 				</div>
@@ -25,7 +25,7 @@
 					<th width="20%" th:text="#{table.price}"></th>
 				</tr>
 				</thead>
-				<tbody>
+				<tbody th:if="${!bestellung.produkte.isEmpty()}">
 				<tr th:each="p:${bestellung.produkte}" th:with="produkt=${p.produkt}">
 					<td class="mdl-data-table__cell--non-numeric">
 						<img th:src="${'/fotos/'+produkt.id}" th:alt="${produkt.dateiname}" height="30" border="0"/>

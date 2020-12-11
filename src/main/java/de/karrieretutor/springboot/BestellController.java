@@ -9,10 +9,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.util.StringUtils;
 
@@ -33,8 +30,11 @@ public class BestellController {
     SimpleController sc;
 
     @GetMapping("/checkout")
-    public String zurKasse(@RequestParam(required = false) Long id, Model model) {
-        Kunde kunde = kundenService.lade(id);
+    public String zurKasse(Model model, HttpSession session) {
+        Kunde kunde = (Kunde)session.getAttribute("kunde");
+        if (kunde == null) {
+            kunde = new Kunde();
+        }
         Bestellung bestellung = new Bestellung();
         bestellung.setKunde(kunde);
         model.addAttribute("bestellung", bestellung);
@@ -69,36 +69,40 @@ public class BestellController {
         }
 
         String message = messageSource.getMessage("order.failure", null, locale);
-        Bestellung neueBestellung = bestellService.speichere(bestellung, true);
+        boolean istNeuerKunde = (kunde.getId() == null);
+        Bestellung neueBestellung = bestellService.speichere(bestellung, istNeuerKunde);
         if (neueBestellung != null) {
             message = messageSource.getMessage("order.success", null, locale);
+            sc.warenkorb.getProdukte().clear();
         }
         redirect.addFlashAttribute("message", message);
         return "redirect:/bestellung/" + neueBestellung.getId();
     }
 
     @GetMapping("/bestellung/{id}")
-    public String bestellung(@PathVariable Long id, Model model) {
-        Bestellung bestellung = bestellService.lade(id);
-        // TODO: User-Berechtigung prüfen
-        if (bestellung == null) {
-            bestellung = new Bestellung();
-            model.addAttribute("message", "No order found for ID: " + id);
+    public String bestellung(@PathVariable Long id, Model model, HttpSession session) {
+        Kunde kunde = (Kunde)session.getAttribute("kunde");
+        // TODO: Kunden-Berechtiung prüfen
+        if (kunde != null) {
+            Bestellung bestellung = bestellService.lade(id);
+            if (bestellung == null) {
+                bestellung = new Bestellung();
+                model.addAttribute("message", "No order found for ID: " + id);
+            }
+            model.addAttribute("bestellung", bestellung);
         }
-        model.addAttribute("bestellung", bestellung);
         model.addAttribute("warenkorb", sc.warenkorb);
         return "order";
     }
 
-    @GetMapping("/bestellungen/{kundenId}")
-    public String bestellungen(@PathVariable Long kundenId, Model model, HttpSession session) {
-        session.getAttribute("kundenId");
-        List<Bestellung> bestellungen = bestellService.bestellungenVonKunde(kundenId);
-        // TODO: User-Berechtigung prüfen
-        if (bestellungen.isEmpty()) {
-            model.addAttribute("message", "No orders found for customer ID: " + kundenId);
+    @GetMapping("/bestellungen")
+    public String bestellungen(Model model, HttpSession session) {
+        Kunde kunde = (Kunde)session.getAttribute("kunde");
+        if (kunde != null) {
+            List<Bestellung> bestellungen = bestellService.bestellungenVonKunde(kunde.getId());
+            // TODO: User-Berechtigung prüfen
+            model.addAttribute("bestellungen", bestellungen);
         }
-        model.addAttribute("bestellungen", bestellungen);
         model.addAttribute("warenkorb", sc.warenkorb);
         return "orders";
     }

@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title th:text="${titel}"></title>
+	<link th:replace="fragments/styles"/>
+</head>
+<body>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+	<div th:replace="fragments/header::large(titel='Customer')"/>
+	<div th:replace="fragments/header::small"/>
+	<main class="mdl-layout__content">
+		<div class="mdl-cell--4-col-desktop mdl-cell--10-col-tablet mdl-cell--11-col-phone center">
+			<h4 th:if="${message}" th:text="${message}"></h4>
+
+			<form th:action="@{/kunde/speichern}" th:object="${kunde}" method="post" autocomplete="on">
+				<div id="buy-button">
+<!--
+					<button type="button" class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-button&#45;&#45;accent"
+		        th:text="#{button.edit}"/>
+					<button type="button" class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-button&#45;&#45;accent"
+		        th:text="#{button.abort}"/>
+-->
+					<button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
+		        th:text="#{button.save}"/>
+				</div>
+
+				<div class="mdl-card__checkout mdl-shadow--4dp">
+					<div class="mdl-card__title">
+						<span class="mdl-card__title-text" th:text="#{title.access.data}"/>
+					</div>
+					<div class="mdl-card__supporting-text">
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label twoFields"
+						     th:classappend="${#fields.hasErrors('email')}?is-invalid">
+							<input class="mdl-textfield__input" th:field="*{email}"/>
+							<label class="mdl-textfield__label" for="email" th:text="#{label.payment.email}"/>
+							<span class="mdl-textfield__error" th:errors="*{email}"/>
+						</div>
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label twoFields"
+						     th:classappend="${#fields.hasErrors('password')}?is-invalid">
+							<input class="mdl-textfield__input" th:field="*{password}"/>
+							<label class="mdl-textfield__label" for="password" th:text="#{label.password}"/>
+							<span class="mdl-textfield__error" th:errors="*{password}"/>
+						</div>
+					</div>
+				</div>
+
+				<div class="mdl-card__checkout mdl-shadow--4dp">
+					<div class="mdl-card__title">
+						<span class="mdl-card__title-text" th:text="#{title.shipping.address}"/>
+						<input type="hidden" th:field="*{id}"/>
+					</div>
+					<div class="mdl-card__supporting-text">
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+					     th:classappend="${#fields.hasErrors('vorname')}?is-invalid">
+							<input class="mdl-textfield__input" th:field="*{vorname}"/>
+							<label class="mdl-textfield__label" for="vorname" th:text="#{label.shipping.prename}"/>
+							<span class="mdl-textfield__error" th:errors="*{vorname}"/>
+						</div>
+
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+					     th:classappend="${#fields.hasErrors('nachname')}?is-invalid">
+							<input class="mdl-textfield__input" th:field="*{nachname}"/>
+							<label class="mdl-textfield__label" for="nachname" th:text="#{label.shipping.name}"/>
+							<span class="mdl-textfield__error" th:errors="*{nachname}"/>
+						</div>
+
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label twoFields"
+						     th:classappend="${#fields.hasErrors('strasse')}?is-invalid">
+							<input class="mdl-textfield__input" th:field="*{strasse}"/>
+							<label class="mdl-textfield__label" for="strasse" th:text="#{label.shipping.address}"/>
+							<span class="mdl-textfield__error" th:errors="*{strasse}"/>
+						</div>
+						<br/>
+
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+					     th:classappend="${#fields.hasErrors('plz')}?is-invalid">
+							<input class="mdl-textfield__input"  th:field="*{plz}"/>
+							<label class="mdl-textfield__label" for="plz" th:text="#{label.shipping.zip}"/>
+							<span class="mdl-textfield__error" th:errors="*{plz}"/>
+						</div>
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+					     th:classappend="${#fields.hasErrors('ort')}?is-invalid">
+							<input class="mdl-textfield__input" th:field="*{ort}"/>
+							<label class="mdl-textfield__label" for="ort" th:text="#{label.shipping.city}"/>
+							<span class="mdl-textfield__error" th:errors="*{ort}"/>
+						</div>
+					</div>
+				</div>
+
+				<div class="mdl-card__checkout mdl-shadow--4dp">
+					<div class="mdl-card__title">
+						<div class="mdl-card__title-text" th:text="#{title.shipping.payment}"/>
+					</div>
+					<div th:if="${#fields.hasErrors('zahlungsart')}" class="mdl-textfield" style="margin-top:-2.5em; padding-left:16px"
+					     th:classappend="${#fields.hasErrors('zahlungsart')}?is-invalid">
+						<span class="mdl-textfield__error" th:text="#{validation.zahlungsart.zahlungsart}"></span>
+					</div>
+
+					<div class="mdl-cell mdl-cell--12-col">
+							<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="list-option-1">
+								<input type="radio" id="list-option-1" class="mdl-radio__button" th:field="*{zahlungsart}" value="EINZUG"/>
+								<span class="mdl-radio__label" th:text="#{label.payment.debit}"/>
+							</label>&nbsp;
+							<span class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" th:classappend="${#fields.hasErrors('iban')}?is-invalid">
+								<input class="mdl-textfield__input" th:field="*{iban}"/>
+								<label class="mdl-textfield__label" for="iban" th:text="#{label.payment.iban}"/>
+								<span class="mdl-textfield__error" th:errors="*{iban}"/>
+							</span>
+					</div>
+					<div class="mdl-cell mdl-cell--12-col">
+							<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="list-option-2">
+								<input type="radio" id="list-option-2" class="mdl-radio__button" th:field="*{zahlungsart}" value="KREDITKARTE"/>
+								<span class="mdl-radio__label" th:text="#{label.payment.card}"/>
+							</label>&nbsp;
+							<span class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" th:classappend="${#fields.hasErrors('kreditkartenNr')}?is-invalid">
+								<input class="mdl-textfield__input" th:field="*{kreditkartenNr}">
+								<label class="mdl-textfield__label" for="kreditkartenNr" th:text="#{label.payment.card.nr}"/>
+								<span class="mdl-textfield__error" th:errors="*{kreditkartenNr}"/>
+							</span>
+					</div>
+
+			    <div class="mdl-cell mdl-cell--12-col">
+				    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="list-option-3">
+		          <input type="radio" id="list-option-3" class="mdl-radio__button" th:field="*{zahlungsart}" value="PAYPAL"/>
+					    <span class="mdl-radio__label" th:text="#{label.payment.paypal}"/>
+				    </label>
+						<span class="mdl-list__item-text-body">
+							<a href="https://developer.paypal.com/classic-home/" target="paypal"
+							   onclick="window.open('', 'paypal', 'width=500,height=600,top=200')">
+								<img src="/images/paypal-button.png"/>
+							</a>
+						</span>
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<footer th:replace="fragments/footer"/>
+	</main>
+</div>
+</body>
+</html>

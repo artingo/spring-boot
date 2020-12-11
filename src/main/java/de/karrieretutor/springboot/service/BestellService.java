@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,7 +26,10 @@ public class BestellService {
 
     @Transactional(readOnly = true)
     public List<Bestellung> bestellungenVonKunde(Long kundenId) {
-        return this.bestellRepository.findByKundeId(kundenId);
+        List<Bestellung> bestellungen = bestellRepository.findByKundeId(kundenId);
+        if (bestellungen == null)
+            bestellungen = new ArrayList<Bestellung>();
+        return bestellungen;
     }
 
     @Transactional()
@@ -33,11 +37,11 @@ public class BestellService {
         Kunde kunde = bestellung.getKunde();
         if (istNeu) {
             kundenService.speichern(kunde);
-            bestellung.setDatum(LocalDateTime.now());
-            bestellung.setStatus(BestellStatus.OFFEN);
-            bestellung.setProdukte(bestellung.getProdukte());
-            bestellRepository.save(bestellung);
         }
+        bestellung.setDatum(LocalDateTime.now());
+        bestellung.setStatus(BestellStatus.OFFEN);
+        bestellung.setProdukte(bestellung.getProdukte());
+        bestellRepository.save(bestellung);
         return bestellung;
     }
     public Bestellung speichere(Bestellung bestellung) {

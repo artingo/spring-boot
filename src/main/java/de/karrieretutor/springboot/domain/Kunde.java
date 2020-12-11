@@ -44,11 +44,20 @@ public class Kunde {
     @Email
     @NotBlank(message = "{validation.zahlungsart.email}")
     private String email;
+    // TODO: in der DB verschlüsseln
+    private String password;
 
     private String sprache = Locale.GERMAN.getLanguage();
 
     @OneToMany(mappedBy = "kunde", cascade = ALL)
     private List<Bestellung> bestellungen = new ArrayList<>();
+
+    public Kunde() {}
+
+    public Kunde(String email, String passwort) {
+        this.email = email;
+        this.password = passwort;
+    }
 
     public Long getId() {
         return id;
@@ -128,6 +137,13 @@ public class Kunde {
     }
     public void setSprache(String sprache) {
         this.sprache = sprache;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public List<Bestellung> getBestellungen() {

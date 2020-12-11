@@ -19,10 +19,10 @@
 				<span th:text="#{button.checkout}"></span>
 				<i class="material-icons">exit_to_app</i>
 			</a>
-<!--			<a href="/orders.html" class="mdl-navigation__link"-->
-<!--			   th:classappend="${titel=='Orders'}?is-active" th:text="#{nav.orders}"></a>-->
-			<a href="/about.html" class="mdl-navigation__link"
-			   th:classappend="${titel=='About'}?is-active" th:text="#{nav.about}"></a>
+			<a href="/bestellungen" th:if="${session.kunde}" class="mdl-navigation__link"
+			   th:classappend="${titel=='Orders'}?is-active" th:text="#{nav.orders}"></a>
+			<a href="/kunde/" th:if="${session.kunde}" class="mdl-navigation__link"
+			   th:classappend="${titel=='Customer'}?is-active" th:text="#{nav.account}"></a>
 			<span>
 	        <span th:text="#{lang.change}"></span><br/>
 	        <select id="locales" onchange="location.search='?lang='+this.value">
@@ -33,7 +33,12 @@
                 th:selected="${#strings.equals(#locale, 'de')}"></option>
 	        </select>
 	    </span>
-			<a href="/login" class="mdl-navigation__link" th:text="#{nav.login}"></a>
+			<a href="/kunde/logout" th:if="${session.kunde}" class="mdl-navigation__link">
+				<span th:text="${session.kunde.vorname}"/>
+				<span th:text="#{nav.logout}"/>
+			</a>
+			<a href="/kunde/login" th:unless="${session.kunde}" class="mdl-navigation__link"
+			   th:classappend="${titel=='Login'}?is-active" th:text="#{nav.login}"></a>
 		</nav>
 
 		<nav sec:authorize="isAuthenticated()"
@@ -50,9 +55,12 @@
 <div xmlns:th="http://www.thymeleaf.org" th:fragment="small"
 	class="mdl-layout__drawer mdl-layout--small-screen-only">
 	<nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
-		<a class="mdl-navigation__link" href="/index.html" th:text="#{nav.portfolio}"></a>
-		<a class="mdl-navigation__link" href="/cart.html" th:text="#{nav.cart}"></a>
-<!--		<a class="mdl-navigation__link" href="/orders.html" th:text="#{nav.orders}"></a>-->
-		<a class="mdl-navigation__link" href="/about.html" th:text="#{nav.about}"></a>
+		<a href="/index.html" class="mdl-navigation__link" th:text="#{nav.portfolio}"></a>
+		<a href="/cart.html" class="mdl-navigation__link" th:text="#{nav.cart}"></a>
+		<a href="/checkout" th:if="${!warenkorb.produkte.isEmpty()}" class="mdl-navigation__link" th:text="#{button.checkout}"></a>
+		<a href="/bestellungen" th:if="${session.kunde}" class="mdl-navigation__link" th:text="#{nav.orders}"></a>
+		<a href="/kunde/" th:if="${session.kunde}" class="mdl-navigation__link" th:text="#{nav.account}"></a>
+		<a href="/kunde/logout" th:if="${session.kunde}" class="mdl-navigation__link" th:text="#{nav.logout}"></a>
+		<a href="/kunde/login" th:unless="${session.kunde}" class="mdl-navigation__link" th:text="#{nav.login}"></a>
 	</nav>
 </div>

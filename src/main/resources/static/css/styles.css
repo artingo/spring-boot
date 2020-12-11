@@ -57,7 +57,7 @@
 
 .portfolio-navigation-row  .mdl-navigation {
   text-align: center;
-  max-width: 900px;
+  max-width: 1080px;
   width: 100%;
 }
 
@@ -88,7 +88,7 @@
   background-color: rgb(255,64,129);
   left: 15%;
 }
-
+.mdl-card__checkout .mdl-card__title,
 .portfolio-card .mdl-card__title {
   padding-bottom: 0;
 }
@@ -219,7 +219,7 @@ footer {
 }
 .mdl-card__checkout {
   overflow: hidden;
-  width: 100%;
+  width: 97%;
   margin: 8px;
 }
 #buy-button {
