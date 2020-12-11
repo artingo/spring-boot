@@ -19,6 +19,8 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Locale;
 
+import static de.karrieretutor.springboot.Const.*;
+
 @Controller
 @RequestMapping(value = "/kunde/")
 public class KundenController {
@@ -26,29 +28,26 @@ public class KundenController {
     KundenService kundenService;
     @Autowired
     MessageSource messageSource;
-    @Autowired
-    SimpleController sc;
 
-    // TODO: aus der Session holen
-    @ModelAttribute("warenkorb")
-    public Warenkorb getInitializedWarenkorb() {
-        return sc.warenkorb;
+    @ModelAttribute(CART)
+    public Warenkorb getInitializedWarenkorb(HttpSession session) {
+        return (Warenkorb) session.getAttribute(CART);
     }
 
     @GetMapping("/")
     public String kundenDetails(Model model, HttpSession session) {
-        Kunde kunde = (Kunde) session.getAttribute("kunde");
+        Kunde kunde = (Kunde) session.getAttribute(Const.CUSTOMER);
         if (kunde != null) {
-            model.addAttribute("kunde", kunde);
+            model.addAttribute(Const.CUSTOMER, kunde);
             return "customer";
         }
-        model.addAttribute("login", new Login());
+        model.addAttribute(LOGIN, new Login());
         return "login";
     }
 
     @GetMapping("login")
     public String loginSeite(Model model) {
-        model.addAttribute("login", new Login());
+        model.addAttribute(LOGIN, new Login());
         return "login";
     }
 
@@ -72,23 +71,25 @@ public class KundenController {
             return "login";
         }
         message = messageSource.getMessage("customer.logged.in", new String[]{kunde.getNameFormatiert()}, locale);
-        redirect.addFlashAttribute("message", message);
-        session.setAttribute("kunde", kunde);
+        redirect.addFlashAttribute(MESSAGE, message);
+        session.setAttribute(Const.CUSTOMER, kunde);
         return "redirect:/index.html";
     }
 
     @GetMapping("logout")
     public String logout(HttpSession session, RedirectAttributes redirect, Locale locale) {
-        session.removeAttribute("kunde");
-        sc.warenkorb.getProdukte().clear();
+        session.removeAttribute(Const.CUSTOMER);
+        Warenkorb warenkorb = getInitializedWarenkorb(session);
+        if (warenkorb != null)
+            warenkorb.getProdukte().clear();
         String message = messageSource.getMessage("customer.logged.out", null, locale);
-        redirect.addFlashAttribute("message", message);
+        redirect.addFlashAttribute(MESSAGE, message);
         return "redirect:/index.html";
     }
 
     @GetMapping("registrieren")
     public String registrierSeite(Model model) {
-        model.addAttribute("login", new Login(true));
+        model.addAttribute(LOGIN, new Login(true));
         return "login";
     }
 
@@ -110,7 +111,7 @@ public class KundenController {
         }
 
         Kunde neuerKunde = new Kunde(login.getEmail(), login.getPassword());
-        redirect.addFlashAttribute("kunde", neuerKunde);
+        redirect.addFlashAttribute(Const.CUSTOMER, neuerKunde);
         return "redirect:/customer.html";
     }
 
@@ -126,10 +127,10 @@ public class KundenController {
         Kunde gespeicherterKunde = kundenService.speichern(kunde);
         String message = messageSource.getMessage("customer.failure", null, locale);
         if (gespeicherterKunde != null) {
-            session.setAttribute("kunde", gespeicherterKunde);
+            session.setAttribute(Const.CUSTOMER, gespeicherterKunde);
             message = messageSource.getMessage("customer.success", null, locale);
         }
-        redirect.addFlashAttribute("message", message);
+        redirect.addFlashAttribute(MESSAGE, message);
         return "redirect:/index.html";
     }
 }

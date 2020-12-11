@@ -17,12 +17,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Locale;
+
+import static de.karrieretutor.springboot.Const.*;
 
 @Controller
 public class SimpleController {
@@ -33,7 +36,7 @@ public class SimpleController {
     @Autowired
     MessageSource messageSource;
 
-    public Warenkorb warenkorb = new Warenkorb();
+    private Warenkorb warenkorb = new Warenkorb();
 
     @GetMapping("/")
     public String homePage(Model model) {
@@ -41,15 +44,15 @@ public class SimpleController {
     }
 
     @GetMapping("/index.html")
-    public String shop(Model model, Locale locale) {
-        model.addAttribute("produkte", produktService.ladeProdukte());
-        model.addAttribute("warenkorb", this.warenkorb);
+    public String shop(Model model, HttpSession session) {
+        model.addAttribute(PRODUCTS, produktService.ladeProdukte());
+        session.setAttribute(CART, warenkorb);
         return "index";
     }
 
     @GetMapping("/{name}.html")
-    public String htmlMapping(@PathVariable(name = "name") String name, Model model) {
-        model.addAttribute("warenkorb", this.warenkorb);
+    public String htmlMapping(@PathVariable(name = "name") String name, HttpSession session) {
+        session.setAttribute(CART, warenkorb);
         return name;
     }
 
@@ -72,28 +75,35 @@ public class SimpleController {
     @GetMapping("/kaufen")
     public String kaufen(@RequestParam Long id,
                          RedirectAttributes redirect,
-                         Locale locale) {
+                         Locale locale,
+                         HttpSession session) {
         String message = messageSource.getMessage("cart.product.id.not.found", new String[]{String.valueOf(id)}, locale);
         if (id != null) {
             Produkt produkt = produktService.getProdukt(id);
             if (produkt != null) {
                 warenkorb.produktHinzufuegen(produkt);
+                session.setAttribute(CART, warenkorb);
                 message = messageSource.getMessage("cart.added", new String[]{produkt.getName()}, locale);
             }
         }
-        redirect.addFlashAttribute("message", message);
+        redirect.addFlashAttribute(MESSAGE, message);
         return "redirect:index.html";
     }
 
     @GetMapping("/entfernen")
-    public String entfernen(@RequestParam Long id, Model model, RedirectAttributes redirect, Locale locale) {
+    public String entfernen(@RequestParam Long id,
+                            Model model,
+                            RedirectAttributes redirect,
+                            Locale locale,
+                            HttpSession session) {
         String message = messageSource.getMessage("cart.not.found", new Long[]{id}, locale);
         Produkt entferntesProdukt = warenkorb.produktEntfernen(id);
         if (entferntesProdukt != null) {
+            session.setAttribute(CART, warenkorb);
             message = messageSource.getMessage("cart.removed", new String[]{entferntesProdukt.getName()}, locale);
         }
-        redirect.addFlashAttribute("message", message);
-        model.addAttribute("warenkorb", warenkorb);
+        redirect.addFlashAttribute(MESSAGE, message);
+        model.addAttribute(CART, warenkorb);
         return "redirect:/cart.html";
     }
 }

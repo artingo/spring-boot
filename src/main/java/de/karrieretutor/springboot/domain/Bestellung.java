@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.karrieretutor.springboot.Const.ORDER;
 import static javax.persistence.CascadeType.ALL;
 
 @Entity
@@ -23,7 +24,7 @@ public class Bestellung {
     @ManyToOne
     private Kunde kunde;
 
-    @OneToMany(mappedBy = "bestellung", cascade = ALL)
+    @OneToMany(mappedBy = ORDER, cascade = ALL)
     private List<BestelltesProdukt> produkte = new ArrayList<>();
 
     public Long getId() {

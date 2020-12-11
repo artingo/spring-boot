@@ -1,5 +1,6 @@
 package de.karrieretutor.springboot.domain;
 
+import de.karrieretutor.springboot.Const;
 import de.karrieretutor.springboot.enums.Zahlungsart;
 import org.springframework.validation.BindingResult;
 
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import static de.karrieretutor.springboot.Const.CUSTOMER;
 import static javax.persistence.CascadeType.ALL;
 
 
@@ -49,7 +51,7 @@ public class Kunde {
 
     private String sprache = Locale.GERMAN.getLanguage();
 
-    @OneToMany(mappedBy = "kunde", cascade = ALL)
+    @OneToMany(mappedBy = CUSTOMER, cascade = ALL)
     private List<Bestellung> bestellungen = new ArrayList<>();
 
     public Kunde() {}

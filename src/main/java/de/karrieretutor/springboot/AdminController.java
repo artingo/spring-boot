@@ -18,12 +18,13 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Locale;
 
+import static de.karrieretutor.springboot.Const.*;
+
 @Controller
 @RequestMapping(value = "/admin/")
 public class AdminController {
     @Autowired
     ProduktService produktService;
-
     @Autowired
     MessageSource messageSource;
 
@@ -33,15 +34,14 @@ public class AdminController {
     }
 
     @GetMapping("bearbeiten.html")
-    public String bearbeiten(@RequestParam(required = false) Long id,
-                             Model model) {
+    public String bearbeiten(@RequestParam(required = false) Long id, Model model) {
         Produkt aktuellesProdukt = new Produkt();
         if (id != null) {
             Produkt vorhandenesProdukt = produktService.getProdukt(id);
             if (vorhandenesProdukt != null)
                 aktuellesProdukt = vorhandenesProdukt;
         }
-        model.addAttribute("produkt", aktuellesProdukt);
+        model.addAttribute(PRODUCT, aktuellesProdukt);
         return "admin/bearbeiten";
     }
 
@@ -59,8 +59,8 @@ public class AdminController {
         produkt.setDatei(file.getBytes());
         produktService.updateProdukt(produkt);
         String message = messageSource.getMessage("product.saved", new Object[]{produkt.getName()}, locale);
-        redirect.addFlashAttribute("message", message);
-        model.addAttribute("produkte", produktService.ladeProdukte());
+        redirect.addFlashAttribute(MESSAGE, message);
+        redirect.addAttribute(PRODUCTS, produktService.ladeProdukte());
         return "redirect:/index.html";
     }
 
@@ -76,7 +76,7 @@ public class AdminController {
         } catch (Exception e) {
             message = messageSource.getMessage("product.delete.not.possible", new Long[]{id}, locale);
         }
-        redirect.addFlashAttribute("message", message);
+        redirect.addFlashAttribute(MESSAGE, message);
         return "redirect:/index.html";
     }
 }
