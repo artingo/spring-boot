@@ -10,7 +10,7 @@
 	<div th:replace="fragments/header::small"/>
 	<main class="mdl-layout__content">
 		<div class="mdl-cell mdl-cell--6-col center">
-			<h2 th:if="${warenkorb.produkte.isEmpty()}" th:text="#{cart.no.products}"></h2>
+			<h2 th:if="${session.warenkorb.produkte.isEmpty()}" th:text="#{cart.no.products}"></h2>
 			<h4 th:if="${message}" th:text="${message}"></h4>
 
 			<form th:action="@{/bestellen}" method="post" autocomplete="on">
@@ -31,7 +31,7 @@
 					</tr>
 					</thead>
 					<tbody>
-					<tr th:each="p:${warenkorb.produkte}" th:with="produkt=${p.produkt}">
+					<tr th:each="p:${session.warenkorb.produkte}" th:with="produkt=${p.produkt}">
 						<td class="mdl-data-table__cell--non-numeric">
 							<input type="hidden" th:name="|produkte[${pStat.index}].produkt.id|" th:value="${produkt.id}"/><br/>
 							<img th:src="${'/fotos/'+produkt.id}" th:alt="${produkt.dateiname}" height="30" border="0"/>
@@ -48,11 +48,11 @@
 						<td></td>
 						<td class="mdl-data-table__cell--non-numeric">
 							<span th:text="#{label.total.number}"/>
-							<span th:text="${warenkorb.gesamtzahl}"/>
+							<span th:text="${session.warenkorb.gesamtzahl}"/>
 						</td>
 						<td></td>
 						<td><span th:text="#{label.total.price}"/>
-							<span th:text="${warenkorb.gesamtpreis}"/> &euro;
+							<span th:text="${session.warenkorb.gesamtpreis}"/> &euro;
 						</td>
 					</tr>
 					</tfoot>

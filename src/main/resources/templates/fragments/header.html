@@ -14,7 +14,7 @@
 			   th:classappend="${titel=='Warenkorb'}?is-active">
           <span th:text="#{nav.cart}"/>
 			</a>
-			<a href="/checkout" th:if="${!warenkorb.produkte.isEmpty()}" class="mdl-navigation__link"
+			<a href="/checkout" th:if="${!session.warenkorb.produkte.isEmpty()}" class="mdl-navigation__link"
 			   th:classappend="${titel=='Checkout'}?is-active">
 				<span th:text="#{button.checkout}"></span>
 				<i class="material-icons">exit_to_app</i>
@@ -57,7 +57,7 @@
 	<nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
 		<a href="/index.html" class="mdl-navigation__link" th:text="#{nav.portfolio}"></a>
 		<a href="/cart.html" class="mdl-navigation__link" th:text="#{nav.cart}"></a>
-		<a href="/checkout" th:if="${!warenkorb.produkte.isEmpty()}" class="mdl-navigation__link" th:text="#{button.checkout}"></a>
+		<a href="/checkout" th:if="${!session.warenkorb.produkte.isEmpty()}" class="mdl-navigation__link" th:text="#{button.checkout}"></a>
 		<a href="/bestellungen" th:if="${session.kunde}" class="mdl-navigation__link" th:text="#{nav.orders}"></a>
 		<a href="/kunde/" th:if="${session.kunde}" class="mdl-navigation__link" th:text="#{nav.account}"></a>
 		<a href="/kunde/logout" th:if="${session.kunde}" class="mdl-navigation__link" th:text="#{nav.logout}"></a>
