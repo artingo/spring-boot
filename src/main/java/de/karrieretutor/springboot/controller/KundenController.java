@@ -1,4 +1,4 @@
-package de.karrieretutor.springboot;
+package de.karrieretutor.springboot.controller;
 
 import de.karrieretutor.springboot.domain.Kunde;
 import de.karrieretutor.springboot.domain.Warenkorb;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -29,16 +28,11 @@ public class KundenController {
     @Autowired
     MessageSource messageSource;
 
-    @ModelAttribute(CART)
-    public Warenkorb getInitializedWarenkorb(HttpSession session) {
-        return (Warenkorb) session.getAttribute(CART);
-    }
-
     @GetMapping("/")
     public String kundenDetails(Model model, HttpSession session) {
-        Kunde kunde = (Kunde) session.getAttribute(Const.CUSTOMER);
+        Kunde kunde = (Kunde) session.getAttribute(CUSTOMER);
         if (kunde != null) {
-            model.addAttribute(Const.CUSTOMER, kunde);
+            model.addAttribute(CUSTOMER, kunde);
             return "customer";
         }
         model.addAttribute(LOGIN, new Login());
@@ -72,14 +66,16 @@ public class KundenController {
         }
         message = messageSource.getMessage("customer.logged.in", new String[]{kunde.getNameFormatiert()}, locale);
         redirect.addFlashAttribute(MESSAGE, message);
-        session.setAttribute(Const.CUSTOMER, kunde);
-        return "redirect:/index.html";
+        session.setAttribute(CUSTOMER, kunde);
+        Warenkorb warenkorb = (Warenkorb) session.getAttribute(CART);
+        String redirectURL = (warenkorb != null && !warenkorb.getProdukte().isEmpty()) ? "checkout" : "index.html";
+        return "redirect:/" + redirectURL;
     }
 
     @GetMapping("logout")
     public String logout(HttpSession session, RedirectAttributes redirect, Locale locale) {
-        session.removeAttribute(Const.CUSTOMER);
-        Warenkorb warenkorb = getInitializedWarenkorb(session);
+        session.removeAttribute(CUSTOMER);
+        Warenkorb warenkorb = (Warenkorb)session.getAttribute(CART);
         if (warenkorb != null)
             warenkorb.getProdukte().clear();
         String message = messageSource.getMessage("customer.logged.out", null, locale);
@@ -111,7 +107,7 @@ public class KundenController {
         }
 
         Kunde neuerKunde = new Kunde(login.getEmail(), login.getPassword());
-        redirect.addFlashAttribute(Const.CUSTOMER, neuerKunde);
+        redirect.addFlashAttribute(CUSTOMER, neuerKunde);
         return "redirect:/customer.html";
     }
 
@@ -127,7 +123,7 @@ public class KundenController {
         Kunde gespeicherterKunde = kundenService.speichern(kunde);
         String message = messageSource.getMessage("customer.failure", null, locale);
         if (gespeicherterKunde != null) {
-            session.setAttribute(Const.CUSTOMER, gespeicherterKunde);
+            session.setAttribute(CUSTOMER, gespeicherterKunde);
             message = messageSource.getMessage("customer.success", null, locale);
         }
         redirect.addFlashAttribute(MESSAGE, message);

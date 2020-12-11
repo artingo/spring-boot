@@ -1,4 +1,4 @@
-package de.karrieretutor.springboot;
+package de.karrieretutor.springboot.controller;
 
 import de.karrieretutor.springboot.domain.Produkt;
 import de.karrieretutor.springboot.service.ProduktService;

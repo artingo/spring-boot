@@ -1,4 +1,4 @@
-package de.karrieretutor.springboot;
+package de.karrieretutor.springboot.controller;
 
 import de.karrieretutor.springboot.domain.Bestellung;
 import de.karrieretutor.springboot.domain.Kunde;
