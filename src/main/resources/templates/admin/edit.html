@@ -15,16 +15,13 @@
 	<div th:replace="fragments/header::large(titel='Bearbeiten')"/>
 	<div th:replace="fragments/header::small"/>
 	<main class="mdl-layout__content">
-		<div class="mdl-grid portfolio-max-width portfolio-contact">
-			<div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp">
+		<div class="mdl-cell mdl-cell--5-col center">
+			<div class="mdl-card__checkout mdl-shadow--4dp center">
 				<div class="mdl-card__title">
 					<h2 class="mdl-card__title-text" th:text="#{h2.edit.product}"></h2>
 				</div>
-				<div class="mdl-card__media">
-					<img class="article-image" src="/images/contact-image.jpg" border="0" alt="">
-				</div>
 				<div class="mdl-card__supporting-text">
-					<p th:text="#{h3.edit.product}"></p>
+<!--					<p th:text="#{h3.edit.product}"></p>-->
 
 					<form th:action="@{/admin/speichern}" th:object="${produkt}" method="post" autocomplete="on"
 					      enctype="multipart/form-data">

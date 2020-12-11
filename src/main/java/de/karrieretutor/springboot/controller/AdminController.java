@@ -7,10 +7,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -42,18 +39,17 @@ public class AdminController {
                 aktuellesProdukt = vorhandenesProdukt;
         }
         model.addAttribute(PRODUCT, aktuellesProdukt);
-        return "admin/bearbeiten";
+        return "admin/edit";
     }
 
     @PostMapping("speichern")
     public String speichern(@RequestParam MultipartFile file,
                             @Valid Produkt produkt,
                             BindingResult fields,
-                            Model model,
                             RedirectAttributes redirect,
                             Locale locale) throws IOException {
         if (fields.hasErrors()) {
-            return "admin/bearbeiten";
+            return "admin/edit";
         }
         produkt.setDateiname(file.getOriginalFilename());
         produkt.setDatei(file.getBytes());
