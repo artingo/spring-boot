@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<title>Confirmation of shipment</title>
+</head>
+<body>
+
+<p>Hello <span th:text="${kunde.nameFormatiert}"/>,<br/>
+	<br/>
+	Your order number <span th:text="${bestellung.id}"/> has been sent.
+</p>
+
+<p>The delivery includes the following items:<br/>
+	<div th:each="bp : ${bestellung.produkte}">
+		Description: <span th:text="${bp.produkt.name}"/>,
+		Price: <span th:text="${bp.produkt.preisFormatiert}"/> €,
+		Quantity: <span th:text="${bp.anzahl}"/>
+	</div>
+	Total number of ordered products: <span th:text="${bestellung.gesamtzahl}"/>,
+	Total price: <span th:text="${bestellung.gesamtpreis}"/><br/>
+</p>
+<p>No more changes can be made to your order as it is already being shipped.</p>
+
+<p>Your order should arrive within the next 3 working days.<br/>
+	Sent to the following address:<br/>
+	<span th:text="${kunde.nameFormatiert}"/><br/>
+	<span th:text="${kunde.strasse}"/><br/>
+	<span th:text="${kunde.plz}"/> <span th:text="${kunde.ort}"/>
+</p>
+
+<p>Payment method:<br/>
+	<span th:text="#{${kunde.zahlungsart.messageKey}}"/>
+</p>
+
+Best regards,<br/>
+your Demo-Shop team
+</body>
+</html>

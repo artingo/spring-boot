@@ -4,6 +4,7 @@ import de.karrieretutor.springboot.domain.Bestellung;
 import de.karrieretutor.springboot.domain.Kunde;
 import de.karrieretutor.springboot.domain.Warenkorb;
 import de.karrieretutor.springboot.service.BestellService;
+import de.karrieretutor.springboot.service.EmailService;
 import de.karrieretutor.springboot.service.KundenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -32,6 +33,8 @@ public class BestellController {
     KundenService kundenService;
     @Autowired
     MessageSource messageSource;
+    @Autowired
+    EmailService emailService;
 
     @ModelAttribute(CART)
     public Warenkorb getInitializedWarenkorb(HttpSession session) {
@@ -78,7 +81,11 @@ public class BestellController {
         String message = messageSource.getMessage("order.failure", null, locale);
         boolean istNeuerKunde = (kunde.getId() == null);
         Bestellung neueBestellung = bestellService.speichere(bestellung, istNeuerKunde);
+        kunde.setSprache(locale.getLanguage());
         if (neueBestellung != null) {
+            // Email versenden
+            emailService.bestellungHTML(neueBestellung);
+
             message = messageSource.getMessage("order.success", null, locale);
             Warenkorb warenkorb = getInitializedWarenkorb(session);
             if (warenkorb != null)

@@ -59,7 +59,6 @@ public class Bestellung {
         return produkte;
     }
     public void setProdukte(List<BestelltesProdukt> produkte) {
-        produkte.forEach(p -> p.setBestellung(this));
         this.produkte = produkte;
     }
 
