@@ -32,4 +32,5 @@ build/
 /.mvn/wrapper/maven-wrapper.jar
 /.mvn/wrapper/maven-wrapper.properties
 /.mvn/wrapper/MavenWrapperDownloader.java
-/src/main/resources/application-dev.properties
+!/src/main/resources/application-dev.properties
+!/src/main/resources/application-prod.properties
