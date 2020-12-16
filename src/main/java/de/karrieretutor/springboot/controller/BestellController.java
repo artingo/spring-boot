@@ -84,7 +84,7 @@ public class BestellController {
         kunde.setSprache(locale.getLanguage());
         if (neueBestellung != null) {
             // Email versenden
-            emailService.bestellungHTML(neueBestellung);
+            emailService.bestellungBestaetigung(neueBestellung);
 
             message = messageSource.getMessage("order.success", null, locale);
             Warenkorb warenkorb = getInitializedWarenkorb(session);

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<title>Kundendaten geändert</title>
+</head>
+<body>
+
+<p>Hallo <span th:text="${kunde.nameFormatiert}"/>,<br/>
+	<br/>
+	Ihre Kundendaten wurden geändert.</p>
+
+
+<p>Ihre geänderte Adresse:<br/>
+	<span th:text="${kunde.nameFormatiert}"/><br/>
+	<span th:text="${kunde.strasse}"/><br/>
+	<span th:text="${kunde.plz}"/> <span th:text="${kunde.ort}"/>
+</p>
+
+<p>Ihre Zahlungsart:<br/>
+	<span th:text="#{${kunde.zahlungsart.messageKey}}"/>
+</p>
+
+<p>Falls Sie diese Änderung <u>NICHT</u> selber durchgeführt haben,
+	wenden Sie sich bitte an unseren Kunden-Support: <a href="mailto:support@kt-shop.de">support@kt-shop.de</a>
+</p>
+
+Mit freundlichen Grüßen,<br/>
+Ihr kt-Shop-Team
+</body>
+</html>

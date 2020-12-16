@@ -15,7 +15,9 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import static de.karrieretutor.springboot.Const.CUSTOMER;
 import static de.karrieretutor.springboot.Const.ORDER;
@@ -36,9 +38,23 @@ public class EmailService {
     @Autowired
     MessageSource messageSource;
 
-    public void bestellungHTML(Bestellung bestellung) {
+    public void bestellungBestaetigung(Bestellung bestellung) {
+        Map<String, Object> params = new HashMap<>();
+        params.put(ORDER, bestellung);
+        Object[] betreffParams = { bestellung.getId(), bestellung.getGesamtzahl() };
+        generateEmail(bestellung.getKunde(), "email.subject", betreffParams, "order-receipt", params);
+    }
+
+    public void kundenDatenGeandert(Kunde kunde) {
+        generateEmail(kunde, "email.customer.changed", null, "customer-changed", null);
+    }
+
+    private void generateEmail(Kunde kunde,
+                               String betreffKey,
+                               Object[] betreffParams,
+                               String template,
+                               Map<String, Object> params) {
         Locale locale;
-        Kunde kunde = bestellung.getKunde();
         String sprache = kunde.getSprache();
         if (sprache == null) {
             locale = Locale.GERMAN;
@@ -47,25 +63,30 @@ public class EmailService {
             locale = new Locale(sprache);
         }
         String empfaenger = kunde.getEmail();
-        String betreff = messageSource.getMessage("email.subject",
-                new Object[]{bestellung.getId(), bestellung.getGesamtzahl()}, locale);
+        String subject = messageSource.getMessage(betreffKey, betreffParams, locale);
 
         final Context ctx = new Context(locale);
-        ctx.setVariable(ORDER, bestellung);
         ctx.setVariable(CUSTOMER, kunde);
-        final String htmlContent = this.templateEngine.process("mail/" + sprache + "/order-receipt.html", ctx);
+        if (params != null) {
+            for (Map.Entry<String, Object> entry : params.entrySet())
+                ctx.setVariable(entry.getKey(), entry.getValue());
+        }
+
+        final String htmlContent = this.templateEngine.process("mail/" + sprache + "/" + template + ".html", ctx);
 
         try {
-            sendMessageWithAttachment(empfaenger, betreff, htmlContent);
+            sendMessageWithAttachment(empfaenger, subject, htmlContent);
         } catch (MessagingException e) {
             LOG.error(e.getMessage(), e.getStackTrace());
         }
+
     }
 
     private void sendMessageWithAttachment(String to, String subject, String text) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, "UTF-8");
         helper.setFrom(SENDER);
+        helper.setReplyTo(SENDER);
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(text, true); // true = isHtml
