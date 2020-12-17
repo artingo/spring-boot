@@ -98,9 +98,8 @@ public class BestellController {
     @GetMapping("/bestellung/{id}")
     public String bestellung(@PathVariable Long id, Model model, HttpSession session) {
         Kunde kunde = (Kunde)session.getAttribute(CUSTOMER);
-        // TODO: Kunden-Berechtiung prüfen
         if (kunde != null) {
-            Bestellung bestellung = bestellService.lade(id);
+            Bestellung bestellung = bestellService.lade(kunde.getId(), id);
             if (bestellung == null) {
                 bestellung = new Bestellung();
                 model.addAttribute(MESSAGE, "No order found for ID: " + id);
@@ -115,7 +114,6 @@ public class BestellController {
         Kunde kunde = (Kunde)session.getAttribute(CUSTOMER);
         if (kunde != null) {
             List<Bestellung> bestellungen = bestellService.bestellungenVonKunde(kunde.getId());
-            // TODO: User-Berechtigung prüfen
             model.addAttribute(ORDERS, bestellungen);
         }
         return "orders";

@@ -20,8 +20,13 @@ public class BestellService {
     ProduktService produktService;
 
     @Transactional(readOnly = true)
-    public Bestellung lade(Long id) {
-        return this.bestellRepository.findById(id).orElse(null);
+    public Bestellung lade(Long kundenId, Long id) {
+        Bestellung bestellung = this.bestellRepository.findById(id).orElse(null);
+        // prüfe, ob es der gleiche Kunde ist
+        if (bestellung != null && bestellung.getKunde().getId() == kundenId) {
+            return bestellung;
+        }
+        return null;
     }
 
     @Transactional(readOnly = true)
