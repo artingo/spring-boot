@@ -1,0 +1,54 @@
+<div class="mdl-card__checkout mdl-shadow--4dp" xmlns:th="http://www.thymeleaf.org"
+    th:fragment="params()"
+    th:with="title=${title} ?: nav.cart,
+        showDelete=${showDelete} ?: false,
+        produkte=${produkte} ?: ${session.warenkorb.produkte}">
+    <div class="mdl-card__title">
+        <span class="mdl-card__title-text" th:text="#{${title}}"/>
+    </div>
+    <table class="mdl-card__actions mdl-data-table mdl-js-data-table">
+    <thead>
+    <tr>
+        <th class="mdl-data-table__cell--non-numeric" width="20%" th:text="#{table.image}"></th>
+        <th class="mdl-data-table__cell--non-numeric" th:text="#{table.description}"></th>
+        <th width="20%" th:text="#{label.number}"></th>
+        <th width="20%" th:text="#{table.price}"></th>
+        <th th:if="${showDelete}" width="10%"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="p:${produkte}" th:with="produkt=${p.produkt}">
+        <td class="mdl-data-table__cell--non-numeric">
+            <input type="hidden" th:name="|produkte[${pStat.index}].produkt.id|" th:value="${produkt.id}"/><br/>
+            <img th:src="${'/fotos/'+produkt.id}" th:alt="${produkt.dateiname}" height="30" border="0"/>
+        </td>
+        <td th:text="${produkt.name}" class="mdl-data-table__cell--non-numeric"></td>
+        <td><span th:text="${p.anzahl}"/>
+            <input type="hidden" th:name="|produkte[${pStat.index}].anzahl|" th:value="${p.anzahl}"/>
+        <td><span th:text="${produkt.preisFormatiert}"/> &euro;</td>
+        </td>
+        <td th:if="${showDelete}">
+            <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
+               th:href="@{/entfernen(id=${produkt.id})}"
+               onclick="loeschenBestaetigen(this.href); return false">
+                <i class="material-icons">remove_shopping_cart</i>
+            </a>
+        </td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+        <td></td>
+        <td></td>
+        <td class="mdl-data-table__cell--non-numeric">
+            <span th:text="#{label.total.number}"/>
+            <span th:text="${session.warenkorb.gesamtzahl}"/>
+        </td>
+        <td th:colspan="${showDelete? 2: 1}">
+            <span th:text="#{label.total.price}"/>
+            <span th:text="${session.warenkorb.gesamtpreis}"/> &euro;
+        </td>
+    </tr>
+    </tfoot>
+    </table>
+</div>

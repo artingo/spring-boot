@@ -17,47 +17,7 @@
 				<button type="submit" id="buy-button" th:text="#{button.buy.now}"
 					class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"/>
 
-				<div class="mdl-card__checkout mdl-shadow--4dp">
-					<div class="mdl-card__title">
-						<span class="mdl-card__title-text" th:text="#{nav.cart}"/>
-					</div>
-					<table class="mdl-data-table mdl-js-data-table">
-					<thead>
-					<tr>
-						<th class="mdl-data-table__cell--non-numeric" width="20%" th:text="#{table.image}"></th>
-						<th class="mdl-data-table__cell--non-numeric" th:text="#{table.description}"></th>
-						<th width="20%" th:text="#{table.price}"></th>
-						<th width="20%" th:text="#{label.number}"></th>
-					</tr>
-					</thead>
-					<tbody>
-					<tr th:each="p:${session.warenkorb.produkte}" th:with="produkt=${p.produkt}">
-						<td class="mdl-data-table__cell--non-numeric">
-							<input type="hidden" th:name="|produkte[${pStat.index}].produkt.id|" th:value="${produkt.id}"/><br/>
-							<img th:src="${'/fotos/'+produkt.id}" th:alt="${produkt.dateiname}" height="30" border="0"/>
-						</td>
-						<td th:text="${produkt.name}" class="mdl-data-table__cell--non-numeric"></td>
-						<td><span th:text="${produkt.preisFormatiert}"/> &euro;</td>
-						<td><span th:text="${p.anzahl}"/>
-							<input type="hidden" th:name="|produkte[${pStat.index}].anzahl|" th:value="${p.anzahl}"/>
-						</td>
-					</tr>
-					</tbody>
-					<tfoot>
-					<tr>
-						<td></td>
-						<td class="mdl-data-table__cell--non-numeric">
-							<span th:text="#{label.total.number}"/>
-							<span th:text="${session.warenkorb.gesamtzahl}"/>
-						</td>
-						<td></td>
-						<td><span th:text="#{label.total.price}"/>
-							<span th:text="${session.warenkorb.gesamtpreis}"/> &euro;
-						</td>
-					</tr>
-					</tfoot>
-					</table>
-				</div>
+				<div th:replace="fragments/productlist"/>
 
 				<!-- TODO: nur Kunden-ID mitgeben -->
 				<div class="mdl-card__checkout mdl-shadow--4dp" th:object="${bestellung.kunde}">

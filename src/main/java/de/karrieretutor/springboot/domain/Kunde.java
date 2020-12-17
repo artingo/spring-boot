@@ -46,7 +46,6 @@ public class Kunde {
     @Email
     @NotBlank(message = "{validation.zahlungsart.email}")
     private String email;
-    // TODO: in der DB verschlüsseln
     private String password;
 
     private String sprache = Locale.GERMAN.getLanguage();

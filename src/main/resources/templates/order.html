@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="de" xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title th:text="#{nav.cart}"></title>
+	<title th:text="#{order.title}"></title>
 	<link th:replace="fragments/styles"/>
 </head>
 <body>
@@ -12,44 +12,7 @@
 		<div class="mdl-cell--6-col-desktop mdl-cell--12-col-phone center">
 			<h4 th:if="${message}" th:text="${message}"></h4>
 
-			<div class="mdl-card__checkout mdl-shadow--4dp">
-				<div class="mdl-card__title">
-					<span class="mdl-card__title-text" th:text="#{order.title}"></span>
-				</div>
-				<table class="mdl-card__actions mdl-data-table mdl-js-data-table" width="100%">
-				<thead>
-				<tr>
-					<th width="20%" class="mdl-data-table__cell--non-numeric" th:text="#{table.image}"></th>
-					<th class="mdl-data-table__cell--non-numeric" th:text="#{table.description}"></th>
-					<th width="20%" th:text="#{label.number}"></th>
-					<th width="20%" th:text="#{table.price}"></th>
-				</tr>
-				</thead>
-				<tbody th:if="${!bestellung.produkte.isEmpty()}">
-				<tr th:each="p:${bestellung.produkte}" th:with="produkt=${p.produkt}">
-					<td class="mdl-data-table__cell--non-numeric">
-						<img th:src="${'/fotos/'+produkt.id}" th:alt="${produkt.dateiname}" height="30" border="0"/>
-					</td>
-					<td class="mdl-data-table__cell--non-numeric" th:text="${produkt.name}"></td>
-					<td th:text="${p.anzahl}"></td>
-					<td><span th:text="${produkt.preisFormatiert}"/> €</td>
-				</tr>
-				</tbody>
-				<tfoot>
-				<tr>
-					<td></td>
-					<td></td>
-					<td class="mdl-data-table__cell--non-numeric">
-						<span th:text="#{label.total.number}"/>
-						<span th:text="${bestellung.gesamtzahl}"/>
-					</td>
-					<td><span th:text="#{label.total.price}"/>
-						<span th:text="${bestellung.gesamtpreis}"/> €
-					</td>
-				</tr>
-				</tfoot>
-				</table>
-			</div>
+			<div th:replace="fragments/productlist::params(title=order.title, produkte=${bestellung.produkte})"/>
 		</div>
 		<footer th:replace="fragments/footer"/>
 	</main>
