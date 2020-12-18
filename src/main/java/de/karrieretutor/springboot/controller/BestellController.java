@@ -82,6 +82,7 @@ public class BestellController {
         boolean istNeuerKunde = (kunde.getId() == null);
         Bestellung neueBestellung = bestellService.speichere(bestellung, istNeuerKunde);
         kunde.setSprache(locale.getLanguage());
+        // TODO: Kundensprache berücksichtigen
         if (neueBestellung != null) {
             // Email versenden
             emailService.bestellungBestaetigung(neueBestellung);
