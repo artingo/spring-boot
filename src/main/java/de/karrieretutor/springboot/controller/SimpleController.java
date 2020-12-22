@@ -35,8 +35,8 @@ public class SimpleController {
     KundenService kundenService;
     @Autowired
     MessageSource messageSource;
-
-    private Warenkorb warenkorb = new Warenkorb();
+    @Autowired
+    Warenkorb warenkorb;
 
     @GetMapping("/")
     public String homePage(Model model) {

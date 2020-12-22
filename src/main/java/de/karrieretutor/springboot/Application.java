@@ -1,6 +1,6 @@
 package de.karrieretutor.springboot;
 
-import de.karrieretutor.springboot.service.ProduktService;
+import de.karrieretutor.springboot.domain.Warenkorb;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -25,6 +25,11 @@ public class Application implements WebMvcConfigurer {
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 		LOG.info("http://localhost:8080");
+	}
+
+	@Bean
+	public Warenkorb getWarenkorb() {
+		return new Warenkorb();
 	}
 
 	@Bean

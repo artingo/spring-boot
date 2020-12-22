@@ -2,6 +2,7 @@ package de.karrieretutor.springboot.unit;
 
 import de.karrieretutor.springboot.controller.SimpleController;
 import de.karrieretutor.springboot.domain.Produkt;
+import de.karrieretutor.springboot.domain.Warenkorb;
 import de.karrieretutor.springboot.enums.Kategorie;
 import de.karrieretutor.springboot.enums.Unterkategorie;
 import de.karrieretutor.springboot.service.KundenService;
@@ -14,9 +15,13 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.karrieretutor.springboot.Const.PRODUCTS;
 import static de.karrieretutor.springboot.enums.Kategorie.KAT1;
 import static de.karrieretutor.springboot.enums.Unterkategorie.SUBKAT1;
 import static org.mockito.Mockito.when;
@@ -33,21 +38,45 @@ public class SimpleControllerTest {
     KundenService kundenService;
     @Autowired
     MessageSource messageSource;
+    @MockBean
+    Warenkorb warenkorb;
 
+    Produkt dummyProdukt = new Produkt("Name", "Herkunft", KAT1, SUBKAT1, 3.99d);
 
-//    @Test
-    // @GetMapping("/index.html")
-    public void shop_without_Params() throws Exception {
-        when(produktService.ladeProdukte()).thenReturn(createProdukte());
+    @Test
+    public void shop() throws Exception {
+        List<Produkt> produkte = createProdukte();
+        when(produktService.ladeProdukte()).thenReturn(produkte);
 
         mvc.perform(get("/index.html")
-                .contentType(MediaType.TEXT_HTML));
+                .contentType(MediaType.TEXT_HTML))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(model().attribute(PRODUCTS, produkte));
+    }
 
+    @Test
+    public void fotos_mit_ID() throws Exception {
+        byte[] testBytes = {1,2,3,4,5};
+        dummyProdukt.setDatei(testBytes);
+        when(produktService.getProdukt(1L)).thenReturn(dummyProdukt);
+
+        mvc.perform(get("/fotos/1"))
+                .andExpect(status().is(200))
+                .andExpect(content().bytes(testBytes));
+    }
+
+    @Test
+    public void fotos_nicht_gefunden() throws Exception {
+        URL imageURL = this.getClass().getClassLoader().getResource("./static/images/no-image.png");
+        byte[] testBytes = Files.readAllBytes(Paths.get(imageURL.toURI()));
+
+        mvc.perform(get("/fotos/1"))
+                .andExpect(status().is(200))
+                .andExpect(content().bytes(testBytes));
     }
 
     @Test
     void kaufen() throws Exception {
-        Produkt dummyProdukt = new Produkt("Name", "Herkunft", KAT1, SUBKAT1, 3.99d);
         when(produktService.getProdukt(1L)).thenReturn(dummyProdukt);
 
         mvc.perform(get("/kaufen")
@@ -75,11 +104,8 @@ public class SimpleControllerTest {
                 .andExpect(flash().attribute("message", "Produkt mit der ID \"null\" nicht gefunden."));
     }
 
-/*
     @Test
     void entfernen() throws Exception {
-        Produkt dummyProdukt = new Produkt("Name", "Herkunft", KAT1, SUBKAT1, 3.99d);
-        Warenkorb warenkorb = mock(Warenkorb.class);
         when(warenkorb.produktEntfernen(1L)).thenReturn(dummyProdukt);
 
         mvc.perform(get("/entfernen")
@@ -88,16 +114,15 @@ public class SimpleControllerTest {
                 .andExpect(redirectedUrl("/cart.html"))
                 .andExpect(flash().attribute("message", "Produkt \"Name\" vom Warenkorb entfernt."));
     }
-*/
 
     List<Produkt> createProdukte() {
         List<Produkt> produkte = new ArrayList<>();
-        for(int i=1; i<= 10; i++) {
+        for (int i = 1; i <= 10; i++) {
             int index = i % Kategorie.values().length;
             Kategorie kat = Kategorie.values()[index];
             int subindex = i % Unterkategorie.values().length;
             Unterkategorie subkat = Unterkategorie.values()[subindex];
-            Produkt produkt = new Produkt("produkt"+i, "herkunft", kat, subkat, (double)i);
+            Produkt produkt = new Produkt("produkt" + i, "herkunft", kat, subkat, (double) i);
             produkte.add(produkt);
         }
         return produkte;
