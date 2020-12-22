@@ -1,6 +1,5 @@
-package de.karrieretutor.springboot.unit;
+package de.karrieretutor.springboot.controller;
 
-import de.karrieretutor.springboot.controller.SimpleController;
 import de.karrieretutor.springboot.domain.Produkt;
 import de.karrieretutor.springboot.domain.Warenkorb;
 import de.karrieretutor.springboot.enums.Kategorie;
@@ -27,7 +26,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(SimpleController.class)
+@WebMvcTest(value=SimpleController.class)
 public class SimpleControllerTest {
     @Autowired
     MockMvc mvc;
