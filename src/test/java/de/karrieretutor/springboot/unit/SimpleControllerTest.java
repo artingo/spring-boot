@@ -5,7 +5,6 @@ import de.karrieretutor.springboot.domain.Produkt;
 import de.karrieretutor.springboot.domain.Warenkorb;
 import de.karrieretutor.springboot.enums.Kategorie;
 import de.karrieretutor.springboot.enums.Unterkategorie;
-import de.karrieretutor.springboot.service.KundenService;
 import de.karrieretutor.springboot.service.ProduktService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +33,6 @@ public class SimpleControllerTest {
     MockMvc mvc;
     @MockBean
     private ProduktService produktService;
-    @MockBean
-    KundenService kundenService;
     @Autowired
     MessageSource messageSource;
     @MockBean
@@ -50,7 +47,6 @@ public class SimpleControllerTest {
 
         mvc.perform(get("/index.html")
                 .contentType(MediaType.TEXT_HTML))
-                .andExpect(status().is2xxSuccessful())
                 .andExpect(model().attribute(PRODUCTS, produkte));
     }
 
@@ -81,8 +77,6 @@ public class SimpleControllerTest {
 
         mvc.perform(get("/kaufen")
                 .param("id", "1"))
-                .andExpect(status().isFound())
-                .andExpect(redirectedUrl("index.html"))
                 .andExpect(flash().attribute("message", "Produkt \"Name\" zum Warenkorb hinzugefügt."));
     }
 
@@ -90,8 +84,6 @@ public class SimpleControllerTest {
     void kaufen_falsche_ProduktID() throws Exception {
         mvc.perform(get("/kaufen")
                 .param("id", "999999"))
-                .andExpect(status().isFound())
-                .andExpect(redirectedUrl("index.html"))
                 .andExpect(flash().attribute("message", "Produkt mit der ID \"999999\" nicht gefunden."));
     }
 
@@ -99,20 +91,25 @@ public class SimpleControllerTest {
     void kaufen_leere_ProduktID() throws Exception {
         mvc.perform(get("/kaufen")
                 .param("id", ""))
-                .andExpect(status().isFound())
-                .andExpect(redirectedUrl("index.html"))
                 .andExpect(flash().attribute("message", "Produkt mit der ID \"null\" nicht gefunden."));
     }
 
     @Test
-    void entfernen() throws Exception {
+    void entfernen_mit_ID() throws Exception {
         when(warenkorb.produktEntfernen(1L)).thenReturn(dummyProdukt);
 
         mvc.perform(get("/entfernen")
                 .param("id", "1"))
-                .andExpect(status().isFound())
-                .andExpect(redirectedUrl("/cart.html"))
                 .andExpect(flash().attribute("message", "Produkt \"Name\" vom Warenkorb entfernt."));
+    }
+
+    @Test
+    void entfernen_falsche_ID() throws Exception {
+        when(warenkorb.produktEntfernen(1L)).thenReturn(dummyProdukt);
+
+        mvc.perform(get("/entfernen")
+                .param("id", "99"))
+                .andExpect(flash().attribute("message", "Produkt mit ID \"99\" nicht im Warenkorb gefunden."));
     }
 
     List<Produkt> createProdukte() {

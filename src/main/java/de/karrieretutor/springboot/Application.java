@@ -28,11 +28,6 @@ public class Application implements WebMvcConfigurer {
 	}
 
 	@Bean
-	public Warenkorb getWarenkorb() {
-		return new Warenkorb();
-	}
-
-	@Bean
 	public MessageSource messageSource() {
 		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
 		messageSource.setBasename("classpath:messages");

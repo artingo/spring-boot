@@ -1,8 +1,11 @@
 package de.karrieretutor.springboot.domain;
 
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class Warenkorb {
     private List<BestelltesProdukt> produkte = new ArrayList<>();
     private Long userId;
