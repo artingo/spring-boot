@@ -63,8 +63,10 @@ public class ProduktService {
     }
 
     public Produkt findProdukt(Long id) {
-        // TODO: wenn nicht im Cache -> vom Server laden
         if (id == null) return null;
+        if (cachedProdukte.isEmpty()) {
+            cachedProdukte = ladeProdukte();
+        }
         Optional<Produkt> optional = cachedProdukte.stream().filter(p -> p.getId() == id).findFirst();
         return optional.isPresent() ? optional.get() : null;
     }
