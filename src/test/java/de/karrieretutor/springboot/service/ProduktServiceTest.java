@@ -55,6 +55,16 @@ class ProduktServiceTest {
         Produkt produkt = produktService.findProdukt(1L);
         assertEquals(produkt.getName(), "produkt1");
     }
+    @Test
+    void findProdukt_falsche_ID() {
+        Produkt produkt = produktService.findProdukt(99L);
+        assertEquals(produkt, null);
+    }
+    @Test
+    void findProdukt_leere_ID() {
+        Produkt produkt = produktService.findProdukt(null);
+        assertEquals(produkt, null);
+    }
 
     Iterable<Produkt> createProdukte() {
         List<Produkt> produkte = new ArrayList<>();
@@ -64,6 +74,7 @@ class ProduktServiceTest {
             int subindex = i % Unterkategorie.values().length;
             Unterkategorie subkat = Unterkategorie.values()[subindex];
             Produkt produkt = new Produkt("produkt" + i, "herkunft", kat, subkat, (double) i);
+            produkt.setId((long)i);
             produkte.add(produkt);
         }
         return produkte;
