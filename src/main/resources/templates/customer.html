@@ -9,7 +9,7 @@
 	<div th:replace="fragments/header::large(titel='Customer')"/>
 	<div th:replace="fragments/header::small"/>
 	<main class="mdl-layout__content">
-		<div class="mdl-cell--4-col-desktop mdl-cell--10-col-tablet mdl-cell--11-col-phone center">
+		<div class="mdl-cell--5-col-desktop mdl-cell--10-col-tablet mdl-cell--11-col-phone center">
 			<h4 th:if="${message}" th:text="${message}"></h4>
 
 			<form th:action="@{/kunde/speichern}" th:object="${kunde}" method="post" autocomplete="on">

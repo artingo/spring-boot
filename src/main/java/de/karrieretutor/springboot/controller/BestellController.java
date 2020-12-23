@@ -10,16 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.thymeleaf.util.StringUtils;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Locale;
 
@@ -50,44 +47,28 @@ public class BestellController {
         Bestellung bestellung = new Bestellung();
         bestellung.setKunde(kunde);
         model.addAttribute(ORDER, bestellung);
+        model.addAttribute(CUSTOMER, kunde);
         return "checkout";
     }
 
     @PostMapping("/bestellen")
-    public String bestellen(@Valid Bestellung bestellung,
-                            BindingResult result,
+    public String bestellen(Bestellung bestellung,
                             RedirectAttributes redirect,
                             Locale locale,
                             HttpSession session) {
-        if (result.hasErrors()) {
-            return "checkout";
-        }
-        // TODO: kunde.validiereZahlungsart(result) implementieren
         Kunde kunde = bestellung.getKunde();
-        switch (kunde.getZahlungsart()) {
-            case EINZUG:
-                if (StringUtils.isEmptyOrWhitespace(kunde.getIban())) {
-                    result.rejectValue("kunde.iban", "validation.zahlungsart.iban");
-                    return "checkout";
-                }
-                break;
-            case KREDITKARTE:
-                if (StringUtils.isEmptyOrWhitespace(kunde.getKreditkartenNr())) {
-                    result.rejectValue("kunde.kreditkartenNr", "validation.zahlungsart.karte");
-                    return "checkout";
-                }
-        }
-
         String message = messageSource.getMessage("order.failure", null, locale);
         boolean istNeuerKunde = (kunde.getId() == null);
         Bestellung neueBestellung = bestellService.speichere(bestellung, istNeuerKunde);
-        kunde.setSprache(locale.getLanguage());
         // TODO: Kundensprache berücksichtigen
+        kunde.setSprache(locale.getLanguage());
         if (neueBestellung != null) {
+            session.setAttribute(CUSTOMER, neueBestellung.getKunde());
+
             // Email versenden
             emailService.bestellungBestaetigung(neueBestellung);
-
             message = messageSource.getMessage("order.success", null, locale);
+
             Warenkorb warenkorb = getInitializedWarenkorb(session);
             if (warenkorb != null)
                 warenkorb.getProdukte().clear();
