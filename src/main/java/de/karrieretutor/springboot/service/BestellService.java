@@ -23,7 +23,7 @@ public class BestellService {
     public Bestellung lade(Long kundenId, Long id) {
         Bestellung bestellung = this.bestellRepository.findById(id).orElse(null);
         // prüfe, ob es der gleiche Kunde ist
-        if (bestellung != null && bestellung.getKunde().getId() == kundenId) {
+        if (bestellung != null && bestellung.getKunde().getId().equals(kundenId)) {
             return bestellung;
         }
         return null;
@@ -46,8 +46,10 @@ public class BestellService {
         bestellung.setDatum(LocalDateTime.now());
         bestellung.setStatus(BestellStatus.OFFEN);
         ladeProduktdetails(bestellung);
-        bestellRepository.save(bestellung);
-        return bestellung;
+        Bestellung neueBestellung = bestellRepository.save(bestellung);
+        // Kundendaten aus der Datenbank laden
+        neueBestellung.setKunde(kundenService.lade(kunde.getId()));
+        return neueBestellung;
     }
 
     private void ladeProduktdetails(Bestellung bestellung) {
