@@ -54,14 +54,13 @@ public class BestellController {
     @PostMapping("/bestellen")
     public String bestellen(Bestellung bestellung,
                             RedirectAttributes redirect,
-                            Locale locale,
                             HttpSession session) {
         Kunde kunde = bestellung.getKunde();
+        Locale locale = new Locale(kunde.getSprache());
         String message = messageSource.getMessage("order.failure", null, locale);
+
         boolean istNeuerKunde = (kunde.getId() == null);
         Bestellung neueBestellung = bestellService.speichere(bestellung, istNeuerKunde);
-        // TODO: Kundensprache berücksichtigen
-        kunde.setSprache(locale.getLanguage());
         if (neueBestellung != null) {
             session.setAttribute(CUSTOMER, neueBestellung.getKunde());
 
